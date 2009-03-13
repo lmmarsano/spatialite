@@ -1,0 +1,6 @@
+spatialite (2.3~beta1-1) unstable; urgency=low
+
+  * Initial release.
+    (closes: #519251)
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 13 Mar 2009 16:01:40 +0100
