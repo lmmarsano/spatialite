@@ -1,0 +1,4 @@
+usr/bin/exif_loader
+usr/bin/shp_doctor
+usr/bin/spatialite
+usr/bin/spatialite_network
