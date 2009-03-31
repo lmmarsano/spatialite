@@ -1,3 +1,10 @@
+spatialite (2.3~beta1-2) unstable; urgency=low
+
+  * NOT RELEASED YET
+  * Removed superfluous removing of *-stamp files.
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 31 Mar 2009 09:53:03 +0200
+
 spatialite (2.3~beta1-1) unstable; urgency=low
 
   * Initial release.
