@@ -1,7 +1,19 @@
-spatialite (2.3~beta1-2) unstable; urgency=low
+spatialite (2.3.0-1) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * NOT RELEASED.
+  * New upstream release.
+  * New upstream packaging: now this package includes all spatialite-related 
+    tarballs to provide the whole set of binary packages.
+  * Added quilt support. Now the upstream tarball is included as a compressed archive
+    to facilitate interactive cleanaups and patching.
+  * [PATCH] split.diff removes embedded sqlite3 and uses system library.
+    The patch is built by autoreconfiguring a suitable fixed automake root file.
+  * [PATCH] tools.diff allows building without pre-installation and fixes use
+    of static libs instead of libtools helpers for external libraries.
   * Removed superfluous removing of *-stamp files.
+  * Removed init SQL file, initialization is now embedded in the library.
+  * Removed README installation: it documents purely installation.
+  * Currently still does not build spatialite-gui.
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 31 Mar 2009 09:53:03 +0200
 

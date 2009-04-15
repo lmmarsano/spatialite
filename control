@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
 Uploaders: Francesco Paolo Lovergine <frankie@debian.org>
 Build-Depends: debhelper (>= 7), autotools-dev, 
- libsqlite3-dev (>= 3.3.6), libgeos-dev (>= 3.0.3), libproj-dev (>= 4.6.1) | proj, libreadline5-dev
+ libsqlite3-dev (>= 3.3.6), libgeos-dev (>= 3.0.3), libproj-dev, libreadline5-dev, quilt
 Standards-Version: 3.8.1
 Homepage: http://www.gaia-gis.it/spatialite/
 
