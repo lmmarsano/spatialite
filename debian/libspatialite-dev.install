@@ -1,7 +1,4 @@
 usr/lib/libspatialite.a
 usr/lib/libspatialite.la
 usr/lib/libspatialite.so
-usr/lib/libvirtualtext.a
-usr/lib/libvirtualtext.la
-usr/lib/libvirtualtext.so
 usr/include
