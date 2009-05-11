@@ -99,7 +99,7 @@ install-indep:
 #	dh_installdirs -i
 #	dh_install -i
 
-install-arch:
+install-arch: build-arch
 	dh_testdir
 	dh_testroot
 	dh_prep -a 
@@ -136,7 +136,7 @@ binary-common:
 # Build architecture independant packages using the common target.
 # Currently there are no packages to build.
 binary-indep: build-indep install-indep
-#	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
+	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
 
 # Build architecture dependant packages using the common target.
 binary-arch: build-arch install-arch

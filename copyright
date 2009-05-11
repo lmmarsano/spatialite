@@ -11,19 +11,21 @@ Upstream Authors:
 
 Copyright:
 
-    Copyright (C) 2008 Alessandro Furieri
+    Copyright (C) 2008-2009 Alessandro Furieri
 
 License:
 
-    This software is distributed under one of three different license at user
-    option:
+    This software is distributed under those licenses:
 
         * Mozilla Public License, version 1.1 or later
-	* GNU General Public License, version 2.0 or later
-	* GNU Lesser General Public License, version 2.1 or later
+	* GNU General Public License, version 3.0 
+
+    Specifically the library is distributed under MPL 1.1, while
+    additional tools and GUI are distributed under GPL-3.
 
     The text of those licenses on Debian system is included as
-    `/usr/share/common-licenses/{GPL-2,LGPL-2}'. 
+    `/usr/share/common-licenses/GPL-3'. 
+
     The text of the MPL 1.1 follows:
 
                           MOZILLA PUBLIC LICENSE
