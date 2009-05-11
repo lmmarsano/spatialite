@@ -25,6 +25,7 @@ Package: libspatialite-dev
 Architecture: any
 Section: libdevel
 Depends: libspatialite2 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Recommends: pkg-config
 Description: Geospatial extension for SQLite - development files
  The SpatiaLite extension enables SQLite to support spatial (geometry) data
  in a way conformant to OpenGis specifications, with both WKT and WKB formats.
