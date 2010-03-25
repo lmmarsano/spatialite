@@ -26,13 +26,27 @@ else
 CROSS= --build $(DEB_BUILD_GNU_TYPE)
 endif
 
+ARCHIVES=libspatialite-amalgamation spatialite-tools
+VERSION=$(shell dpkg-parsechangelog|grep Version:|cut -d' ' -f2|cut -d- -f1)
+
+get-orig-tarball:
+	mkdir -p $(CURDIR)/tmp || true
+	for archive in $(ARCHIVES); \
+	do \
+	    wget -O $(CURDIR)/$$archive.tar.gz http://www.gaia-gis.it/spatialite/$$archive-$(VERSION).tar.gz; \
+		tar xzovf $(CURDIR)/$$archive.tar.gz -C $(CURDIR)/tmp; \
+		mv $(CURDIR)/tmp/$$archive-$(VERSION) $(CURDIR)/tmp/$$archive; \
+	done
+	mkdir -p $(CURDIR)/spatialite-$(VERSION)/upstream
+	tar czvf $(CURDIR)/spatialite-$(VERSION)/upstream/spatialite.tar.gz -C $(CURDIR)/tmp $(ARCHIVES)
+	rm -rf $(CURDIR)/tmp $(CURDIR)/*.tar.gz
+	tar czvf spatialite_$(VERSION).orig.tar.gz --exclude=debian --exclude-vcs spatialite-$(VERSION)
+	rm -rf $(CURDIR)/spatialite-$(VERSION)
+
 unpack: unpack-stamp
 unpack-stamp:
-	mkdir $(CURDIR)/libspatialite $(CURDIR)/spatialite-tools
-	tar xzvf $(CURDIR)/upstream/libspatialite*.tar.gz --strip-components=1 \
-	    -C  $(CURDIR)/libspatialite --exclude-vcs
-	tar xzvf $(CURDIR)/upstream/spatialite-tools*.tar.gz --strip-components=1 \
-	    -C  $(CURDIR)/spatialite-tools --exclude-vcs
+	tar xozvf $(CURDIR)/upstream/spatialite.tar.gz --exclude-vcs
+	mv libspatialite-amalgamation libspatialite
 	touch $@
 
 patch: unpack patch-stamp
@@ -107,7 +121,7 @@ install-arch: build-arch
 	
 	$(MAKE) -C $(CURDIR)/libspatialite DESTDIR=$(CURDIR)/debian/tmp install
 	$(MAKE) -C $(CURDIR)/spatialite-tools DESTDIR=$(CURDIR)/debian/tmp install
-	# Fix pkg-config file
+	# Fix pkg-config file, just in case.
 	sed -i -e 's/Libs:\(.*\)/Libs:\1 -lsqlite3/' $(CURDIR)/debian/tmp/usr/lib/pkgconfig/spatialite.pc
 	
 	dh_install -a
