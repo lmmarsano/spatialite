@@ -1,11 +1,19 @@
-spatialite (2.3.0-2) unstable; urgency=low
+spatialite (2.3.1-1) unstable; urgency=low
 
-  * Now build-dep on libreadline-dev | libreadline5-dev
-  * Policy changed to 3.8.3
-  * Fixed debian/watch file to find x.y.z versions.
-  * Added Vcs-* fields to debian/control.
+  * New upstream release with API change and new SONAME.
+  * A new single sqlite3_libtool.diff patch introduced to use system-wide
+    sqlite3 stuff and drop the libtool helpers use for sqlite3, geos and proj.
+    (closes: #567615)
+  * Revised the get-orig-source to work with a single upstream archive.
+    That renders the archive compatible with dpkg format 3.0.
+    (closes: #538566)
+  * Now use libreadline-dev as build-dep.
+    (closes: #553855)
+  * Do not install spatialite .la file as well.
+  * Added Vcs-* fields.
+  * Policy bumped to 3.8.4.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 14 Sep 2009 15:51:40 +0200
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 25 Mar 2010 15:23:13 +0100
 
 spatialite (2.3.0-1) unstable; urgency=low
 
