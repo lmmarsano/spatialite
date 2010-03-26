@@ -10,7 +10,7 @@ Homepage: http://www.gaia-gis.it/spatialite/
 Vcs-Browser: http://svn.debian.org/viewsvn/pkg-grass/packages/spatialite/trunk
 Vcs-Svn: svn://svn.debian.org/svn/pkg-grass/packages/spatialite/trunk
 
-Package: libspatialite1
+Package: libspatialite2
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends}

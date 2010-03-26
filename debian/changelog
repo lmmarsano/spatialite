@@ -1,8 +1,10 @@
-spatialite (2.3.1-1) unstable; urgency=low
+spatialite (2.4.0~rc2-1) unstable; urgency=low
 
-  * New upstream release with API change and new SONAME.
-  * A new single sqlite3_libtool.diff patch introduced to use system-wide
+  * New upstream pre-release candidate.
+  * A new mega-patch systemlibs.diff introduced to use system-wide
     sqlite3 stuff and drop the libtool helpers use for sqlite3, geos and proj.
+    Also changed libtool versioning to avoid not proper SONAME bumping, after
+    a private thread with Sandro.
     (closes: #567615)
   * Revised the get-orig-source to work with a single upstream archive.
     That renders the archive compatible with dpkg format 3.0.
@@ -13,7 +15,7 @@ spatialite (2.3.1-1) unstable; urgency=low
   * Added Vcs-* fields.
   * Policy bumped to 3.8.4.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 25 Mar 2010 15:23:13 +0100
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 25 Mar 2010 16:02:42 +0100
 
 spatialite (2.3.0-1) unstable; urgency=low
 
