@@ -27,13 +27,13 @@ CROSS= --build $(DEB_BUILD_GNU_TYPE)
 endif
 
 ARCHIVES=libspatialite-amalgamation spatialite-tools
-VERSION=$(shell dpkg-parsechangelog|grep Version:|cut -d' ' -f2|cut -d- -f1)
+VERSION=$(shell dpkg-parsechangelog|grep Version:|cut -d' ' -f2|cut -d- -f1|cut -d~ -f1)
 
 get-orig-tarball:
 	mkdir -p $(CURDIR)/tmp || true
 	for archive in $(ARCHIVES); \
 	do \
-	    wget -O $(CURDIR)/$$archive.tar.gz http://www.gaia-gis.it/spatialite/$$archive-$(VERSION).tar.gz; \
+	    wget -O $(CURDIR)/$$archive.tar.gz http://www.gaia-gis.it/spatialite-$(VERSION)/$$archive-$(VERSION).tar.gz; \
 		tar xzovf $(CURDIR)/$$archive.tar.gz -C $(CURDIR)/tmp; \
 		mv $(CURDIR)/tmp/$$archive-$(VERSION) $(CURDIR)/tmp/$$archive; \
 	done
