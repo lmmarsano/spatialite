@@ -1,3 +1,11 @@
+spatialite (2.4.0~rc2-4) unstable; urgency=medium
+
+  * Now -dev package depends also on libsqlite3-dev.
+  * Added a symlink for sqlite3.h within /usr/include/spatialite because other
+    softwares could look for that at configure time (e.g. ATM gdal).
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 07 May 2010 14:53:21 +0200
+
 spatialite (2.4.0~rc2-3) unstable; urgency=medium
 
   * Restored right version of .install file.
