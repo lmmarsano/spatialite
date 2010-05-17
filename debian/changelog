@@ -6,7 +6,8 @@ spatialite (2.4.0~rc2-6) unstable; urgency=low
 
 spatialite (2.4.0~rc2-5) unstable; urgency=low
 
-  * Changed build-dep libsqlite3-dev to (>= 3.6.0).
+  * Changed build-dep libsqlite3-dev to (>= 3.6.11): spatialite uses "hot backup"
+    interface of sqlite3.
 
  -- Alan Boudreault <aboudreault@mapgears.com>  Fri, 14 May 2010 13:09:49 -0400
 
