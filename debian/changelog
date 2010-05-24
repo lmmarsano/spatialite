@@ -1,15 +1,13 @@
-spatialite (2.4.0~rc2-6) unstable; urgency=low
+spatialite (2.4.0~rc2-6) unstable; urgency=medium
 
+  [ Alan Boudreault ]
   * Added spatialite_tool and spatialite_osm binaries in spatialite-bin.
-
- -- Alan Boudreault <aboudreault@mapgears.com>  Mon, 17 May 2010 08:29:32 -0400
-
-spatialite (2.4.0~rc2-5) unstable; urgency=low
-
   * Changed build-dep libsqlite3-dev to (>= 3.6.11): spatialite uses "hot backup"
     interface of sqlite3.
+  * VirtualText has been updated long time ago.
+    (closes: #530422)
 
- -- Alan Boudreault <aboudreault@mapgears.com>  Fri, 14 May 2010 13:09:49 -0400
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 24 May 2010 11:02:26 +0200
 
 spatialite (2.4.0~rc2-4) unstable; urgency=medium
 
