@@ -1,4 +1,4 @@
-spatialite (2.4.0~rc2-6) unstable; urgency=medium
+spatialite (2.4.0~rc2-5) unstable; urgency=medium
 
   [ Alan Boudreault ]
   * Added spatialite_tool and spatialite_osm binaries in spatialite-bin.
