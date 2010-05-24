@@ -4,6 +4,7 @@ spatialite (2.4.0~rc2-5) unstable; urgency=medium
   * Added spatialite_tool and spatialite_osm binaries in spatialite-bin.
   * Changed build-dep libsqlite3-dev to (>= 3.6.11): spatialite uses "hot backup"
     interface of sqlite3.
+    (closes: #576743)
   * VirtualText has been updated long time ago.
     (closes: #530422)
 
