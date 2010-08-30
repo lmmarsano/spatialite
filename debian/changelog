@@ -1,3 +1,10 @@
+spatialite (2.4.0~rc4-1) unstable; urgency=low
+
+  * New upstream pre-release candidate with bug fixes.
+  * Added libexpat1-dev as build-dep.
+
+ -- Alan Boudreault <aboudreault@mapgears.com>  Mon, 30 Aug 2010 09:57:25 -0400
+
 spatialite (2.4.0~rc2-5) unstable; urgency=medium
 
   [ Alan Boudreault ]

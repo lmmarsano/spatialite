@@ -51,11 +51,11 @@ unpack-stamp:
 
 patch: unpack patch-stamp
 patch-stamp:
-	QUILT_PATCH_OPTS="-p1" QUILT_PATCHES=$(CURDIR)/debian/patches quilt push -a --color=auto || [ $$? = 2 ]
+	QUILT_PATCH_OPTS="-p0" QUILT_PATCHES=$(CURDIR)/debian/patches quilt push -a --color=auto || [ $$? = 2 ]
 	touch $@
 
 unpatch: 
-	QUILT_PATCH_OPTS="-p1" QUILT_PATCHES=$(CURDIR)/debian/patches quilt pop -a || true
+	QUILT_PATCH_OPTS="-p0" QUILT_PATCHES=$(CURDIR)/debian/patches quilt pop -a || true
 	rm -rf patch-stamp .pc
 
 configure: unpack patch $(CURDIR)/libspatialite/config.status
@@ -73,8 +73,6 @@ endif
 	      --with-proj-lib=/usr/lib --with-geos-lib=/usr/lib 
 	cd $(CURDIR)/spatialite-tools && ./configure $(CROSS) --prefix=/usr --mandir=\$${prefix}/share/man \
 	      --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS) -I$(CURDIR)/libspatialite/headers" LDFLAGS="-Wl,-z,defs,-lm" \
-	      --enable-geos --enable-proj \
-	      --with-proj-lib=/usr/lib --with-geos-lib=/usr/lib \
 	      --with-spatialite-lib=$(CURDIR)/libspatialite/.libs
 
 #Architecture
