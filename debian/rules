@@ -121,7 +121,7 @@ install-arch: build-arch
 	$(MAKE) -C $(CURDIR)/libspatialite DESTDIR=$(CURDIR)/debian/tmp install
 	$(MAKE) -C $(CURDIR)/spatialite-tools DESTDIR=$(CURDIR)/debian/tmp install
 	# Fix pkg-config file, just in case.
-	sed -i -e 's/Libs:\(.*\)/Libs:\1 -lsqlite3/' $(CURDIR)/debian/tmp/usr/lib/pkgconfig/spatialite.pc
+    #sed -i -e 's/Libs:\(.*\)/Libs:\1 -lsqlite3/' $(CURDIR)/debian/tmp/usr/lib/pkgconfig/spatialite.pc
 	
 	dh_install -a
 
