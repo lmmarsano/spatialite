@@ -1,9 +1,14 @@
 spatialite (2.4.0~rc4-1) unstable; urgency=low
 
+  [ Alan Boudreault ]
   * New upstream pre-release candidate with bug fixes.
   * Added libexpat1-dev as build-dep.
 
- -- Alan Boudreault <aboudreault@mapgears.com>  Mon, 30 Aug 2010 09:57:25 -0400
+  [ Francesco Paolo Lovergine ]
+  * Fixed get-orig-tarball to use full version for pre-release tarballs.
+  * Policy bumped to 3.9.1, without changes.
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 19 Nov 2010 10:47:20 +0100
 
 spatialite (2.4.0~rc2-5) unstable; urgency=medium
 

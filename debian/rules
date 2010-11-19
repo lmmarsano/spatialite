@@ -27,7 +27,8 @@ CROSS= --build $(DEB_BUILD_GNU_TYPE)
 endif
 
 ARCHIVES=libspatialite-amalgamation spatialite-tools
-VERSION=$(shell dpkg-parsechangelog|grep Version:|cut -d' ' -f2|cut -d- -f1|cut -d~ -f1)
+FULL_VERSION=$(shell dpkg-parsechangelog|grep Version:|cut -d' ' -f2|cut -d- -f1)
+VERSION=$(shell echo $(FULL_VERSION)|cut -d~ -f1)
 
 get-orig-tarball:
 	mkdir -p $(CURDIR)/tmp || true
@@ -37,11 +38,11 @@ get-orig-tarball:
 		tar xzovf $(CURDIR)/$$archive.tar.gz -C $(CURDIR)/tmp; \
 		mv $(CURDIR)/tmp/$$archive-$(VERSION) $(CURDIR)/tmp/$$archive; \
 	done
-	mkdir -p $(CURDIR)/spatialite-$(VERSION)/upstream
-	tar czvf $(CURDIR)/spatialite-$(VERSION)/upstream/spatialite.tar.gz -C $(CURDIR)/tmp $(ARCHIVES)
+	mkdir -p $(CURDIR)/spatialite-$(FULL_VERSION)/upstream
+	tar czvf $(CURDIR)/spatialite-$(FULL_VERSION)/upstream/spatialite.tar.gz -C $(CURDIR)/tmp $(ARCHIVES)
 	rm -rf $(CURDIR)/tmp $(CURDIR)/*.tar.gz
-	tar czvf spatialite_$(VERSION).orig.tar.gz --exclude=debian --exclude-vcs spatialite-$(VERSION)
-	rm -rf $(CURDIR)/spatialite-$(VERSION)
+	tar czvf spatialite_$(FULL_VERSION).orig.tar.gz --exclude=debian --exclude-vcs spatialite-$(FULL_VERSION)
+	rm -rf $(CURDIR)/spatialite-$(FULL_VERSION)
 
 unpack: unpack-stamp
 unpack-stamp:
