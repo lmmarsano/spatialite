@@ -7,6 +7,7 @@ spatialite (2.4.0~rc4-1) unstable; urgency=low
   [ Francesco Paolo Lovergine ]
   * Fixed get-orig-tarball to use full version for pre-release tarballs.
   * Policy bumped to 3.9.1, without changes.
+  * The mega-patch systemlibs.diff has been updated.
 
  -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 19 Nov 2010 10:47:20 +0100
 
