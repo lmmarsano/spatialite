@@ -53,12 +53,7 @@ unpack-stamp:
 configure: unpack $(CURDIR)/libspatialite/config.status
 $(CURDIR)/libspatialite/config.status:
 	dh_testdir
-ifneq "$(wildcard /usr/share/misc/config.sub)" ""
-	cp -f /usr/share/misc/config.sub $(CURDIR)/libspatialite/config.sub
-endif
-ifneq "$(wildcard /usr/share/misc/config.guess)" ""
-	cp -f /usr/share/misc/config.guess $(CURDIR)/libspatialite/config.guess
-endif
+	dh_autoreconf
 	cd $(CURDIR)/libspatialite && ./configure $(CROSS) --prefix=/usr --mandir=\$${prefix}/share/man \
 	      --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs,-lm" \
 	      --enable-geos --enable-proj \
@@ -93,7 +88,8 @@ clean:
 	rm -rf $(CURDIR)/libspatialite $(CURDIR)/spatialite-tools
 	rm -rf .pc
 	
-	dh_clean 
+	dh_clean
+	dh_autoreconf_clean
 
 install: install-indep install-arch
 install-indep:

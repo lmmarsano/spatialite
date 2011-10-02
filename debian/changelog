@@ -12,8 +12,11 @@ spatialite (2.4.0~rc4-1) UNRELEASED; urgency=low
 
   [ David Paleino ]
   * Use "3.0 (quilt)" source format.
+  * systemlibs.diff renamed to 00-systemlibs.patch, and refreshed to only
+    include significant changes. Autotools files are now updated and cleaned
+    by dh-autoreconf.
 
- -- David Paleino <dapal@debian.org>  Sun, 02 Oct 2011 17:59:01 +0200
+ -- David Paleino <dapal@debian.org>  Sun, 02 Oct 2011 18:09:12 +0200
 
 spatialite (2.4.0~rc2-5) unstable; urgency=medium
 
