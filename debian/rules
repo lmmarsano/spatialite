@@ -50,16 +50,7 @@ unpack-stamp:
 	mv libspatialite-amalgamation libspatialite
 	touch $@
 
-patch: unpack patch-stamp
-patch-stamp:
-	QUILT_PATCH_OPTS="-p0" QUILT_PATCHES=$(CURDIR)/debian/patches quilt push -a --color=auto || [ $$? = 2 ]
-	touch $@
-
-unpatch: 
-	QUILT_PATCH_OPTS="-p0" QUILT_PATCHES=$(CURDIR)/debian/patches quilt pop -a || true
-	rm -rf patch-stamp .pc
-
-configure: unpack patch $(CURDIR)/libspatialite/config.status
+configure: unpack $(CURDIR)/libspatialite/config.status
 $(CURDIR)/libspatialite/config.status:
 	dh_testdir
 ifneq "$(wildcard /usr/share/misc/config.sub)" ""

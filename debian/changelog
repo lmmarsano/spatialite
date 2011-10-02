@@ -10,7 +10,10 @@ spatialite (2.4.0~rc4-1) UNRELEASED; urgency=low
   * The mega-patch systemlibs.diff has been updated.
   * Removed .pc file manipulation. 
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 19 Nov 2010 15:21:24 +0100
+  [ David Paleino ]
+  * Use "3.0 (quilt)" source format.
+
+ -- David Paleino <dapal@debian.org>  Sun, 02 Oct 2011 17:59:01 +0200
 
 spatialite (2.4.0~rc2-5) unstable; urgency=medium
 
