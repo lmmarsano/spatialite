@@ -15,8 +15,9 @@ spatialite (2.4.0~rc4-1) UNRELEASED; urgency=low
   * systemlibs.diff renamed to 00-systemlibs.patch, and refreshed to only
     include significant changes. Autotools files are now updated and cleaned
     by dh-autoreconf.
+  * debian/rules rewritten using dh7.
 
- -- David Paleino <dapal@debian.org>  Sun, 02 Oct 2011 18:09:12 +0200
+ -- David Paleino <dapal@debian.org>  Sun, 02 Oct 2011 18:22:42 +0200
 
 spatialite (2.4.0~rc2-5) unstable; urgency=medium
 

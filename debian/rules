@@ -1,14 +1,5 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-#
-# This file was originally written by Joey Hess and Craig Small.
-# As a special exception, when this file is copied by dh-make into a
-# dh-make output file, you may use that output file without restriction.
-# This special exception was added by Craig Small in version 0.37 of dh-make.
-#
-# Modified to make a template file for a multi-binary package with separated
-# build-arch and build-indep targets  by Bill Allombert 2001
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -16,19 +7,13 @@
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-# These are used for cross-compiling and for saving the configure script
-# from having to guess our platform (since we know it already)
-DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
-DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
-ifneq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
-CROSS= --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
-else
-CROSS= --build $(DEB_BUILD_GNU_TYPE)
-endif
-
 ARCHIVES=libspatialite-amalgamation spatialite-tools
 FULL_VERSION=$(shell dpkg-parsechangelog|grep Version:|cut -d' ' -f2|cut -d- -f1)
 VERSION=$(shell echo $(FULL_VERSION)|cut -d~ -f1)
+
+%:
+	dh $@ \
+		--with autoreconf
 
 get-orig-tarball:
 	mkdir -p $(CURDIR)/tmp || true
@@ -50,97 +35,25 @@ unpack-stamp:
 	mv libspatialite-amalgamation libspatialite
 	touch $@
 
-configure: unpack $(CURDIR)/libspatialite/config.status
-$(CURDIR)/libspatialite/config.status:
-	dh_testdir
-	dh_autoreconf
-	cd $(CURDIR)/libspatialite && ./configure $(CROSS) --prefix=/usr --mandir=\$${prefix}/share/man \
-	      --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs,-lm" \
-	      --enable-geos --enable-proj \
-	      --with-proj-lib=/usr/lib --with-geos-lib=/usr/lib 
-	cd $(CURDIR)/spatialite-tools && ./configure $(CROSS) --prefix=/usr --mandir=\$${prefix}/share/man \
-	      --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS) -I$(CURDIR)/libspatialite/headers" LDFLAGS="-Wl,-z,defs,-lm" \
-	      --with-spatialite-lib=$(CURDIR)/libspatialite/.libs
+override_dh_auto_configure: unpack
+	dh_auto_configure -Dlibspatialite -- \
+		--enable-geos --with-geos-lib=/usr/lib \
+		--enable-proj --with-proj-lib=/usr/lib
+	dh_auto_configure -Dspatialite-tools -- \
+		--with-spatialite-lib=$(CURDIR)/libspatialite/.libs
 
-#Architecture
-build: build-arch build-indep
+override_dh_auto_build:
+	dh_auto_build -Dlibspatialite
+	dh_auto_build -Dspatialite-tools
 
-build-arch: build-arch-stamp
-build-arch-stamp:  configure
-	
-	# Add here commands to compile the arch part of the package.
-	$(MAKE) -C $(CURDIR)/libspatialite
-	$(MAKE) -C $(CURDIR)/spatialite-tools
-	touch $@
-
-build-indep: build-indep-stamp
-build-indep-stamp:  configure
-	
-	# Add here commands to compile the indep part of the package.
-	#$(MAKE) doc
-	touch $@
-
-clean: 
-	dh_testdir
-	dh_testroot
-	
-	# Add here commands to clean up after the build process.
+override_dh_auto_clean:
+	dh_auto_clean
 	rm -rf $(CURDIR)/libspatialite $(CURDIR)/spatialite-tools
 	rm -rf .pc
-	
-	dh_clean
-	dh_autoreconf_clean
 
-install: install-indep install-arch
-install-indep:
-#	dh_testdir
-#	dh_testroot
-#	dh_prep -i 
-#	dh_installdirs -i
-#	dh_install -i
+override_dh_auto_install:
+	dh_auto_install -Dlibspatialite
+	dh_auto_install -Dspatialite-tools
 
-install-arch: build-arch
-	dh_testdir
-	dh_testroot
-	dh_prep -a 
-	dh_installdirs -a
-	
-	$(MAKE) -C $(CURDIR)/libspatialite DESTDIR=$(CURDIR)/debian/tmp install
-	$(MAKE) -C $(CURDIR)/spatialite-tools DESTDIR=$(CURDIR)/debian/tmp install
-	# Fix pkg-config file, just in case.
-    #sed -i -e 's/Libs:\(.*\)/Libs:\1 -lsqlite3/' $(CURDIR)/debian/tmp/usr/lib/pkgconfig/spatialite.pc
-	
-	dh_install -a
-
-# Must not depend on anything. This is to be called by
-# binary-arch/binary-indep
-# in another 'make' thread.
-binary-common:
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs 
-	dh_installdocs
-	dh_installexamples
-	dh_installman
-	dh_link
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_makeshlibs
-	dh_installdeb
+override_dh_shlibdeps:
 	dh_shlibdeps -l/usr/lib:$(CURDIR)/debian/tmp/usr/lib
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-# Build architecture independant packages using the common target.
-# Currently there are no packages to build.
-binary-indep: build-indep install-indep
-#	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
-
-# Build architecture dependant packages using the common target.
-binary-arch: build-arch install-arch
-	$(MAKE) -f debian/rules DH_OPTIONS=-a binary-common
-
-binary: binary-arch binary-indep
-.PHONY: build clean binary-indep binary-arch binary install install-indep install-arch
