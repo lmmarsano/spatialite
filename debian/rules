@@ -15,7 +15,7 @@ VERSION=$(shell echo $(FULL_VERSION)|cut -d~ -f1)
 	-dh $@ \
 		--with autoreconf
 
-get-orig-tarball:
+get-orig-source:
 	mkdir -p $(CURDIR)/tmp || true
 	for archive in $(ARCHIVES); \
 	do \
