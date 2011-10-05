@@ -1,0 +1,29 @@
+From: Francesco Paolo Lovergine <frankie@debian.org>
+Subject: add 'foreign' to AUTOMAKE_OPTIONS
+Origin: vendor
+Forwarded: no
+
+---
+ libspatialite/Makefile.am    |    2 +-
+ spatialite-tools/Makefile.am |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+--- spatialite.orig/libspatialite/Makefile.am
++++ spatialite/libspatialite/Makefile.am
+@@ -1,6 +1,6 @@
+ ACLOCAL_AMFLAGS = -I m4
+ 
+-AUTOMAKE_OPTIONS = dist-zip
++AUTOMAKE_OPTIONS = dist-zip foreign
+ 
+ EXTRA_DIST = makefile.vc nmake.opt libspatialite.def
+ 
+--- spatialite.orig/spatialite-tools/Makefile.am
++++ spatialite/spatialite-tools/Makefile.am
+@@ -40,5 +40,5 @@ EXTRA_DIST = makefile.vc nmake.opt \
+ 	Makefile-static-Linux \
+ 	Makefile-static-MacOsX
+ 
+-AUTOMAKE_OPTIONS = dist-zip
++AUTOMAKE_OPTIONS = dist-zip foreign
+ 
