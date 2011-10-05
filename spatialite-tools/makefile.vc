@@ -1,0 +1,69 @@
+# $Id: makefile.vc 2009/04/16 Sandro Furieri $
+#
+# NMAKE Makefile to build SpatiaLite-tools on Windows
+#
+!INCLUDE nmake.opt
+
+SPATIALITE_EXE         =	spatialite.exe
+EXIF_LOADER_EXE        =	exif_loader.exe
+SHP_DOCTOR_EXE         =	shp_doctor.exe
+SPATIALITE_NETWORK_EXE =	spatialite_network.exe
+SPATIALITE_TOOL_EXE    =	spatialite_tool.exe
+
+CFLAGS	=	/nologo -IC:\OSGeo4W\include $(OPTFLAGS)
+
+default:	all
+
+all: $(SPATIALITE_EXE) $(SHP_DOCTOR_EXE) $(SPATIALITE_TOOL_EXE) \
+	$(SPATIALITE_NETWORK_EXE) $(EXIF_LOADER_EXE)
+
+$(SPATIALITE_EXE): shell.obj shapefiles.obj
+	cl shell.obj shapefiles.obj C:\OSGeo4W\lib\proj_i.lib \
+		C:\OSGeo4W\lib\iconv.lib C:\OSGeo4W\lib\geos_c_i.lib \
+		C:\OSGeo4W\lib\spatialite_i.lib \
+		/Fe$(SPATIALITE_EXE)
+	if exist $(SPATIALITE_EXE).manifest mt -manifest \
+		$(SPATIALITE_EXE).manifest -outputresource:$(SPATIALITE_EXE);1
+
+$(EXIF_LOADER_EXE):	exif_loader.obj
+	cl exif_loader.obj C:\OSGeo4W\lib\proj_i.lib \
+		C:\OSGeo4W\lib\iconv.lib C:\OSGeo4W\lib\geos_c_i.lib \
+		C:\OSGeo4W\lib\spatialite_i.lib
+	if exist $(EXIF_LOADER_EXE).manifest mt -manifest \
+		$(EXIF_LOADER_EXE).manifest -outputresource:$(EXIF_LOADER_EXE);1
+
+$(SHP_DOCTOR_EXE):	shp_doctor.obj
+	cl shp_doctor.obj  C:\OSGeo4W\lib\proj_i.lib \
+		C:\OSGeo4W\lib\iconv.lib C:\OSGeo4W\lib\geos_c_i.lib \
+		C:\OSGeo4W\lib\spatialite_i.lib
+	if exist $(SHP_DOCTOR_EXE).manifest mt -manifest \
+		$(SHP_DOCTOR_EXE).manifest -outputresource:$(SHP_DOCTOR_EXE);1
+
+$(SPATIALITE_NETWORK_EXE):	spatialite_network.obj
+	cl spatialite_network.obj C:\OSGeo4W\lib\proj_i.lib \
+		C:\OSGeo4W\lib\iconv.lib \
+		C:\OSGeo4W\lib\spatialite_i.lib
+	if exist $(SPATIALITE_NETWORK_EXE).manifest mt -manifest \
+		$(SPATIALITE_TOOL_EXE).manifest \
+		-outputresource:$(SPATIALITE_TOOL_EXE);1
+
+$(SPATIALITE_TOOL_EXE):	spatialite_tool.obj shapefiles.obj
+	cl spatialite_tool.obj shapefiles.obj C:\OSGeo4W\lib\proj_i.lib \
+		C:\OSGeo4W\lib\iconv.lib C:\OSGeo4W\lib\geos_c_i.lib \
+		C:\OSGeo4W\lib\spatialite_i.lib
+	if exist $(SPATIALITE_TOOL_EXE).manifest mt -manifest \
+		$(SPATIALITE_TOOL_EXE).manifest \
+		-outputresource:$(SPATIALITE_TOOL_EXE);1
+
+clean:
+	del *.exe
+	del *.exp
+	del *.manifest
+	del *.obj
+	del *.pdb
+
+install: all
+	-mkdir $(INSTDIR)
+	-mkdir $(INSTDIR)\bin
+	copy *.exe $(INSTDIR)\bin
+	
