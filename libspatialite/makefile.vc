@@ -1,13 +1,23 @@
-# $Id: makefile.vc 2009/04/16 Sandro Furieri $
+# $Id: makefile.vc 2010/11/09 Sandro Furieri $
 #
 # NMAKE Makefile to build libspatialite on Windows
 #
 !INCLUDE nmake.opt
 
-LIBOBJ	               =	spatialite.obj sqlite3.obj
-SPATIALITE_DLL 	       =	spatialite$(VERSION).dll
+LIBOBJ = src\gaiaaux\gg_sqlaux.obj src\gaiaaux\gg_utf8.obj \
+	src\gaiaexif\gaia_exif.obj src\gaiageo\gg_advanced.obj \
+	src\gaiageo\gg_endian.obj src\gaiageo\gg_geodesic.obj \
+	src\gaiageo\gg_geometries.obj src\gaiageo\gg_geoscvt.obj \
+	src\gaiageo\gg_relations.obj src\gaiageo\gg_shape.obj \
+	src\gaiageo\gg_transform.obj src\gaiageo\gg_wkb.obj \
+	src\gaiageo\gg_wkt.obj src\spatialite\mbrcache.obj \
+	src\spatialite\spatialite.obj src\spatialite\virtualdbf.obj \
+	src\spatialite\virtualfdo.obj src\spatialite\virtualnetwork.obj \
+	src\spatialite\virtualshape.obj src\srsinit\srs_init.obj \
+	src\versioninfo\version.obj src\virtualtext\virtualtext.obj
+SPATIALITE_DLL = spatialite$(VERSION).dll
 
-CFLAGS	=	/nologo -IC:\OSGeo4W\include $(OPTFLAGS)
+CFLAGS = /nologo -IC:\OSGeo4W\include -I.\src\headers $(OPTFLAGS)
 
 default:	all
 
@@ -24,16 +34,25 @@ spatialite_i.lib:	$(LIBOBJ)
 	link /debug /dll /def:libspatialite.def /out:$(SPATIALITE_DLL) \
 		/implib:spatialite_i.lib $(LIBOBJ) \
 		C:\OSGeo4W\lib\proj_i.lib C:\OSGeo4W\lib\geos_c_i.lib \
-		C:\OSGeo4w\lib\iconv.lib
+		C:\OSGeo4w\lib\iconv.lib C:\OSGeo4W\lib\sqlite_i.lib
 	if exist $(SPATIALITE_DLL).manifest mt -manifest \
 		$(SPATIALITE_DLL).manifest -outputresource:$(SPATIALITE_DLL);2
-
+		
+.c.obj:
+	$(CC) $(CFLAGS) /c $*.c /Fo$@
+	
 clean:
 	del *.dll
 	del *.exp
 	del *.manifest
 	del *.lib
-	del *.obj
+	del src\gaiaaux\*.obj
+	del src\gaiaexif\*.obj
+	del src\gaiageo\*.obj
+	del src\spatialite\*.obj
+	del src\srsinit\*.obj
+	del src\versioninfo\*.obj
+	del src\virtualtext\*.obj
 	del *.pdb
 
 install: all
@@ -44,6 +63,6 @@ install: all
 	-mkdir $(INSTDIR)\include\spatialite
 	copy *.dll $(INSTDIR)\bin
 	copy *.lib $(INSTDIR)\lib
-	copy headers\*.h $(INSTDIR)\include
-	copy headers\spatialite\*.h $(INSTDIR)\include\spatialite
+	copy src\headers\*.h $(INSTDIR)\include
+	copy src\headers\spatialite\*.h $(INSTDIR)\include\spatialite
 	

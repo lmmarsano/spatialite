@@ -2,8 +2,9 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(spatialite-tools, 2.4.0, a.furieri@lqt.it)
+AC_INIT(spatialite-tools, 3.0.0-beta, a.furieri@lqt.it)
 AC_LANG(C)
+AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
@@ -21,6 +22,7 @@ AC_CHECK_HEADERS(stddef.h,, [AC_MSG_ERROR([cannot find stddef.h, bailing out])])
 AC_CHECK_HEADERS(stdint.h,, [AC_MSG_ERROR([cannot find stdint.h, bailing out])])
 AC_CHECK_HEADERS(sys/time.h,, [AC_MSG_ERROR([cannot find sys/time.h, bailing out])])
 AC_CHECK_HEADERS(unistd.h,, [AC_MSG_ERROR([cannot find unistd.h, bailing out])])
+AC_CHECK_HEADERS(expat.h,, [AC_MSG_ERROR([cannot find expat.h, bailing out])])
 
 # Checks for programs.
 AC_PROG_CXX
@@ -67,82 +69,14 @@ if test x"$enable_readline" != xno ; then
   LIBS=$sLIBS
 fi
 AC_SUBST(READLINE_LIBS)
-#-----------------------------------------------------------------------
 
-#-----------------------------------------------------------------------
-#   --with-spatialite-lib
-#
-AC_ARG_WITH(spatialite-lib,
-  [  --with-spatialite-lib=DIR  search for SpatiaLite lib in DIR],
-  spatialite_lib="$withval", spatialite_lib="")
-if test "$spatialite_lib" == "" ; then
-  SPATIALITE_LIB="/usr/local/lib/libspatialite.a"
-else
-  SPATIALITE_LIB="$spatialite_lib/libspatialite.a"
-fi
-AC_SUBST(SPATIALITE_LIB)
-#-----------------------------------------------------------------------
+AC_CHECK_LIB(expat,XML_ParserCreate,,AC_MSG_ERROR(['expat' is required but it doesn't seems to be installed on this system.]))
+AC_CHECK_LIB(proj,pj_init_plus,,AC_MSG_ERROR(['libproj' is required but it doesn't seems to be installed on this system.]),-lm)
+AC_CHECK_LIB(geos_c,GEOSTopologyPreserveSimplify,,AC_MSG_ERROR(['libgeos_c' is required but it doesn't seems to be installed on this system.]),-lm -lgeos)
 
-#-----------------------------------------------------------------------
-#   --with-proj-lib
-#
-AC_ARG_WITH(proj-lib,
-  [  --with-proj-lib=DIR        search for PROJ.4 lib in DIR],
-  proj_lib="$withval", proj_lib="")
-if test "$proj_lib" == "" ; then
-  PROJ_LIB="/usr/local/lib/libproj.a"
-else
-  PROJ_LIB="$proj_lib/libproj.a"
-fi
-AC_SUBST(PROJ_LIB)
-#-----------------------------------------------------------------------
-
-#-----------------------------------------------------------------------
-#   --enable-proj
-#
-AC_ARG_ENABLE(proj, [AS_HELP_STRING(
-  [--enable-proj], [enables PROJ.4 inclusion [default=yes]])], 
-  [], [proj=yes])
-if test x"$enable_proj" == "xno"; then
-  PROJ_LIB=
-  AC_SUBST(PROJ_LIB)
-fi
-#-----------------------------------------------------------------------
-
-#-----------------------------------------------------------------------
-#   --with-geos-lib
-#
-AC_ARG_WITH(geos-lib,
-  [  --with-geos-lib=DIR        search for GEOS lib in DIR],
-  geos_lib="$withval", geos_lib="")
-if test "$geos_lib" == "" ; then
-  GEOS_LIB_C="/usr/local/lib/libgeos_c.a"
-  GEOS_LIB="/usr/local/lib/libgeos.a"
-else
-  GEOS_LIB_C="$geos_lib/libgeos_c.a"
-  GEOS_LIB="$geos_lib/libgeos.a"
-fi
-AC_SUBST(GEOS_LIB_C)
-AC_SUBST(GEOS_LIB)
-#-----------------------------------------------------------------------
-
-#-----------------------------------------------------------------------
-#   --enable-geos
-#
-AC_ARG_ENABLE(geos, [AS_HELP_STRING(
-  [--enable-geos], [enables GEOS inclusion [default=yes]])], 
-  [], [geos=yes])
-if test x"$enable_geos" == "xno"; then
-  GEOS_LIB_C=
-  GEOS_LIB=
-  AC_SUBST(GEOS_LIB_C)
-  AC_SUBST(GEOS_LIB)
-fi
-#-----------------------------------------------------------------------
-
-# Checking for MinGW
-AM_CONDITIONAL([MINGW], [test "$target_alias" = "mingw32"])
-# Checking for Mac OsX
-AM_CONDITIONAL([MACOSX], [test "$target_alias" = "macosx"])
+PKG_CHECK_MODULES([LIBSPATIALITE], [spatialite], , AC_MSG_ERROR(['libspatialite' is required but it doesn't seems to be installed on this system.]))
+PKG_CHECK_MODULES([LIBFREEXL], [freexl], , AC_MSG_ERROR(['libfreexl' is required but it doesn't seems to be installed on this system.]))
+AC_SUBST(LIBSPATIALITE_CFLAGS)
+AC_SUBST(LIBSPATIALITE_LIBS)
 
 AC_OUTPUT

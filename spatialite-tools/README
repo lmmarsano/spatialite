@@ -47,19 +47,7 @@ The external dependencies needed in order to build 'spatialite-tools'
 are exactly the ones inherited by 'libspatialite'.
 'spatialite-tools' are built on the top of 'libspatialite', so it's very
 alike you've already resolved any required dependency while building 
-'libspatialite'; you simply have to use now the same settings. 
-The following is the full list of options you can pass to ./configure:
---enable-geos=[yes|no]
---enable-proj=[yes|no]
-
-On Linux and MacOsX you can support [or not] 'readline' setting:
---enable-readline=[yes|no]
-
-Any required library will be searched by default on /usr/local/lib
-you can alter the standard behaviour using:
---with-proj-lib=some_dir
---with-geos-lib=some_other_dir
---with-spatialite-lib=yet_another_dir
+'libspatialite';
 
 3 - Build notes
 ===============
@@ -69,9 +57,9 @@ you can alter the standard behaviour using:
 
 Building 'spatialite-tools' under Linux does not require any special 
 setting; we'll suppose you have unpacked the sources as 
-./spatialite-tools-2.3.1
+./spatialite-tools-2.4.0
 
-# cd spatialite-tools-2.3.1
+# cd spatialite-tools-2.4.0
 # ./configure
 # make
 # sudo make install
@@ -82,13 +70,16 @@ setting; we'll suppose you have unpacked the sources as
 -----------------------
 
 Building 'spatialite-tools' on MacOsX is quite the same as for 
-Linux; simply an --target=macosx is required because the libs
-layout on MacOsX is a little bit peculiar.
+Linux; simply setting some ENV variable is required because the 
+libs layout on MacOsX is a little bit peculiar.
 We'll suppose you have unpacked the sources as 
-./spatialite-tools-2.3.1
+./spatialite-tools-2.4.0
 
-# cd spatialite-tools-2.3.1
-# ./configure --target=macosx
+# cd spatialite-tools-2.4.0
+# export "CFLAGS=-I/opt/local/include"
+# export "LDFLAGS=-L/opt/local/lib"
+# export "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig"
+# ./configure
 # make
 # sudo make install
 #     or (in order to save some disk space)
@@ -118,11 +109,12 @@ Building 'spatialite-tools' under Windows is then more or less like building
 on any other UNIX-like system; simply an --target=mingw32 is required to
 sane any specific Windows idiosyncrasy.
 We'll suppose you have unpacked the sources as 
-C:\spatialite-tools-2.3.1
+C:\spatialite-tools-2.4.0
 
-$ cd c:/spatialite-tool-2.3.1
+$ cd c:/spatialite-tool-2.4.0
 $ export "CFLAGS=-I/usr/local/include"
 $ export "LDFLAGS=-L/usr/local/lib"
+$ export "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig"
 $ ./configure --target=mingw32
 $ make
 $ make install-strip
@@ -136,15 +128,11 @@ $ make install-strip
 We suppose you have already installed Visual Studio enabling the command
 line tools [you are expected to use the command prompt shell].
 We'll suppose you have unpacked the sources as 
-C:\spatialite-tools-2.3.1
+C:\spatialite-tools-2.4.0
 
-> cd c:\spatialite-tools-2.3.1
+> cd c:\spatialite-tools-2.4.0
 > nmake /f makefile.vc
 > nmake /f makefile.vc install
-
-Please note: standard definitions in 'makefile.vc' assumes:
-- enabling PROJ
-- disabling GEOS
 
 If you want to alter this 'basic' behaviour you have then to
 adapt 'makefile.vc'.

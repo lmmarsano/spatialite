@@ -24,12 +24,22 @@
 /
 */
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+/* MSVC strictly requires this include [off_t] */
+#include <sys/types.h>
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <float.h>
 
+#ifdef SPATIALITE_AMALGAMATION
 #include <spatialite/sqlite3.h>
+#else
+#include <sqlite3.h>
+#endif
+
 #include <spatialite/gaiageo.h>
 #include <spatialite.h>
 
@@ -1022,6 +1032,47 @@ create_network_data (sqlite3 * handle, char *out_table, int force_creation,
 }
 
 static void
+spatialite_autocreate (sqlite3 * db)
+{
+/* attempting to perform self-initialization for a newly created DB */
+    int ret;
+    char sql[1024];
+    char *err_msg = NULL;
+    int count;
+    int i;
+    char **results;
+    int rows;
+    int columns;
+
+/* checking if this DB is really empty */
+    strcpy (sql, "SELECT Count(*) from sqlite_master");
+    ret = sqlite3_get_table (db, sql, &results, &rows, &columns, NULL);
+    if (ret != SQLITE_OK)
+	return;
+    if (rows < 1)
+	;
+    else
+      {
+	  for (i = 1; i <= rows; i++)
+	      count = atoi (results[(i * columns) + 0]);
+      }
+    sqlite3_free_table (results);
+
+    if (count > 0)
+	return;
+
+/* all right, it's empty: proceding to initialize */
+    strcpy (sql, "SELECT InitSpatialMetadata()");
+    ret = sqlite3_exec (db, sql, NULL, NULL, &err_msg);
+    if (ret != SQLITE_OK)
+      {
+	  fprintf (stderr, "InitSpatialMetadata() error: %s\n", err_msg);
+	  sqlite3_free (err_msg);
+	  return;
+      }
+}
+
+static void
 validate (char *path, char *table, char *from_column, char *to_column,
 	  char *cost_column, char *geom_column, char *name_column,
 	  char *oneway_tofrom, char *oneway_fromto, int bidirectional,
@@ -1105,7 +1156,9 @@ validate (char *path, char *table, char *from_column, char *to_column,
 /* showing the SpatiaLite version */
     fprintf (stderr, "SpatiaLite version: %s\n", spatialite_version ());
 /* trying to connect the SpatiaLite DB  */
-    ret = sqlite3_open_v2 (path, &handle, SQLITE_OPEN_READWRITE, NULL);
+    ret =
+	sqlite3_open_v2 (path, &handle,
+			 SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
     if (ret != SQLITE_OK)
       {
 	  fprintf (stderr, "cannot open '%s': %s\n", path,
@@ -1113,6 +1166,8 @@ validate (char *path, char *table, char *from_column, char *to_column,
 	  sqlite3_close (handle);
 	  return;
       }
+    spatialite_autocreate (handle);
+
     fprintf (stderr, "Step   I - checking for table and columns existence\n");
 /* reporting args */
     printf ("\nspatialite-network\n\n");
@@ -1351,10 +1406,12 @@ validate (char *path, char *table, char *from_column, char *to_column,
 			 ("LINESTRING",
 			  (char *) sqlite3_column_text (stmt, 2)) != 0)
 		    geom_not_linestring = 1;
+		col_n = 3;
 		if (cost_column)
 		  {
 		      /* the Cost type */
-		      type = sqlite3_column_type (stmt, 3);
+		      type = sqlite3_column_type (stmt, col_n);
+		      col_n++;
 		      if (type == SQLITE_NULL)
 			  cost_null = 1;
 		      if (type == SQLITE_INTEGER)
@@ -1369,7 +1426,8 @@ validate (char *path, char *table, char *from_column, char *to_column,
 		if (oneway_fromto)
 		  {
 		      /* the FromTo type */
-		      type = sqlite3_column_type (stmt, 4);
+		      type = sqlite3_column_type (stmt, col_n);
+		      col_n++;
 		      if (type == SQLITE_NULL)
 			  fromto_null = 1;
 		      if (type == SQLITE_INTEGER)
@@ -1384,7 +1442,8 @@ validate (char *path, char *table, char *from_column, char *to_column,
 		if (oneway_tofrom)
 		  {
 		      /* the ToFrom type */
-		      type = sqlite3_column_type (stmt, 5);
+		      type = sqlite3_column_type (stmt, col_n);
+		      col_n++;
 		      if (type == SQLITE_NULL)
 			  tofrom_null = 1;
 		      if (type == SQLITE_INTEGER)
