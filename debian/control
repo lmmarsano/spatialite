@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 7), autotools-dev,
  libsqlite3-dev (>= 3.6.11), libgeos-dev (>= 3.0.3), libproj-dev, libreadline-dev,
  libexpat1-dev
  , dh-autoreconf
-Standards-Version: 3.9.1
+Standards-Version: 3.9.2
 Homepage: http://www.gaia-gis.it/spatialite/
 Vcs-Browser: http://git.debian.org/?p=pkg-grass/spatialite.git
 Vcs-Git: git://git.debian.org/pkg-grass/spatialite.git

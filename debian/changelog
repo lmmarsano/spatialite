@@ -6,7 +6,7 @@ spatialite (2.4.0~rc4-1) UNRELEASED; urgency=low
 
   [ Francesco Paolo Lovergine ]
   * Fixed get-orig-tarball to use full version for pre-release tarballs.
-  * Policy bumped to 3.9.1, without changes.
+  * Policy bumped to 3.9.2, without changes.
   * The mega-patch systemlibs.diff has been updated.
   * Removed .pc file manipulation. 
 
@@ -19,7 +19,7 @@ spatialite (2.4.0~rc4-1) UNRELEASED; urgency=low
   * debian/rules: rename get-orig-tarball target to get-orig-source.
   * Update Vcs-* fields to reflect SVN→Git migration
 
- -- David Paleino <dapal@debian.org>  Wed, 05 Oct 2011 18:35:03 +0200
+ -- David Paleino <dapal@debian.org>  Wed, 05 Oct 2011 18:35:25 +0200
 
 spatialite (2.4.0~rc2-5) unstable; urgency=medium
 
