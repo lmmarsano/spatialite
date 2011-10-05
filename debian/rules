@@ -23,19 +23,13 @@ get-orig-source:
 		tar xzovf $(CURDIR)/$$archive.tar.gz -C $(CURDIR)/tmp; \
 		mv $(CURDIR)/tmp/$$archive-$(VERSION) $(CURDIR)/tmp/$$archive; \
 	done
-	mkdir -p $(CURDIR)/spatialite-$(FULL_VERSION)/upstream
-	tar czvf $(CURDIR)/spatialite-$(FULL_VERSION)/upstream/spatialite.tar.gz -C $(CURDIR)/tmp $(ARCHIVES)
-	rm -rf $(CURDIR)/tmp $(CURDIR)/*.tar.gz
+	-mv $(CURDIR)/tmp/libspatialite-amalgamation $(CURDIR)/tmp/libspatialite
+	mv $(CURDIR)/tmp $(CURDIR)/spatialite-$(FULL_VERSION)
+	rm -rf $(CURDIR)/*.tar.gz
 	tar czvf spatialite_$(FULL_VERSION).orig.tar.gz --exclude=debian --exclude-vcs spatialite-$(FULL_VERSION)
 	rm -rf $(CURDIR)/spatialite-$(FULL_VERSION)
 
-unpack: unpack-stamp
-unpack-stamp:
-	tar xozvf $(CURDIR)/upstream/spatialite.tar.gz --exclude-vcs
-	mv libspatialite-amalgamation libspatialite
-	touch $@
-
-override_dh_auto_configure: unpack
+override_dh_auto_configure:
 	dh_auto_configure -Dlibspatialite -- \
 		--enable-geos --with-geos-lib=/usr/lib \
 		--enable-proj --with-proj-lib=/usr/lib
@@ -46,7 +40,7 @@ override_dh_auto_build:
 	dh_auto_build -Dlibspatialite
 	dh_auto_build -Dspatialite-tools
 
-override_dh_auto_clean: unpack
+override_dh_auto_clean:
 	dh_auto_clean
 	rm -rf $(CURDIR)/libspatialite $(CURDIR)/spatialite-tools
 	rm -rf .pc
