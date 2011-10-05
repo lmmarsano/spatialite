@@ -40,7 +40,12 @@
 #include <dirent.h>
 #endif
 
+#ifdef SPATIALITE_AMALGAMATION
 #include <spatialite/sqlite3.h>
+#else
+#include <sqlite3.h>
+#endif
+
 #include <spatialite/gaiaexif.h>
 #include <spatialite/gaiageo.h>
 #include <spatialite.h>
@@ -1390,6 +1395,47 @@ checkExifTables (sqlite3 * handle)
 }
 
 static void
+spatialite_autocreate (sqlite3 * db)
+{
+/* attempting to perform self-initialization for a newly created DB */
+    int ret;
+    char sql[1024];
+    char *err_msg = NULL;
+    int count;
+    int i;
+    char **results;
+    int rows;
+    int columns;
+
+/* checking if this DB is really empty */
+    strcpy (sql, "SELECT Count(*) from sqlite_master");
+    ret = sqlite3_get_table (db, sql, &results, &rows, &columns, NULL);
+    if (ret != SQLITE_OK)
+	return;
+    if (rows < 1)
+	;
+    else
+      {
+	  for (i = 1; i <= rows; i++)
+	      count = atoi (results[(i * columns) + 0]);
+      }
+    sqlite3_free_table (results);
+
+    if (count > 0)
+	return;
+
+/* all right, it's empty: proceding to initialize */
+    strcpy (sql, "SELECT InitSpatialMetadata()");
+    ret = sqlite3_exec (db, sql, NULL, NULL, &err_msg);
+    if (ret != SQLITE_OK)
+      {
+	  fprintf (stderr, "InitSpatialMetadata() error: %s\n", err_msg);
+	  sqlite3_free (err_msg);
+	  return;
+      }
+}
+
+static void
 do_help ()
 {
 /* printing the argument list */
@@ -1543,6 +1589,7 @@ main (int argc, char *argv[])
 	  sqlite3_close (handle);
 	  return -1;
       }
+    spatialite_autocreate (handle);
     if (!checkExifTables (handle))
       {
 	  fprintf (stderr,

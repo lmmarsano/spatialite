@@ -24,13 +24,23 @@
 /
 */
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+/* MSVC strictly requires this include [off_t] */
+#include <sys/types.h>
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <float.h>
 #include <errno.h>
 
+#ifdef SPATIALITE_AMALGAMATION
 #include <spatialite/sqlite3.h>
+#else
+#include <sqlite3.h>
+#endif
+
 #include <spatialite/gaiageo.h>
 
 #define ARG_NONE		0
@@ -1291,7 +1301,6 @@ do_analyze_dbf (char *base_path)
     int current_row;
     int skpos;
     int offset;
-    int sz;
     int ind;
     int err_dbf = 0;
     int err_geo = 0;

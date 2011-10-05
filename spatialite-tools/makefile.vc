@@ -9,13 +9,19 @@ EXIF_LOADER_EXE        =	exif_loader.exe
 SHP_DOCTOR_EXE         =	shp_doctor.exe
 SPATIALITE_NETWORK_EXE =	spatialite_network.exe
 SPATIALITE_TOOL_EXE    =	spatialite_tool.exe
+SPATIALITE_OSM_NET_EXE =    spatialite_osm_net.exe
+SPATIALITE_OSM_MAP_EXE =    spatialite_osm_map.exe
+SPATIALITE_OSM_RAW_EXE =    spatialite_osm_raw.exe
+SPATIALITE_GML_EXE     =    spatialite_gml.exe
 
 CFLAGS	=	/nologo -IC:\OSGeo4W\include $(OPTFLAGS)
 
 default:	all
 
 all: $(SPATIALITE_EXE) $(SHP_DOCTOR_EXE) $(SPATIALITE_TOOL_EXE) \
-	$(SPATIALITE_NETWORK_EXE) $(EXIF_LOADER_EXE)
+	$(SPATIALITE_NETWORK_EXE) $(EXIF_LOADER_EXE) \
+	$(SPATIALITE_OSM_NET_EXE) $(SPATIALITE_OSM_MAP_EXE) \
+	$(SPATIALITE_GML_EXE) $(SPATIALITE_OSM_RAW_EXE)
 
 $(SPATIALITE_EXE): shell.obj shapefiles.obj
 	cl shell.obj shapefiles.obj C:\OSGeo4W\lib\proj_i.lib \
@@ -54,6 +60,41 @@ $(SPATIALITE_TOOL_EXE):	spatialite_tool.obj shapefiles.obj
 	if exist $(SPATIALITE_TOOL_EXE).manifest mt -manifest \
 		$(SPATIALITE_TOOL_EXE).manifest \
 		-outputresource:$(SPATIALITE_TOOL_EXE);1
+
+$(SPATIALITE_OSM_NET_EXE):	spatialite_osm_net.obj
+	cl spatialite_osm_net.obj C:\OSGeo4W\lib\proj_i.lib \
+		C:\OSGeo4W\lib\iconv.lib \
+		C:\OSGeo4W\lib\spatialite_i.lib
+	if exist $(SPATIALITE_OSM_EXE).manifest mt -manifest \
+		$(SPATIALITE_OSM_EXE).manifest \
+		-outputresource:$(SPATIALITE_OSM_NET_EXE);1
+
+$(SPATIALITE_OSM_MAP_EXE):	spatialite_osm_map.obj
+	cl spatialite_osm_map.obj C:\OSGeo4W\lib\proj_i.lib \
+		C:\OSGeo4W\lib\iconv.lib \
+		C:\OSGeo4W\lib\libexpat.lib \
+		C:\OSGeo4W\lib\spatialite_i.lib
+	if exist $(SPATIALITE_OSM_MAP_EXE).manifest mt -manifest \
+		$(SPATIALITE_OSM_MAP_EXE).manifest \
+		-outputresource:$(SPATIALITE_OSM_MAP_EXE);1
+
+$(SPATIALITE_GML_EXE):	spatialite_gml.obj
+	cl spatialite_gml.obj C:\OSGeo4W\lib\proj_i.lib \
+		C:\OSGeo4W\lib\iconv.lib \
+		C:\OSGeo4W\lib\libexpat.lib \
+		C:\OSGeo4W\lib\spatialite_i.lib
+	if exist $(SPATIALITE_GML_EXE).manifest mt -manifest \
+		$(SPATIALITE_GML_EXE).manifest \
+		-outputresource:$(SPATIALITE_GML_EXE);1
+
+$(SPATIALITE_OSM_RAW_EXE):	spatialite_osm_raw.obj
+	cl spatialite_osm_raw.obj C:\OSGeo4W\lib\proj_i.lib \
+		C:\OSGeo4W\lib\iconv.lib \
+		C:\OSGeo4W\lib\libexpat.lib \
+		C:\OSGeo4W\lib\spatialite_i.lib
+	if exist $(SPATIALITE_OSM_RAW_EXE).manifest mt -manifest \
+		$(SPATIALITE_OSM_RAW_EXE).manifest \
+		-outputresource:$(SPATIALITE_OSM_RAW_EXE);1
 
 clean:
 	del *.exe

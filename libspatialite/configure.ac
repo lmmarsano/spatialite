@@ -2,8 +2,9 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(libspatialite-amalgamation, 2.4.0, a.furieri@lqt.it)
+AC_INIT(libspatialite, 3.0.0-beta, a.furieri@lqt.it)
 AC_LANG(C)
+AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
@@ -21,6 +22,8 @@ AC_CHECK_HEADERS(stddef.h,, [AC_MSG_ERROR([cannot find stddef.h, bailing out])])
 AC_CHECK_HEADERS(stdint.h,, [AC_MSG_ERROR([cannot find stdint.h, bailing out])])
 AC_CHECK_HEADERS(sys/time.h,, [AC_MSG_ERROR([cannot find sys/time.h, bailing out])])
 AC_CHECK_HEADERS(unistd.h,, [AC_MSG_ERROR([cannot find unistd.h, bailing out])])
+AC_CHECK_HEADERS(sqlite3.h,, [AC_MSG_ERROR([cannot find sqlite3.h, bailing out])])
+AC_CHECK_HEADERS(sqlite3ext.h,, [AC_MSG_ERROR([cannot find sqlite3ext.h, bailing out])])
 
 
 # Checks for programs.
@@ -49,12 +52,22 @@ AC_FUNC_STAT
 AC_FUNC_STRFTIME
 AC_CHECK_FUNCS([memset sqrt strcasecmp strerror strncasecmp strstr fdatasync ftruncate getcwd gettimeofday localtime_r memmove strerror])
 
+# Checks for installed libraries
+AC_CHECK_LIB(sqlite3,sqlite3_prepare_v2,,AC_MSG_ERROR(['libsqlite3' is required but it doesn't seems to be installed on this system.]),-lm)
+
 AC_CONFIG_FILES([Makefile \
-		headers/Makefile \
+		src/Makefile \
+		src/headers/Makefile \
+		src/gaiaaux/Makefile \
+		src/gaiaexif/Makefile \
+		src/gaiageo/Makefile \
+		src/spatialite/Makefile \
+		src/srsinit/Makefile \
+		src/virtualtext/Makefile \
 		spatialite.pc])
 
 #-----------------------------------------------------------------------
-#   --enable-math-functions
+#   --enable-mathsql
 #
 AC_ARG_ENABLE(mathsql, [AS_HELP_STRING(
   [--enable-mathsql], [enables SQL math functions [default=yes]])],
@@ -68,31 +81,18 @@ AC_SUBST(OMIT_MATHSQL_FLAGS)
 #-----------------------------------------------------------------------
 
 #-----------------------------------------------------------------------
-#   --with-proj-include
+#   --enable-geocallbacks
 #
-AC_ARG_WITH(proj-include,
-  [  --with-proj-include=DIR search for PROJ.4 headers in DIR],
-  proj_include="$withval", proj_include="")
-if test "$proj_include" == "" ; then
-  PROJ_INCLUDE=""
+AC_ARG_ENABLE(geocallbacks, [AS_HELP_STRING(
+  [--enable-geocallbacks], [enables geometry callbacks [default=yes]])],
+  [], [geocallbacks=yes])
+if test x"$enable_geocallbacks" != "xno"; then
+  OMIT_GEOCALLBACKS_FLAGS=
+  AC_CHECK_LIB(sqlite3,sqlite3_rtree_geometry_callback,,AC_MSG_ERROR([obsolete 'libsqlite3' (< v.3.7.3). please retry specifying: --disable-geocallbacks]),-lm)
 else
-  PROJ_INCLUDE="-I$proj_include"
+  OMIT_GEOCALLBACKS_FLAGS=-DOMIT_GEOCALLBACKS
 fi
-AC_SUBST(PROJ_INCLUDE)
-#-----------------------------------------------------------------------
-
-#-----------------------------------------------------------------------
-#   --with-proj-lib
-#
-AC_ARG_WITH(proj-lib,
-  [  --with-proj-lib=DIR     search for PROJ.4 lib in DIR],
-  proj_lib="$withval", proj_lib="")
-if test "$proj_lib" == "" ; then
-  PROJ_LIB_LA="/usr/local/lib/libproj.la"
-else
-  PROJ_LIB_LA="$proj_lib/libproj.la"
-fi
-AC_SUBST(PROJ_LIB_LA)
+AC_SUBST(OMIT_GEOCALLBACKS_FLAGS)
 #-----------------------------------------------------------------------
 
 #-----------------------------------------------------------------------
@@ -103,43 +103,12 @@ AC_ARG_ENABLE(proj, [AS_HELP_STRING(
   [], [proj=yes])
 if test x"$enable_proj" != "xno"; then
   OMIT_PROJ_FLAGS=
+  AC_CHECK_HEADERS(proj_api.h,, [AC_MSG_ERROR([cannot find proj_api.h, bailing out])])
+  AC_SEARCH_LIBS(pj_init_plus,proj,,AC_MSG_ERROR(['libproj' is required but it doesn't seems to be installed on this system.]),-lm)
 else
   OMIT_PROJ_FLAGS=-DOMIT_PROJ
-  PROJ_LIB_LA=
-  AC_SUBST(PROJ_LIB_LA)
 fi
 AC_SUBST(OMIT_PROJ_FLAGS)
-#-----------------------------------------------------------------------
-
-#-----------------------------------------------------------------------
-#   --with-geos-include
-#
-AC_ARG_WITH(geos-include,
-  [  --with-geos-include=DIR search for GEOS headers in DIR],
-  geos_include="$withval", geos_include="")
-if test "$geos_include" == "" ; then
-  GEOS_INCLUDE=""
-else
-  GEOS_INCLUDE="-I$geos_include"
-fi
-AC_SUBST(GEOS_INCLUDE)
-#-----------------------------------------------------------------------
-
-#-----------------------------------------------------------------------
-#   --with-geos-lib
-#
-AC_ARG_WITH(geos-lib,
-  [  --with-geos-lib=DIR     search for GEOS lib in DIR],
-  geos_lib="$withval", geos_lib="")
-if test "$geos_lib" == "" ; then
-  GEOS_LIB_CLA="/usr/local/lib/libgeos_c.la"
-  GEOS_LIB_LA="/usr/local/lib/libgeos.la"
-else
-  GEOS_LIB_CLA="$geos_lib/libgeos_c.la"
-  GEOS_LIB_LA="$geos_lib/libgeos.la"
-fi
-AC_SUBST(GEOS_LIB_CLA)
-AC_SUBST(GEOS_LIB_LA)
 #-----------------------------------------------------------------------
 
 #-----------------------------------------------------------------------
@@ -150,14 +119,74 @@ AC_ARG_ENABLE(geos, [AS_HELP_STRING(
   [], [geos=yes])
 if test x"$enable_geos" != "xno"; then
   OMIT_GEOS_FLAGS=
+  AC_CHECK_HEADERS(geos_c.h,, [AC_MSG_ERROR([cannot find geos_c.h, bailing out])])
+  AC_SEARCH_LIBS(GEOSTopologyPreserveSimplify,geos_c,,AC_MSG_ERROR(['libgeos_c' is required but it doesn't seems to be installed on this system.]),-lm -lgeos)
+  #-----------------------------------------------------------------------
+  #   --enable-geosadvanced
+  #
+  AC_ARG_ENABLE(geosadvanced, [AS_HELP_STRING(
+	  [--enable-geosadvanced], [enables GEOS advanced features [default=yes]])],
+	  [], [geosadvanced=yes])
+  if test x"$enable_geosadvanced" != "xno"; then
+	  GEOSADVANCED_FLAGS=-DGEOS_ADVANCED
+	  AC_SEARCH_LIBS(GEOSCoveredBy,geos_c,,AC_MSG_ERROR([obsolete 'libgeos_c' (< v.3.3.0). please retry specifying: --disable-geosadvanced.]),-lm -lgeos)
+  else
+	  GEOSADVANCED_FLAGS=
+  fi
+	  AC_SUBST(GEOSADVANCED_FLAGS)
 else
   OMIT_GEOS_FLAGS=-DOMIT_GEOS
-  GEOS_LIB_CLA=
-  GEOS_LIB_LA=
-  AC_SUBST(GEOS_LIB_CLA)
-  AC_SUBST(GEOS_LIB_LA)
 fi
 AC_SUBST(OMIT_GEOS_FLAGS)
+
+#-----------------------------------------------------------------------
+#   --enable-iconv
+#
+AC_ARG_ENABLE(iconv, [AS_HELP_STRING(
+  [--enable-iconv], [enables ICONV inclusion [default=yes]])],
+  [], [geos=yes])
+if test x"$enable_iconv" != "xno"; then
+  OMIT_ICONV_FLAGS=
+  AC_CHECK_HEADERS(iconv.h,, [AC_MSG_ERROR([cannot find iconv.h, bailing out])])
+# on some systems "iconv()" lives in libc. On others it lives in libiconv
+#  on older systems "libiconv()" lives in libiconv
+  AC_SEARCH_LIBS(iconv,iconv,,
+    AC_SEARCH_LIBS(libiconv,iconv,,AC_MSG_ERROR(['libiconv' is required but it doesn't seems to be installed on this system.]),))
+  AC_SEARCH_LIBS(locale_charset,charset,,
+    AC_SEARCH_LIBS(nl_langinfo,c,,AC_MSG_ERROR(['libcharset' is required but it doesn't seems to be installed on this system.]),))
+else
+  OMIT_ICONV_FLAGS=-DOMIT_ICONV
+fi
+AC_SUBST(OMIT_ICONV_FLAGS)
+
+#-----------------------------------------------------------------------
+#   --enable-freexl
+#
+AC_ARG_ENABLE(freexl, [AS_HELP_STRING(
+  [--enable-freexl], [enables FreeXL inclusion [default=yes]])],
+  [], [proj=yes])
+if test x"$enable_freexl" != "xno"; then
+  OMIT_FREEXL_FLAGS=
+  AC_CHECK_HEADERS(freexl.h,, [AC_MSG_ERROR([cannot find freexl.h, bailing out])])
+  AC_SEARCH_LIBS(freexl_open,freexl,,AC_MSG_ERROR(['libfreexl' is required but it doesn't seems to be installed on this system.]),-lm)
+else
+  OMIT_FREEXL_FLAGS=-DOMIT_FREEXL
+fi
+AC_SUBST(OMIT_FREEXL_FLAGS)
+#-----------------------------------------------------------------------
+
+#-----------------------------------------------------------------------
+#   --enable-epsg
+#
+AC_ARG_ENABLE(epsg, [AS_HELP_STRING(
+  [--enable-epsg], [enables full EPSG dataset support [default=yes]])],
+  [], [epsg=yes])
+if test x"$enable_epsg" != "xno"; then
+  OMIT_EPSG_FLAGS=
+else
+  OMIT_EPSG_FLAGS=-DOMIT_EPSG
+fi
+AC_SUBST(OMIT_EPSG_FLAGS)
 #-----------------------------------------------------------------------
 
 # Checking for MinGW

@@ -24,12 +24,22 @@
 /
 */
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+/* MSVC strictly requires this include [off_t] */
+#include <sys/types.h>
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 
+#ifdef SPATIALITE_AMALGAMATION
 #include <spatialite/sqlite3.h>
+#else
+#include <sqlite3.h>
+#endif
+
 #include <spatialite/gaiaaux.h>
 #include <spatialite/gaiageo.h>
 #include <spatialite.h>
@@ -50,70 +60,45 @@
 #define ARG_SRID		9
 #define ARG_TYPE		10
 
-static char *
-read_sql_line (FILE * in, int *len, int *eof)
+static void
+spatialite_autocreate (sqlite3 * db)
 {
-/* reading an SQL script line */
-    int c;
-    int size = 4096;
-    char *line = (char *) malloc (size);
-    int off = 0;
-    *eof = 0;
-    while ((c = getc (in)) != EOF)
-      {
-	  /* consuming input one chat at each time */
-	  if (off == size)
-	    {
-		/* buffer overflow; reallocating a bigger one */
-		/* presumably this is because there is some BLOB */
-		/* so we'll grow by 1MB at each time */
-		size += 1024 * 1024;
-		line = (char *) realloc (line, size);
-	    }
-	  *(line + off) = c;
-	  off++;
-	  if (c == '\n')
-	    {
-		/* end of line marker */
-		*(line + off) = '\0';
-		*len = off;
-		return line;
-	    }
-	  if (c == ';')
-	    {
-		/* end of SQL statement marker */
-		*(line + off) = '\0';
-		*len = off;
-		return line;
-	    }
-      }
-/* EOF reached */
-    *len = off;
-    *eof = 1;
-    return line;
-}
-
-static int
-do_execute_sql (sqlite3 * handle, char *sql, int row_no)
-{
-/* executes an SQL statement from the SQL script */
+/* attempting to perform self-initialization for a newly created DB */
     int ret;
-    char *errMsg = NULL;
-    ret = sqlite3_exec (handle, sql, NULL, NULL, &errMsg);
+    char sql[1024];
+    char *err_msg = NULL;
+    int count;
+    int i;
+    char **results;
+    int rows;
+    int columns;
+
+/* checking if this DB is really empty */
+    strcpy (sql, "SELECT Count(*) from sqlite_master");
+    ret = sqlite3_get_table (db, sql, &results, &rows, &columns, NULL);
+    if (ret != SQLITE_OK)
+	return;
+    if (rows < 1)
+	;
+    else
+      {
+	  for (i = 1; i <= rows; i++)
+	      count = atoi (results[(i * columns) + 0]);
+      }
+    sqlite3_free_table (results);
+
+    if (count > 0)
+	return;
+
+/* all right, it's empty: proceding to initialize */
+    strcpy (sql, "SELECT InitSpatialMetadata()");
+    ret = sqlite3_exec (db, sql, NULL, NULL, &err_msg);
     if (ret != SQLITE_OK)
       {
-	  fprintf (stderr, "ERROR [row=%d]: %s\n", row_no, errMsg);
-	  sqlite3_free (errMsg);
-	  return 0;
+	  fprintf (stderr, "InitSpatialMetadata() error: %s\n", err_msg);
+	  sqlite3_free (err_msg);
+	  return;
       }
-    return 1;
-}
-
-static void
-do_rollback (sqlite3 * handle)
-{
-/* performing a ROLLBACK */
-    sqlite3_exec (handle, "ROLLBACK", NULL, NULL, NULL);
 }
 
 static void
@@ -140,6 +125,7 @@ do_import_dbf (char *db_path, char *dbf_path, char *table, char *charset)
 	  sqlite3_close (handle);
 	  return;
       }
+    spatialite_autocreate (handle);
     if (load_dbf (handle, dbf_path, table, charset, 0, &rows))
 	fprintf (stderr, "Inserted %d rows into '%s' from '%s'\n", rows, table,
 		 dbf_path);
@@ -177,6 +163,7 @@ do_import_shp (char *db_path, char *shp_path, char *table, char *charset,
 	  sqlite3_close (handle);
 	  return;
       }
+    spatialite_autocreate (handle);
     if (load_shapefile
 	(handle, shp_path, table, charset, srid, column, coerce2d, compressed,
 	 0, &rows))
