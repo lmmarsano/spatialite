@@ -1,7 +1,6 @@
-spatialite (2.4.0~rc4-1) UNRELEASED; urgency=low
+spatialite (3.0.0~beta20110817-1) UNRELEASED; urgency=low
 
   [ Alan Boudreault ]
-  * New upstream pre-release candidate with bug fixes.
   * Added libexpat1-dev as build-dep.
 
   [ Francesco Paolo Lovergine ]
@@ -11,6 +10,7 @@ spatialite (2.4.0~rc4-1) UNRELEASED; urgency=low
   * Removed .pc file manipulation. 
 
   [ David Paleino ]
+  * New upstream pre-release
   * Use "3.0 (quilt)" source format.
   * systemlibs.diff renamed to 00-systemlibs.patch, and refreshed to only
     include significant changes. Autotools files are now updated and cleaned
