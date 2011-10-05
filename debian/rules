@@ -40,11 +40,6 @@ override_dh_auto_build:
 	dh_auto_build -Dlibspatialite
 	dh_auto_build -Dspatialite-tools
 
-override_dh_auto_clean:
-	dh_auto_clean
-	rm -rf $(CURDIR)/libspatialite $(CURDIR)/spatialite-tools
-	rm -rf .pc
-
 override_dh_auto_install:
 	dh_auto_install -Dlibspatialite
 	dh_auto_install -Dspatialite-tools
