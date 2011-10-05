@@ -18,8 +18,9 @@ spatialite (2.4.0~rc4-1) UNRELEASED; urgency=low
   * debian/rules rewritten using dh7.
   * debian/rules: rename get-orig-tarball target to get-orig-source.
   * Update Vcs-* fields to reflect SVN→Git migration
+  * Added myself to Uploaders
 
- -- David Paleino <dapal@debian.org>  Wed, 05 Oct 2011 18:35:25 +0200
+ -- David Paleino <dapal@debian.org>  Wed, 05 Oct 2011 18:36:03 +0200
 
 spatialite (2.4.0~rc2-5) unstable; urgency=medium
 
