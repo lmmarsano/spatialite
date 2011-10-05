@@ -2,11 +2,17 @@ Source: spatialite
 Section: science
 Priority: extra
 Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
-Uploaders: Francesco Paolo Lovergine <frankie@debian.org>
+Uploaders:
+ Francesco Paolo Lovergine <frankie@debian.org>
  , David Paleino <dapal@debian.org>
-Build-Depends: debhelper (>= 7), autotools-dev, 
- libsqlite3-dev (>= 3.6.11), libgeos-dev (>= 3.0.3), libproj-dev, libreadline-dev,
- libexpat1-dev
+Build-Depends:
+ debhelper (>= 7)
+ , autotools-dev
+ , libsqlite3-dev (>= 3.6.11)
+ , libgeos-dev (>= 3.0.3)
+ , libproj-dev
+ , libreadline-dev
+ , libexpat1-dev
  , dh-autoreconf
 Standards-Version: 3.9.2
 Homepage: http://www.gaia-gis.it/spatialite/
@@ -16,7 +22,9 @@ Vcs-Git: git://git.debian.org/pkg-grass/spatialite.git
 Package: libspatialite2
 Architecture: any
 Section: libs
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends:
+ ${shlibs:Depends}
+ , ${misc:Depends}
 Description: Geospatial extension for SQLite - libraries
  The SpatiaLite extension enables SQLite to support spatial (geometry) data
  in a way conformant to OpenGis specifications, with both WKT and WKB formats.
@@ -29,7 +37,11 @@ Description: Geospatial extension for SQLite - libraries
 Package: libspatialite-dev
 Architecture: any
 Section: libdevel
-Depends: libspatialite2 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}, libsqlite3-dev (>= 3.3.6)
+Depends:
+ libspatialite2 (= ${binary:Version})
+ , ${shlibs:Depends}
+ , ${misc:Depends}
+ , libsqlite3-dev (>= 3.3.6)
 Recommends: pkg-config
 Description: Geospatial extension for SQLite - development files
  The SpatiaLite extension enables SQLite to support spatial (geometry) data
@@ -43,7 +55,9 @@ Description: Geospatial extension for SQLite - development files
 Package: spatialite-bin
 Architecture: any
 Section: science
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends:
+ ${shlibs:Depends}
+ , ${misc:Depends}
 Description: Geospatial extension for SQLite - tools
  The SpatiaLite extension enables SQLite to support spatial (geometry) data
  in a way conformant to OpenGis specifications, with both WKT and WKB formats.
