@@ -14,7 +14,6 @@ Build-Depends:
  , libreadline-dev
  , libexpat1-dev
  , libfreexl-dev
- , dh-autoreconf
 Standards-Version: 3.9.2
 Homepage: http://www.gaia-gis.it/spatialite/
 Vcs-Browser: http://git.debian.org/?p=pkg-grass/spatialite.git
