@@ -1,0 +1,54 @@
+From: David Paleino <dapal@debian.org>
+Subject: fix linkage issues
+Origin: vendor
+Forwarded: not-needed
+
+---
+ spatialite-tools/Makefile.am |    6 ++++--
+ spatialite-tools/Makefile.in |    6 ++++--
+ 2 files changed, 8 insertions(+), 4 deletions(-)
+
+--- spatialite.orig/spatialite-tools/Makefile.am
++++ spatialite/spatialite-tools/Makefile.am
+@@ -1,7 +1,8 @@
+ ACLOCAL_AMFLAGS = -I m4
+ 
+ AM_CFLAGS = -D_LARGE_FILE=1 -D_FILE_OFFSET_BITS=64 \
+-	-D_LARGEFILE_SOURCE=1 @LIBSPATIALITE_CFLAGS@
++	-D_LARGEFILE_SOURCE=1 @LIBSPATIALITE_CFLAGS@ \
++	-L../libspatialite/src/.libs/
+ 
+ bin_PROGRAMS = spatialite \
+ 	spatialite_tool \
+@@ -32,7 +33,8 @@ spatialite_osm_raw_LDADD = @LIBSPATIALIT
+ spatialite_gml_LDADD = @LIBSPATIALITE_LIBS@ \
+ 	-lexpat 
+ spatialite_LDADD = @LIBSPATIALITE_LIBS@ \
+-	@READLINE_LIBS@
++	@READLINE_LIBS@ \
++	-lfreexl
+ LDADD = @LIBSPATIALITE_LIBS@ 
+ 
+ EXTRA_DIST = makefile.vc nmake.opt \
+--- spatialite.orig/spatialite-tools/Makefile.in
++++ spatialite/spatialite-tools/Makefile.in
+@@ -252,7 +252,8 @@ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ ACLOCAL_AMFLAGS = -I m4
+ AM_CFLAGS = -D_LARGE_FILE=1 -D_FILE_OFFSET_BITS=64 \
+-	-D_LARGEFILE_SOURCE=1 @LIBSPATIALITE_CFLAGS@
++	-D_LARGEFILE_SOURCE=1 @LIBSPATIALITE_CFLAGS@ \
++	-L../libspatialite/src/.libs/
+ 
+ INCLUDES = @CFLAGS@
+ spatialite_SOURCES = shell.c shapefiles.c
+@@ -274,7 +275,8 @@ spatialite_gml_LDADD = @LIBSPATIALITE_LI
+ 	-lexpat 
+ 
+ spatialite_LDADD = @LIBSPATIALITE_LIBS@ \
+-	@READLINE_LIBS@
++	@READLINE_LIBS@ \
++	-lfreexl
+ 
+ LDADD = @LIBSPATIALITE_LIBS@ 
+ EXTRA_DIST = makefile.vc nmake.opt \
