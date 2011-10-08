@@ -142,6 +142,20 @@ libspatialite.so.3 libspatialite3 #MINVER#
  VanuatuWkt_scan_buffer@Base 3.0.0~beta20110817
  VanuatuWkt_scan_bytes@Base 3.0.0~beta20110817
  VanuatuWkt_scan_string@Base 3.0.0~beta20110817
+ VanuatuWkt_switch_to_buffer@Base 3.0.0~beta20110817
+ VanuatuWktalloc@Base 3.0.0~beta20110817
+ VanuatuWkterror@Base 3.0.0~beta20110817
+ VanuatuWktfree@Base 3.0.0~beta20110817
+ VanuatuWktget_debug@Base 3.0.0~beta20110817
+ VanuatuWktget_in@Base 3.0.0~beta20110817
+ VanuatuWktget_leng@Base 3.0.0~beta20110817
+ VanuatuWktget_lineno@Base 3.0.0~beta20110817
+ VanuatuWktget_out@Base 3.0.0~beta20110817
+ VanuatuWktget_text@Base 3.0.0~beta20110817
+ VanuatuWktin@Base 3.0.0~beta20110817
+ VanuatuWktleng@Base 3.0.0~beta20110817
+ VanuatuWktlex@Base 3.0.0~beta20110817
+ VanuatuWktlex_destroy@Base 3.0.0~beta20110817
  VanuatuWktlineno@Base 3.0.0~beta20110817
  VanuatuWktlval@Base 3.0.0~beta20110817
  VanuatuWktout@Base 3.0.0~beta20110817
