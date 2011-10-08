@@ -19,7 +19,7 @@ Homepage: http://www.gaia-gis.it/spatialite/
 Vcs-Browser: http://git.debian.org/?p=pkg-grass/spatialite.git
 Vcs-Git: git://git.debian.org/pkg-grass/spatialite.git
 
-Package: libspatialite2
+Package: libspatialite3
 Architecture: any
 Section: libs
 Depends:
@@ -38,7 +38,7 @@ Package: libspatialite-dev
 Architecture: any
 Section: libdevel
 Depends:
- libspatialite2 (= ${binary:Version})
+ libspatialite3 (= ${binary:Version})
  , ${shlibs:Depends}
  , ${misc:Depends}
  , libsqlite3-dev (>= 3.3.6)
