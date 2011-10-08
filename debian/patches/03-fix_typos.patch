@@ -1,0 +1,218 @@
+From: David Paleino <dapal@debian.org>
+Subject: fix typos in source code
+Origin: vendor
+Forwarded: no
+
+---
+ libspatialite/src/spatialite/spatialite.c |   24 ++++++++++++------------
+ libspatialite/src/srsinit/srs_init.c      |    2 +-
+ spatialite-tools/exif_loader.c            |    4 ++--
+ spatialite-tools/spatialite_gml.c         |    2 +-
+ spatialite-tools/spatialite_osm_map.c     |    4 ++--
+ spatialite-tools/spatialite_osm_net.c     |    4 ++--
+ spatialite-tools/spatialite_osm_raw.c     |    2 +-
+ 7 files changed, 21 insertions(+), 21 deletions(-)
+
+--- spatialite.orig/libspatialite/src/spatialite/spatialite.c
++++ spatialite/libspatialite/src/spatialite/spatialite.c
+@@ -1141,7 +1141,7 @@ fnct_InitSpatialMetaData (sqlite3_contex
+     if (ret != SQLITE_OK)
+ 	goto error;
+     updateSpatiaLiteHistory (sqlite, "spatial_ref_sys", NULL,
+-			     "table succesfully created");
++			     "table successfully created");
+ /* creating the GEOMETRY_COLUMN table */
+     strcpy (sql, "CREATE TABLE geometry_columns (\n");
+     strcat (sql, "f_table_name TEXT NOT NULL,\n");
+@@ -1158,7 +1158,7 @@ fnct_InitSpatialMetaData (sqlite3_contex
+     if (ret != SQLITE_OK)
+ 	goto error;
+     updateSpatiaLiteHistory (sqlite, "geometry_columns", NULL,
+-			     "table succesfully created");
++			     "table successfully created");
+ /* creating an INDEX corresponding to the SRID FK */
+     strcpy (sql, "CREATE INDEX idx_srid_geocols ON geometry_columns\n");
+     strcat (sql, "(srid) ");
+@@ -1185,7 +1185,7 @@ fnct_InitSpatialMetaData (sqlite3_contex
+ 	goto error;
+     if (spatial_ref_sys_init (sqlite, 0))
+ 	updateSpatiaLiteHistory (sqlite, "spatial_ref_sys", NULL,
+-				 "table succesfully populated");
++				 "table successfully populated");
+     sqlite3_result_int (context, 1);
+     return;
+   error:
+@@ -2058,7 +2058,7 @@ fnct_AddGeometryColumn (sqlite3_context
+       };
+     sprintf (sqlcolumn, ",SRID=%d", (srid <= 0) ? -1 : srid);
+     strcat (sql, sqlcolumn);
+-    strcat (sql, "] succesfully created");
++    strcat (sql, "] successfully created");
+     updateSpatiaLiteHistory (sqlite, (const char *) table,
+ 			     (const char *) column, sql);
+     return;
+@@ -2493,7 +2493,7 @@ fnct_RecoverGeometryColumn (sqlite3_cont
+       };
+     sprintf (sqlcolumn, ",SRID=%d", (srid <= 0) ? -1 : srid);
+     strcat (sql, sqlcolumn);
+-    strcat (sql, "] succesfully recovered");
++    strcat (sql, "] successfully recovered");
+     updateSpatiaLiteHistory (sqlite, (const char *) table,
+ 			     (const char *) column, sql);
+     return;
+@@ -2629,7 +2629,7 @@ fnct_DiscardGeometryColumn (sqlite3_cont
+     /* end deletion old versions [v2.0, v2.2] triggers[if any] */
+ 
+     sqlite3_result_int (context, 1);
+-    strcpy (sql, "Geometry succesfully discarded");
++    strcpy (sql, "Geometry successfully discarded");
+     updateSpatiaLiteHistory (sqlite, (const char *) table,
+ 			     (const char *) column, sql);
+     return;
+@@ -3722,7 +3722,7 @@ recover_spatial_index (sqlite3 * sqlite,
+ 	goto error;
+ /* populating the R*Tree table from scratch */
+     buildSpatialIndex (sqlite, table, (const char *) geom);
+-    strcpy (sql, "SpatialIndex: succesfully recovered");
++    strcpy (sql, "SpatialIndex: successfully recovered");
+     updateSpatiaLiteHistory (sqlite, (const char *) table,
+ 			     (const char *) geom, sql);
+     return 1;
+@@ -3970,7 +3970,7 @@ fnct_CreateSpatialIndex (sqlite3_context
+       }
+     updateGeometryTriggers (sqlite, table, column);
+     sqlite3_result_int (context, 1);
+-    strcpy (sql, "R*Tree Spatial Index succesfully created");
++    strcpy (sql, "R*Tree Spatial Index successfully created");
+     updateSpatiaLiteHistory (sqlite, (const char *) table,
+ 			     (const char *) column, sql);
+     return;
+@@ -4039,7 +4039,7 @@ fnct_CreateMbrCache (sqlite3_context * c
+       }
+     updateGeometryTriggers (sqlite, table, column);
+     sqlite3_result_int (context, 1);
+-    strcpy (sql, "MbrCache succesfully created");
++    strcpy (sql, "MbrCache successfully created");
+     updateSpatiaLiteHistory (sqlite, (const char *) table,
+ 			     (const char *) column, sql);
+     return;
+@@ -4109,7 +4109,7 @@ fnct_DisableSpatialIndex (sqlite3_contex
+       }
+     updateGeometryTriggers (sqlite, table, column);
+     sqlite3_result_int (context, 1);
+-    strcpy (sql, "SpatialIndex succesfully disabled");
++    strcpy (sql, "SpatialIndex successfully disabled");
+     updateSpatiaLiteHistory (sqlite, (const char *) table,
+ 			     (const char *) column, sql);
+     return;
+@@ -4183,7 +4183,7 @@ fnct_RebuildGeometryTriggers (sqlite3_co
+       }
+     updateGeometryTriggers (sqlite, table, column);
+     sqlite3_result_int (context, 1);
+-    strcpy (sql, "Geometry Triggers succesfully rebuilt");
++    strcpy (sql, "Geometry Triggers successfully rebuilt");
+     updateSpatiaLiteHistory (sqlite, (const char *) table,
+ 			     (const char *) column, sql);
+     return;
+@@ -5279,7 +5279,7 @@ fnct_CreateTopologyTables (sqlite3_conte
+ 	 view_surfaces_resolved, srid, dims))
+ 	goto error;
+     updateSpatiaLiteHistory (sqlite, "*** TOPOLOGY ***", NULL,
+-			     "Topology tables succesfully created");
++			     "Topology tables successfully created");
+     sqlite3_result_int (context, 1);
+     return;
+ 
+--- spatialite.orig/libspatialite/src/srsinit/srs_init.c
++++ spatialite/libspatialite/src/srsinit/srs_init.c
+@@ -110726,7 +110726,7 @@ spatial_ref_sys_init (sqlite3 * handle,
+       {
+ 	  if (verbose)
+ 	      fprintf (stderr,
+-		       "OK: the SPATIAL_REF_SYS table was succesfully populated\n");
++		       "OK: the SPATIAL_REF_SYS table was successfully populated\n");
+ 	  return 1;
+       }
+     return 0;
+--- spatialite.orig/spatialite-tools/exif_loader.c
++++ spatialite/spatialite-tools/exif_loader.c
+@@ -970,7 +970,7 @@ load_file (sqlite3 * handle, const char
+ 	      printf ("SQL error(s): file '%s' was not loaded\n", file_path);
+       }
+     else
+-	printf ("file '%s' succesfully loaded\n", file_path);
++	printf ("file '%s' successfully loaded\n", file_path);
+     if (blob)
+ 	free (blob);
+     if (tag_list)
+@@ -1607,7 +1607,7 @@ main (int argc, char *argv[])
+ 		 sqlite3_errmsg (handle));
+     if (cnt)
+ 	fprintf (stderr,
+-		 "\n\n***   %d EXIF photo%s succesfully inserted into the DB\n",
++		 "\n\n***   %d EXIF photo%s successfully inserted into the DB\n",
+ 		 cnt, (cnt > 1) ? "s where" : " was");
+     return 0;
+ }
+--- spatialite.orig/spatialite-tools/spatialite_gml.c
++++ spatialite/spatialite-tools/spatialite_gml.c
+@@ -1924,7 +1924,7 @@ main (int argc, char *argv[])
+ 	  ret = sqlite3_backup_finish (backup);
+ 	  sqlite3_close (handle);
+ 	  handle = disk_db_handle;
+-	  printf ("\tIN_MEMORY database succesfully exported\n");
++	  printf ("\tIN_MEMORY database successfully exported\n");
+       }
+ 
+     sqlite3_close (handle);
+--- spatialite.orig/spatialite-tools/spatialite_osm_map.c
++++ spatialite/spatialite-tools/spatialite_osm_map.c
+@@ -1966,7 +1966,7 @@ db_vacuum (sqlite3 * db_handle)
+ 	  sqlite3_free (sql_err);
+ 	  return;
+       }
+-    printf ("\tAll done: OSM map was succesfully loaded\n");
++    printf ("\tAll done: OSM map was successfully loaded\n");
+ }
+ 
+ static void
+@@ -2788,7 +2788,7 @@ main (int argc, char *argv[])
+ 	  ret = sqlite3_backup_finish (backup);
+ 	  sqlite3_close (handle);
+ 	  handle = disk_db_handle;
+-	  printf ("\tIN_MEMORY database succesfully exported\n");
++	  printf ("\tIN_MEMORY database successfully exported\n");
+       }
+ 
+ /* VACUUMing */
+--- spatialite.orig/spatialite-tools/spatialite_osm_net.c
++++ spatialite/spatialite-tools/spatialite_osm_net.c
+@@ -2030,7 +2030,7 @@ db_vacuum (sqlite3 * handle)
+ 	  sqlite3_free (sql_err);
+ 	  return;
+       }
+-    printf ("\tAll done: OSM graph was succesfully loaded\n");
++    printf ("\tAll done: OSM graph was successfully loaded\n");
+ }
+ 
+ static void
+@@ -2644,7 +2644,7 @@ main (int argc, char *argv[])
+ 	  ret = sqlite3_backup_finish (backup);
+ 	  sqlite3_close (handle);
+ 	  handle = disk_handle;
+-	  printf ("\tIN_MEMORY database succesfully exported\n");
++	  printf ("\tIN_MEMORY database successfully exported\n");
+       }
+ /* VACUUMing */
+     db_vacuum (handle);
+--- spatialite.orig/spatialite-tools/spatialite_osm_raw.c
++++ spatialite/spatialite-tools/spatialite_osm_raw.c
+@@ -1836,7 +1836,7 @@ main (int argc, char *argv[])
+ 	  ret = sqlite3_backup_finish (backup);
+ 	  sqlite3_close (handle);
+ 	  handle = disk_db_handle;
+-	  printf ("\tIN_MEMORY database succesfully exported\n");
++	  printf ("\tIN_MEMORY database successfully exported\n");
+       }
+ 
+ /* closing the DB connection */
