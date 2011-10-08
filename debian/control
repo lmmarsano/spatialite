@@ -55,7 +55,6 @@ Description: Geospatial extension for SQLite - development files
  
 Package: spatialite-bin
 Architecture: any
-Section: science
 Depends:
  ${shlibs:Depends}
  , ${misc:Depends}
