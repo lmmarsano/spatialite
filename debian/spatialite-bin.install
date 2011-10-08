@@ -1,6 +1,7 @@
 usr/bin/exif_loader
 usr/bin/shp_doctor
 usr/bin/spatialite
+usr/bin/spatialite_gml
 usr/bin/spatialite_network
-usr/bin/spatialite_osm
+usr/bin/spatialite_osm*
 usr/bin/spatialite_tool
