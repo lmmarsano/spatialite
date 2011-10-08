@@ -21,8 +21,9 @@ spatialite (3.0.0~beta20110817-1) UNRELEASED; urgency=low
   * Added myself to Uploaders
   * Split 'foreign' addition to AUTOMAKE_OPTIONS from 00-systemlibs.patch.
   * Add Build-Depends on libfreexl-dev
+  * Bump debhelper compatibility to 8
 
- -- David Paleino <dapal@debian.org>  Wed, 05 Oct 2011 19:18:17 +0200
+ -- David Paleino <dapal@debian.org>  Sat, 08 Oct 2011 20:48:21 +0200
 
 spatialite (2.4.0~rc2-5) unstable; urgency=medium
 

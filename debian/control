@@ -6,7 +6,7 @@ Uploaders:
  Francesco Paolo Lovergine <frankie@debian.org>
  , David Paleino <dapal@debian.org>
 Build-Depends:
- debhelper (>= 7)
+ debhelper (>= 8)
  , autotools-dev
  , libsqlite3-dev (>= 3.6.11)
  , libgeos-dev (>= 3.0.3)
