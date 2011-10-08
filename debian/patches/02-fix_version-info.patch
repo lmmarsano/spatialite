@@ -5,7 +5,8 @@ Forwarded: no
 
 ---
  libspatialite/src/Makefile.am |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ libspatialite/src/Makefile.in |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 --- spatialite.orig/libspatialite/src/Makefile.am
 +++ spatialite/libspatialite/src/Makefile.am
@@ -21,3 +22,16 @@ Forwarded: no
  libspatialite_la_LIBADD += -lpthread -ldl
  endif
  
+--- spatialite.orig/libspatialite/src/Makefile.in
++++ spatialite/libspatialite/src/Makefile.in
+@@ -275,8 +275,8 @@ libspatialite_la_LIBADD = ./gaiaaux/libg
+ 	./gaiaexif/libgaiaexif.la ./gaiageo/libgaiageo.la \
+ 	./spatialite/libsplite.la ./srsinit/libsrsinit.la \
+ 	./virtualtext/libvirtualtext.la $(am__append_1)
+-@MINGW_FALSE@libspatialite_la_LDFLAGS = -version-info 4:0:0
+-@MINGW_TRUE@libspatialite_la_LDFLAGS = -version-info 4:0:0 -no-undefined
++@MINGW_FALSE@libspatialite_la_LDFLAGS = -version-info 3:0:0
++@MINGW_TRUE@libspatialite_la_LDFLAGS = -version-info 3:0:0 -no-undefined
+ all: all-recursive
+ 
+ .SUFFIXES:
