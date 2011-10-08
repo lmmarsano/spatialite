@@ -5,8 +5,10 @@ Forwarded: no
 
 ---
  libspatialite/Makefile.am    |    2 +-
+ libspatialite/Makefile.in    |    2 +-
  spatialite-tools/Makefile.am |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ spatialite-tools/Makefile.in |    2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
 --- spatialite.orig/libspatialite/Makefile.am
 +++ spatialite/libspatialite/Makefile.am
@@ -27,3 +29,25 @@ Forwarded: no
 -AUTOMAKE_OPTIONS = dist-zip
 +AUTOMAKE_OPTIONS = dist-zip foreign
  
+--- spatialite.orig/libspatialite/Makefile.in
++++ spatialite/libspatialite/Makefile.in
+@@ -252,7 +252,7 @@ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ ACLOCAL_AMFLAGS = -I m4
+-AUTOMAKE_OPTIONS = dist-zip
++AUTOMAKE_OPTIONS = dist-zip foreign
+ EXTRA_DIST = makefile.vc nmake.opt libspatialite.def
+ SUBDIRS = src
+ pkgconfigdir = $(libdir)/pkgconfig
+--- spatialite.orig/spatialite-tools/Makefile.in
++++ spatialite/spatialite-tools/Makefile.in
+@@ -282,7 +282,7 @@ EXTRA_DIST = makefile.vc nmake.opt \
+ 	Makefile-static-Linux \
+ 	Makefile-static-MacOsX
+ 
+-AUTOMAKE_OPTIONS = dist-zip
++AUTOMAKE_OPTIONS = dist-zip foreign
+ all: all-am
+ 
+ .SUFFIXES:
