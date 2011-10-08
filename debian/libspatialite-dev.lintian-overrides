@@ -1,0 +1,2 @@
+# not true, it depends on libsqlite3-dev
+libspatialite-dev: package-contains-broken-symlink usr/include/spatialite/sqlite3.h ../sqlite3.h
