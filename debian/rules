@@ -30,11 +30,10 @@ get-orig-source:
 
 override_dh_auto_configure:
 	dh_auto_configure -Dlibspatialite -- \
-		--enable-geos --with-geos-lib=/usr/lib \
-		--enable-proj --with-proj-lib=/usr/lib \
+		--enable-geos \
+		--enable-proj \
 		--disable-geosadvanced
-	dh_auto_configure -Dspatialite-tools -- \
-		--with-spatialite-lib=$(CURDIR)/libspatialite/.libs
+	dh_auto_configure -Dspatialite-tools
 
 override_dh_auto_build:
 	dh_auto_build -Dlibspatialite
