@@ -1,4 +1,4 @@
-spatialite (3.0.0~beta20110817-1) UNRELEASED; urgency=low
+spatialite (3.0.0~beta20110817-1) unstable; urgency=low
 
   [ Alan Boudreault ]
   * Added libexpat1-dev as build-dep.
@@ -23,7 +23,7 @@ spatialite (3.0.0~beta20110817-1) UNRELEASED; urgency=low
   * Add Build-Depends on libfreexl-dev
   * Bump debhelper compatibility to 8
 
- -- David Paleino <dapal@debian.org>  Sat, 08 Oct 2011 20:48:21 +0200
+ -- David Paleino <dapal@debian.org>  Sat, 08 Oct 2011 21:09:50 +0200
 
 spatialite (2.4.0~rc2-5) unstable; urgency=medium
 
