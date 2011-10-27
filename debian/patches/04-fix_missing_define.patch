@@ -1,0 +1,12 @@
+Index: spatialite/libspatialite/src/headers/spatialite/gaiaexif.h
+===================================================================
+--- spatialite.orig/libspatialite/src/headers/spatialite/gaiaexif.h	2011-10-27 12:05:47.000000000 +0200
++++ spatialite/libspatialite/src/headers/spatialite/gaiaexif.h	2011-10-27 12:09:30.000000000 +0200
+@@ -67,6 +67,7 @@
+ #define GAIA_PDF_BLOB		7
+ #define GAIA_GEOMETRY_BLOB	8
+ #define GAIA_TIFF_BLOB		9
++#define GAIA_WAVELET_BLOB	10
+ 
+ /* constants used for EXIF value types */
+ #define GAIA_EXIF_NONE		0
