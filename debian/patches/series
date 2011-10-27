@@ -2,3 +2,4 @@
 01-fix_local_build.patch
 02-fix_version-info.patch
 03-fix_typos.patch
+04-fix_missing_define.patch

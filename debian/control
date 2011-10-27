@@ -2,9 +2,7 @@ Source: spatialite
 Section: science
 Priority: extra
 Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
-Uploaders:
- Francesco Paolo Lovergine <frankie@debian.org>
- , David Paleino <dapal@debian.org>
+Uploaders: Francesco Paolo Lovergine <frankie@debian.org>, David Paleino <dapal@debian.org>
 Build-Depends:
  debhelper (>= 8)
  , autotools-dev

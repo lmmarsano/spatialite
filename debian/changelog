@@ -1,3 +1,11 @@
+spatialite (3.0.0~beta20110817-2) unstable; urgency=low
+
+  * Added 04-fix_missing_define.patch to re-add GAIA_WAVELET_BLOB support
+    as used by current rasterlite.
+    (closes: #646463, #646450)
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 27 Oct 2011 12:17:11 +0200
+
 spatialite (3.0.0~beta20110817-1) unstable; urgency=low
 
   [ Alan Boudreault ]
