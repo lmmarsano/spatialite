@@ -1,3 +1,10 @@
+spatialite (3.0.0~beta20110817-3) unstable; urgency=low
+
+  * Fixed linking order for sqlite3 in debian patch 00-systemlibs.patch.
+    (closes: #638929)
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 03 Nov 2011 15:39:36 +0100
+
 spatialite (3.0.0~beta20110817-2) unstable; urgency=low
 
   * Added 04-fix_missing_define.patch to re-add GAIA_WAVELET_BLOB support

@@ -80,7 +80,7 @@ Forwarded: no
 -	@GEOS_LIB_C@ \
 -	@GEOS_LIB@ \
 -	@PROJ_LIB@ \
-+spatialite_LDADD = -lsqlite3 @SPATIALITE_LIB@ \
++spatialite_LDADD = @SPATIALITE_LIB@ -lsqlite3 \
 +	-lgeos_c -lgeos -lproj \
  	-lm -lstdc++ -lpthread -ldl \
  	@READLINE_LIBS@
@@ -88,7 +88,7 @@ Forwarded: no
 -	@GEOS_LIB_C@ \
 -	@GEOS_LIB@ \
 -	@PROJ_LIB@ \
-+LDADD = -lsqlite3 @SPATIALITE_LIB@ \
++LDADD = @SPATIALITE_LIB@ -lsqlite3 \
 +	-lgeos_c -lgeos -lproj \
  	-lm -lstdc++ -lpthread -ldl
  endif
