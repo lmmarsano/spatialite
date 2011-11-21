@@ -1,4 +1,4 @@
-spatialite (3.0.0~beta20110817-3) UNRELEASED; urgency=low
+spatialite (3.0.0~beta20110817-3) unstable; urgency=medium
 
   [ Francesco Paolo Lovergine ]
   * Fixed linking order for sqlite3 in debian patch 00-systemlibs.patch.
@@ -9,7 +9,7 @@ spatialite (3.0.0~beta20110817-3) UNRELEASED; urgency=low
     on powerpc, and document what projections are available on that
     architecture (Closes: #649302)
 
- -- David Paleino <dapal@debian.org>  Mon, 21 Nov 2011 11:36:43 +0100
+ -- David Paleino <dapal@debian.org>  Mon, 21 Nov 2011 12:10:43 +0100
 
 spatialite (3.0.0~beta20110817-2) unstable; urgency=low
 

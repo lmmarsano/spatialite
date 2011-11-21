@@ -1,4 +1,4 @@
-spatialite (3.0.0~beta20110817-3) UNRELEASED; urgency=low
+spatialite (3.0.0~beta20110817-3) unstable; urgency=medium
 
   From this release, powerpc will lack full EPSG initialization.
   .
