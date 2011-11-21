@@ -1,5 +1,10 @@
 spatialite (3.0.0~beta20110817-3) UNRELEASED; urgency=low
 
+  [ Francesco Paolo Lovergine ]
+  * Fixed linking order for sqlite3 in debian patch 00-systemlibs.patch.
+    (closes: #638929)
+
+  [ David Paleino ]
   * Conditionally disable full EPSG initialization (for srs_init.c)
     on powerpc, and document what projections are available on that
     architecture (Closes: #649302)
