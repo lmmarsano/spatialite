@@ -1,3 +1,11 @@
+spatialite (3.0.0~beta20110817-3) UNRELEASED; urgency=low
+
+  * Conditionally disable full EPSG initialization (for srs_init.c)
+    on powerpc, and document what projections are available on that
+    architecture (Closes: #649302)
+
+ -- David Paleino <dapal@debian.org>  Mon, 21 Nov 2011 11:36:43 +0100
+
 spatialite (3.0.0~beta20110817-2) unstable; urgency=low
 
   * Added 04-fix_missing_define.patch to re-add GAIA_WAVELET_BLOB support

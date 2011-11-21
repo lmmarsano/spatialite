@@ -12,6 +12,14 @@ FULL_VERSION := $(shell dpkg-parsechangelog | grep ^Version | cut -d' ' -f2 | cu
 VERSION := $(shell echo $(FULL_VERSION) | sed -e "s/~beta[[:digit:]]\+/-BETA/")
 LC_VERSION := $(shell echo $(VERSION) | tr A-Z a-z)
 
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+# see FTBFS #649302
+ifeq ($(DEB_HOST_ARCH),powerpc)
+EPSG := --disable-epsg
+else
+EPSG :=
+endif
+
 %:
 	dh $@
 
@@ -32,6 +40,7 @@ override_dh_auto_configure:
 	dh_auto_configure -Dlibspatialite -- \
 		--enable-geos \
 		--enable-proj \
+		$(EPSG) \
 		--disable-geosadvanced
 	dh_auto_configure -Dspatialite-tools
 
