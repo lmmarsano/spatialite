@@ -12,6 +12,8 @@ FULL_VERSION := $(shell dpkg-parsechangelog | grep ^Version | cut -d' ' -f2 | cu
 VERSION := $(shell echo $(FULL_VERSION) | sed -e "s/~beta[[:digit:]]\+/-BETA/")
 LC_VERSION := $(shell echo $(VERSION) | tr A-Z a-z)
 
+BASE_URL := http://www.gaia-gis.it/gaia-sins
+
 %:
 	dh $@
 
@@ -19,7 +21,7 @@ get-orig-source:
 	mkdir -p $(CURDIR)/tmp || true
 	for archive in $(ARCHIVES); \
 	do \
-	    wget -O $(CURDIR)/$$archive.tar.gz http://www.gaia-gis.it/spatialite-$(VERSION)/$$archive-$(LC_VERSION).tar.gz; \
+	    wget -O $(CURDIR)/$$archive.tar.gz $(BASE_URL)/$$archive-sources/$$archive-$(LC_VERSION).tar.gz; \
 		tar xzovf $(CURDIR)/$$archive.tar.gz -C $(CURDIR)/tmp; \
 		mv $(CURDIR)/tmp/$$archive-$(LC_VERSION) $(CURDIR)/tmp/$$archive; \
 	done
