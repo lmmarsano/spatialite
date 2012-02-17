@@ -60,8 +60,6 @@ do_analyze (char *base_path, int ignore_shape, int ignore_extent)
     char path[1024];
     int rd;
     unsigned char buf_shx[256];
-    int size_shp;
-    int size_shx;
     unsigned char *buf_shp = NULL;
     int buf_size = 1024;
     int shape;
@@ -162,7 +160,6 @@ do_analyze (char *base_path, int ignore_shape, int ignore_extent)
 	  printf (err_header, "SHX");
 	  goto error;
       }
-    size_shx = gaiaImport32 (buf_shx + 24, GAIA_BIG_ENDIAN, endian_arch);
 /* reading SHP file header */
     buf_shp = malloc (sizeof (unsigned char) * buf_size);
     rd = fread (buf_shp, sizeof (unsigned char), 100, fl_shp);
@@ -176,7 +173,6 @@ do_analyze (char *base_path, int ignore_shape, int ignore_extent)
 	  printf (err_header, "SHP");
 	  goto error;
       }
-    size_shp = gaiaImport32 (buf_shp + 24, GAIA_BIG_ENDIAN, endian_arch);
     shape = gaiaImport32 (buf_shp + 32, GAIA_LITTLE_ENDIAN, endian_arch);
     if (shape == GAIA_SHP_POINT || shape == GAIA_SHP_POINTM
 	|| shape == GAIA_SHP_POINTZ || shape == GAIA_SHP_POLYLINE
@@ -692,7 +688,6 @@ do_analyze_no_shx (char *base_path, int ignore_shape, int ignore_extent)
     FILE *fl_dbf = NULL;
     char path[1024];
     int rd;
-    int size_shp;
     unsigned char *buf_shp = NULL;
     int buf_size = 1024;
     int shape;
@@ -788,7 +783,6 @@ do_analyze_no_shx (char *base_path, int ignore_shape, int ignore_extent)
 	  printf (err_header, "SHP");
 	  goto error;
       }
-    size_shp = gaiaImport32 (buf_shp + 24, GAIA_BIG_ENDIAN, endian_arch);
     shape = gaiaImport32 (buf_shp + 32, GAIA_LITTLE_ENDIAN, endian_arch);
     if (shape == GAIA_SHP_POINT || shape == GAIA_SHP_POINTM
 	|| shape == GAIA_SHP_POINTM || shape == GAIA_SHP_POLYLINE

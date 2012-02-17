@@ -126,7 +126,7 @@ do_import_dbf (char *db_path, char *dbf_path, char *table, char *charset)
 	  return;
       }
     spatialite_autocreate (handle);
-    if (load_dbf (handle, dbf_path, table, charset, 0, &rows))
+    if (load_dbf (handle, dbf_path, table, charset, 0, &rows, NULL))
 	fprintf (stderr, "Inserted %d rows into '%s' from '%s'\n", rows, table,
 		 dbf_path);
     else
@@ -166,7 +166,7 @@ do_import_shp (char *db_path, char *shp_path, char *table, char *charset,
     spatialite_autocreate (handle);
     if (load_shapefile
 	(handle, shp_path, table, charset, srid, column, coerce2d, compressed,
-	 0, &rows))
+	 0, 0, &rows, NULL))
 	fprintf (stderr, "Inserted %d rows into '%s' from '%s.shp'\n", rows,
 		 table, shp_path);
     else
@@ -202,7 +202,7 @@ do_export (char *db_path, char *shp_path, char *table, char *column,
 	  return;
       }
     if (dump_shapefile
-	(handle, table, column, shp_path, charset, type, 0, &rows))
+	(handle, table, column, shp_path, charset, type, 0, &rows, NULL))
 	fprintf (stderr, "Exported %d rows into '%s.shp' from '%s'\n", rows,
 		 shp_path, table);
     else

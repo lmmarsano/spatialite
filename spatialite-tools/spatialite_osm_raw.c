@@ -77,22 +77,18 @@ struct aux_params
     sqlite3_stmt *ins_node_tags_stmt;
     sqlite3_stmt *ins_ways_stmt;
     sqlite3_stmt *ins_way_tags_stmt;
-    sqlite3_stmt *ins_way_node_refs_stmt;
+    sqlite3_stmt *ins_way_refs_stmt;
     sqlite3_stmt *ins_relations_stmt;
     sqlite3_stmt *ins_relation_tags_stmt;
-    sqlite3_stmt *ins_relation_node_refs_stmt;
-    sqlite3_stmt *ins_relation_way_refs_stmt;
-    sqlite3_stmt *ins_relation_relation_refs_stmt;
+    sqlite3_stmt *ins_relation_refs_stmt;
     int wr_nodes;
     int wr_node_tags;
     int wr_ways;
     int wr_way_tags;
-    int wr_way_node_refs;
+    int wr_way_refs;
     int wr_relations;
     int wr_rel_tags;
-    int wr_rel_node_refs;
-    int wr_rel_way_refs;
-    int wr_rel_rel_refs;
+    int wr_rel_refs;
     int current_tag;
 };
 
@@ -138,18 +134,12 @@ struct way
     struct node_ref *last_node;
 } glob_way;
 
-struct way_ref
+struct multi_ref
 {
-    sqlite3_int64 way_id;
+    sqlite3_int64 id;
+    char type;
     char *role;
-    struct way_ref *next;
-};
-
-struct rel_ref
-{
-    sqlite3_int64 rel_id;
-    char *role;
-    struct rel_ref *next;
+    struct multi_ref *next;
 };
 
 struct relation
@@ -162,12 +152,8 @@ struct relation
     sqlite3_int64 changeset;
     struct tag *first;
     struct tag *last;
-    struct node_ref *first_node;
-    struct node_ref *last_node;
-    struct way_ref *first_way;
-    struct way_ref *last_way;
-    struct rel_ref *first_rel;
-    struct rel_ref *last_rel;
+    struct multi_ref *first_rel;
+    struct multi_ref *last_rel;
 } glob_relation;
 
 static void
@@ -310,22 +296,22 @@ insert_way (struct aux_params *params)
     nr = glob_way.first_node;
     while (nr)
       {
-	  sqlite3_reset (params->ins_way_node_refs_stmt);
-	  sqlite3_clear_bindings (params->ins_way_node_refs_stmt);
-	  sqlite3_bind_int64 (params->ins_way_node_refs_stmt, 1, glob_way.id);
-	  sqlite3_bind_int (params->ins_way_node_refs_stmt, 2, sub);
+	  sqlite3_reset (params->ins_way_refs_stmt);
+	  sqlite3_clear_bindings (params->ins_way_refs_stmt);
+	  sqlite3_bind_int64 (params->ins_way_refs_stmt, 1, glob_way.id);
+	  sqlite3_bind_int (params->ins_way_refs_stmt, 2, sub);
 	  sub++;
-	  sqlite3_bind_int64 (params->ins_way_node_refs_stmt, 3, nr->node_id);
-	  ret = sqlite3_step (params->ins_way_node_refs_stmt);
+	  sqlite3_bind_int64 (params->ins_way_refs_stmt, 3, nr->node_id);
+	  ret = sqlite3_step (params->ins_way_refs_stmt);
 	  if (ret == SQLITE_DONE || ret == SQLITE_ROW)
 	      ;
 	  else
 	    {
 		fprintf (stderr,
-			 "sqlite3_step() error: INSERT INTO osm_way_node_refs\n");
+			 "sqlite3_step() error: INSERT INTO osm_way_refs\n");
 		return;
 	    }
-	  params->wr_way_node_refs += 1;
+	  params->wr_way_refs += 1;
 	  nr = nr->next;
       }
 }
@@ -336,9 +322,7 @@ insert_relation (struct aux_params *params)
     int ret;
     int sub = 0;
     struct tag *p_tag;
-    struct node_ref *nr;
-    struct way_ref *wr;
-    struct rel_ref *rr;
+    struct multi_ref *mr;
     sqlite3_reset (params->ins_relations_stmt);
     sqlite3_clear_bindings (params->ins_relations_stmt);
     sqlite3_bind_int64 (params->ins_relations_stmt, 1, glob_relation.id);
@@ -399,93 +383,44 @@ insert_relation (struct aux_params *params)
       }
 
     sub = 0;
-    nr = glob_relation.first_node;
-    while (nr)
+    mr = glob_relation.first_rel;
+    while (mr)
       {
-	  sqlite3_reset (params->ins_relation_node_refs_stmt);
-	  sqlite3_clear_bindings (params->ins_relation_node_refs_stmt);
-	  sqlite3_bind_int64 (params->ins_relation_node_refs_stmt, 1,
+	  sqlite3_reset (params->ins_relation_refs_stmt);
+	  sqlite3_clear_bindings (params->ins_relation_refs_stmt);
+	  sqlite3_bind_int64 (params->ins_relation_refs_stmt, 1,
 			      glob_relation.id);
-	  sqlite3_bind_int (params->ins_relation_node_refs_stmt, 2, sub);
+	  sqlite3_bind_int (params->ins_relation_refs_stmt, 2, sub);
 	  sub++;
-	  sqlite3_bind_int64 (params->ins_relation_node_refs_stmt, 3,
-			      nr->node_id);
-	  if (nr->role == NULL)
-	      sqlite3_bind_null (params->ins_relation_node_refs_stmt, 4);
+	  if (mr->type == 'N')
+	      sqlite3_bind_text (params->ins_relation_refs_stmt, 3, "N", 1,
+				 SQLITE_STATIC);
+	  else if (mr->type == 'W')
+	      sqlite3_bind_text (params->ins_relation_refs_stmt, 3, "W", 1,
+				 SQLITE_STATIC);
+	  else if (mr->type == 'R')
+	      sqlite3_bind_text (params->ins_relation_refs_stmt, 3, "R", 1,
+				 SQLITE_STATIC);
 	  else
-	      sqlite3_bind_text (params->ins_relation_node_refs_stmt, 4,
-				 nr->role, strlen (nr->role), SQLITE_STATIC);
-	  ret = sqlite3_step (params->ins_relation_node_refs_stmt);
+	      sqlite3_bind_text (params->ins_relation_refs_stmt, 3, "?", 1,
+				 SQLITE_STATIC);
+	  sqlite3_bind_int64 (params->ins_relation_refs_stmt, 4, mr->id);
+	  if (mr->role == NULL)
+	      sqlite3_bind_null (params->ins_relation_refs_stmt, 5);
+	  else
+	      sqlite3_bind_text (params->ins_relation_refs_stmt, 5,
+				 mr->role, strlen (mr->role), SQLITE_STATIC);
+	  ret = sqlite3_step (params->ins_relation_refs_stmt);
 	  if (ret == SQLITE_DONE || ret == SQLITE_ROW)
 	      ;
 	  else
 	    {
 		fprintf (stderr,
-			 "sqlite3_step() error: INSERT INTO osm_relation_node_refs\n");
+			 "sqlite3_step() error: INSERT INTO osm_relation_refs\n");
 		return;
 	    }
-	  params->wr_rel_node_refs += 1;
-	  nr = nr->next;
-      }
-
-    sub = 0;
-    wr = glob_relation.first_way;
-    while (wr)
-      {
-	  sqlite3_reset (params->ins_relation_way_refs_stmt);
-	  sqlite3_clear_bindings (params->ins_relation_way_refs_stmt);
-	  sqlite3_bind_int64 (params->ins_relation_way_refs_stmt, 1,
-			      glob_relation.id);
-	  sqlite3_bind_int (params->ins_relation_way_refs_stmt, 2, sub);
-	  sub++;
-	  sqlite3_bind_int64 (params->ins_relation_way_refs_stmt, 3,
-			      wr->way_id);
-	  if (wr->role == NULL)
-	      sqlite3_bind_null (params->ins_relation_way_refs_stmt, 4);
-	  else
-	      sqlite3_bind_text (params->ins_relation_way_refs_stmt, 4,
-				 wr->role, strlen (wr->role), SQLITE_STATIC);
-	  ret = sqlite3_step (params->ins_relation_way_refs_stmt);
-	  if (ret == SQLITE_DONE || ret == SQLITE_ROW)
-	      ;
-	  else
-	    {
-		fprintf (stderr,
-			 "sqlite3_step() error: INSERT INTO osm_relation_way_refs\n");
-		return;
-	    }
-	  params->wr_rel_way_refs += 1;
-	  wr = wr->next;
-      }
-
-    sub = 0;
-    rr = glob_relation.first_rel;
-    while (rr)
-      {
-	  sqlite3_reset (params->ins_relation_relation_refs_stmt);
-	  sqlite3_clear_bindings (params->ins_relation_relation_refs_stmt);
-	  sqlite3_bind_int64 (params->ins_relation_relation_refs_stmt, 1,
-			      glob_relation.id);
-	  sqlite3_bind_int (params->ins_relation_relation_refs_stmt, 2, sub);
-	  sub++;
-	  sqlite3_bind_int64 (params->ins_relation_relation_refs_stmt, 3,
-			      rr->rel_id);
-	  if (rr->role == NULL)
-	      sqlite3_bind_null (params->ins_relation_relation_refs_stmt, 4);
-	  else
-	      sqlite3_bind_text (params->ins_relation_relation_refs_stmt, 4,
-				 rr->role, strlen (rr->role), SQLITE_STATIC);
-	  ret = sqlite3_step (params->ins_relation_relation_refs_stmt);
-	  if (ret == SQLITE_DONE || ret == SQLITE_ROW)
-	      ;
-	  else
-	    {
-		fprintf (stderr,
-			 "sqlite3_step() error: INSERT INTO osm_relation_relation_refs\n");
-		return;
-	    }
-	  params->wr_rel_rel_refs += 1;
-	  rr = rr->next;
+	  params->wr_rel_refs += 1;
+	  mr = mr->next;
       }
 }
 
@@ -560,12 +495,8 @@ clean_relation ()
 /* cleaning the current relation */
     struct tag *pt;
     struct tag *ptn;
-    struct node_ref *nr;
-    struct node_ref *nrn;
-    struct way_ref *wr;
-    struct way_ref *wrn;
-    struct rel_ref *rr;
-    struct rel_ref *rrn;
+    struct multi_ref *mr;
+    struct multi_ref *mrn;
     if (glob_relation.timestamp)
 	free (glob_relation.timestamp);
     if (glob_relation.user)
@@ -581,41 +512,19 @@ clean_relation ()
 	  free (pt);
 	  pt = ptn;
       }
-    nr = glob_relation.first_node;
-    while (nr)
+    mr = glob_relation.first_rel;
+    while (mr)
       {
-	  nrn = nr->next;
-	  if (nr->role)
-	      free (nr->role);
-	  free (nr);
-	  nr = nrn;
-      }
-    wr = glob_relation.first_way;
-    while (wr)
-      {
-	  wrn = wr->next;
-	  if (wr->role)
-	      free (wr->role);
-	  free (wr);
-	  wr = wrn;
-      }
-    rr = glob_relation.first_rel;
-    while (rr)
-      {
-	  rrn = rr->next;
-	  if (rr->role)
-	      free (rr->role);
-	  free (rr);
-	  rr = rrn;
+	  mrn = mr->next;
+	  if (mr->role)
+	      free (mr->role);
+	  free (mr);
+	  mr = mrn;
       }
     glob_relation.timestamp = NULL;
     glob_relation.user = NULL;
     glob_relation.first = NULL;
     glob_relation.last = NULL;
-    glob_relation.first_node = NULL;
-    glob_relation.last_node = NULL;
-    glob_relation.first_way = NULL;
-    glob_relation.last_way = NULL;
     glob_relation.first_rel = NULL;
     glob_relation.last_rel = NULL;
 }
@@ -855,9 +764,7 @@ start_member (struct aux_params *params, const char **attr)
     int is_way = 0;
     int is_node = 0;
     int is_rel = 0;
-    struct node_ref *nr;
-    struct way_ref *wr;
-    struct rel_ref *rr;
+    struct multi_ref *mr;
     for (i = 0; attr[i]; i += 2)
       {
 	  if (strcmp (attr[i], "type") == 0)
@@ -874,70 +781,31 @@ start_member (struct aux_params *params, const char **attr)
 	  if (strcmp (attr[i], "role") == 0)
 	      role = attr[i + 1];
       }
-    if (is_node)
+
+    if (params->current_tag == CURRENT_TAG_IS_RELATION)
       {
-/* appending a new node-ref-id to the current item */
-	  if (params->current_tag == CURRENT_TAG_IS_RELATION)
+	  /* appending a new relation-ref-id to the current item */
+	  mr = malloc (sizeof (struct multi_ref));
+	  if (glob_relation.first_rel == NULL)
+	      glob_relation.first_rel = mr;
+	  if (glob_relation.last_rel != NULL)
+	      glob_relation.last_rel->next = mr;
+	  glob_relation.last_rel = mr;
+	  mr->next = NULL;
+	  mr->type = '?';
+	  if (is_node)
+	      mr->type = 'N';
+	  if (is_way)
+	      mr->type = 'W';
+	  if (is_rel)
+	      mr->type = 'R';
+	  mr->id = id;
+	  mr->role = NULL;
+	  if (role)
 	    {
-		nr = malloc (sizeof (struct node_ref));
-		if (glob_relation.first_node == NULL)
-		    glob_relation.first_node = nr;
-		if (glob_relation.last_node != NULL)
-		    glob_relation.last_node->next = nr;
-		glob_relation.last_node = nr;
-		nr->next = NULL;
-		nr->node_id = id;
-		nr->role = NULL;
-		if (role)
-		  {
-		      len = strlen (role);
-		      nr->role = malloc (len + 1);
-		      strcpy (nr->role, role);
-		  }
-	    }
-      }
-    if (is_way)
-      {
-/* appending a new way-ref-id to the current item */
-	  if (params->current_tag == CURRENT_TAG_IS_RELATION)
-	    {
-		wr = malloc (sizeof (struct way_ref));
-		if (glob_relation.first_way == NULL)
-		    glob_relation.first_way = wr;
-		if (glob_relation.last_way != NULL)
-		    glob_relation.last_way->next = wr;
-		glob_relation.last_way = wr;
-		wr->next = NULL;
-		wr->way_id = id;
-		wr->role = NULL;
-		if (role)
-		  {
-		      len = strlen (role);
-		      wr->role = malloc (len + 1);
-		      strcpy (wr->role, role);
-		  }
-	    }
-      }
-    if (is_rel)
-      {
-/* appending a new relation-ref-id to the current item */
-	  if (params->current_tag == CURRENT_TAG_IS_RELATION)
-	    {
-		rr = malloc (sizeof (struct rel_ref));
-		if (glob_relation.first_rel == NULL)
-		    glob_relation.first_rel = rr;
-		if (glob_relation.last_rel != NULL)
-		    glob_relation.last_rel->next = rr;
-		glob_relation.last_rel = rr;
-		rr->next = NULL;
-		rr->rel_id = id;
-		rr->role = NULL;
-		if (role)
-		  {
-		      len = strlen (role);
-		      rr->role = malloc (len + 1);
-		      strcpy (rr->role, role);
-		  }
+		len = strlen (role);
+		mr->role = malloc (len + 1);
+		strcpy (mr->role, role);
 	    }
       }
 }
@@ -986,18 +854,14 @@ finalize_sql_stmts (struct aux_params *params)
 	sqlite3_finalize (params->ins_ways_stmt);
     if (params->ins_way_tags_stmt != NULL)
 	sqlite3_finalize (params->ins_way_tags_stmt);
-    if (params->ins_way_node_refs_stmt != NULL)
-	sqlite3_finalize (params->ins_way_node_refs_stmt);
+    if (params->ins_way_refs_stmt != NULL)
+	sqlite3_finalize (params->ins_way_refs_stmt);
     if (params->ins_relations_stmt != NULL)
 	sqlite3_finalize (params->ins_relations_stmt);
     if (params->ins_relation_tags_stmt != NULL)
 	sqlite3_finalize (params->ins_relation_tags_stmt);
-    if (params->ins_relation_node_refs_stmt != NULL)
-	sqlite3_finalize (params->ins_relation_node_refs_stmt);
-    if (params->ins_relation_way_refs_stmt != NULL)
-	sqlite3_finalize (params->ins_relation_way_refs_stmt);
-    if (params->ins_relation_relation_refs_stmt != NULL)
-	sqlite3_finalize (params->ins_relation_relation_refs_stmt);
+    if (params->ins_relation_refs_stmt != NULL)
+	sqlite3_finalize (params->ins_relation_refs_stmt);
 
 /* committing the still pending SQL Transaction */
     ret = sqlite3_exec (params->db_handle, "COMMIT", NULL, NULL, &sql_err);
@@ -1016,12 +880,10 @@ create_sql_stmts (struct aux_params *params)
     sqlite3_stmt *ins_node_tags_stmt;
     sqlite3_stmt *ins_ways_stmt;
     sqlite3_stmt *ins_way_tags_stmt;
-    sqlite3_stmt *ins_way_node_refs_stmt;
+    sqlite3_stmt *ins_way_refs_stmt;
     sqlite3_stmt *ins_relations_stmt;
     sqlite3_stmt *ins_relation_tags_stmt;
-    sqlite3_stmt *ins_relation_node_refs_stmt;
-    sqlite3_stmt *ins_relation_way_refs_stmt;
-    sqlite3_stmt *ins_relation_relation_refs_stmt;
+    sqlite3_stmt *ins_relation_refs_stmt;
     char sql[1024];
     int ret;
     char *sql_err = NULL;
@@ -1035,8 +897,8 @@ create_sql_stmts (struct aux_params *params)
 	  return;
       }
     strcpy (sql,
-	    "INSERT INTO osm_nodes (node_id, version, timestamp, uid, user, changeset, Geometry) ");
-    strcat (sql, "VALUES (?, ?, ?, ?, ?, ?, ?)");
+	    "INSERT INTO osm_nodes (node_id, version, timestamp, uid, user, changeset, filtered, Geometry) ");
+    strcat (sql, "VALUES (?, ?, ?, ?, ?, ?, 0, ?)");
     ret =
 	sqlite3_prepare_v2 (params->db_handle, sql, strlen (sql),
 			    &ins_nodes_stmt, NULL);
@@ -1060,8 +922,8 @@ create_sql_stmts (struct aux_params *params)
 	  return;
       }
     strcpy (sql,
-	    "INSERT INTO osm_ways (way_id, version, timestamp, uid, user, changeset) ");
-    strcat (sql, "VALUES (?, ?, ?, ?, ?, ?)");
+	    "INSERT INTO osm_ways (way_id, version, timestamp, uid, user, changeset, filtered) ");
+    strcat (sql, "VALUES (?, ?, ?, ?, ?, ?, 0)");
     ret =
 	sqlite3_prepare_v2 (params->db_handle, sql, strlen (sql),
 			    &ins_ways_stmt, NULL);
@@ -1084,11 +946,11 @@ create_sql_stmts (struct aux_params *params)
 	  finalize_sql_stmts (params);
 	  return;
       }
-    strcpy (sql, "INSERT INTO osm_way_node_refs (way_id, sub, node_id) ");
+    strcpy (sql, "INSERT INTO osm_way_refs (way_id, sub, node_id) ");
     strcat (sql, "VALUES (?, ?, ?)");
     ret =
 	sqlite3_prepare_v2 (params->db_handle, sql, strlen (sql),
-			    &ins_way_node_refs_stmt, NULL);
+			    &ins_way_refs_stmt, NULL);
     if (ret != SQLITE_OK)
       {
 	  fprintf (stderr, "SQL error: %s\n%s\n", sql,
@@ -1097,8 +959,8 @@ create_sql_stmts (struct aux_params *params)
 	  return;
       }
     strcpy (sql,
-	    "INSERT INTO osm_relations (rel_id, version, timestamp, uid, user, changeset) ");
-    strcat (sql, "VALUES (?, ?, ?, ?, ?, ?)");
+	    "INSERT INTO osm_relations (rel_id, version, timestamp, uid, user, changeset, filtered) ");
+    strcat (sql, "VALUES (?, ?, ?, ?, ?, ?, 0)");
     ret =
 	sqlite3_prepare_v2 (params->db_handle, sql, strlen (sql),
 			    &ins_relations_stmt, NULL);
@@ -1122,37 +984,11 @@ create_sql_stmts (struct aux_params *params)
 	  return;
       }
     strcpy (sql,
-	    "INSERT INTO osm_relation_node_refs (rel_id, sub, node_id, role) ");
-    strcat (sql, "VALUES (?, ?, ?, ?)");
+	    "INSERT INTO osm_relation_refs (rel_id, sub, type, ref, role) ");
+    strcat (sql, "VALUES (?, ?, ?, ?, ?)");
     ret =
 	sqlite3_prepare_v2 (params->db_handle, sql, strlen (sql),
-			    &ins_relation_node_refs_stmt, NULL);
-    if (ret != SQLITE_OK)
-      {
-	  fprintf (stderr, "SQL error: %s\n%s\n", sql,
-		   sqlite3_errmsg (params->db_handle));
-	  finalize_sql_stmts (params);
-	  return;
-      }
-    strcpy (sql,
-	    "INSERT INTO osm_relation_way_refs (rel_id, sub, way_id, role) ");
-    strcat (sql, "VALUES (?, ?, ?, ?)");
-    ret =
-	sqlite3_prepare_v2 (params->db_handle, sql, strlen (sql),
-			    &ins_relation_way_refs_stmt, NULL);
-    if (ret != SQLITE_OK)
-      {
-	  fprintf (stderr, "SQL error: %s\n%s\n", sql,
-		   sqlite3_errmsg (params->db_handle));
-	  finalize_sql_stmts (params);
-	  return;
-      }
-    strcpy (sql,
-	    "INSERT INTO osm_relation_relation_refs (rel_id, sub, relation_id, role) ");
-    strcat (sql, "VALUES (?, ?, ?, ?)");
-    ret =
-	sqlite3_prepare_v2 (params->db_handle, sql, strlen (sql),
-			    &ins_relation_relation_refs_stmt, NULL);
+			    &ins_relation_refs_stmt, NULL);
     if (ret != SQLITE_OK)
       {
 	  fprintf (stderr, "SQL error: %s\n%s\n", sql,
@@ -1165,12 +1001,10 @@ create_sql_stmts (struct aux_params *params)
     params->ins_node_tags_stmt = ins_node_tags_stmt;
     params->ins_ways_stmt = ins_ways_stmt;
     params->ins_way_tags_stmt = ins_way_tags_stmt;
-    params->ins_way_node_refs_stmt = ins_way_node_refs_stmt;
+    params->ins_way_refs_stmt = ins_way_refs_stmt;
     params->ins_relations_stmt = ins_relations_stmt;
     params->ins_relation_tags_stmt = ins_relation_tags_stmt;
-    params->ins_relation_node_refs_stmt = ins_relation_node_refs_stmt;
-    params->ins_relation_way_refs_stmt = ins_relation_way_refs_stmt;
-    params->ins_relation_relation_refs_stmt = ins_relation_relation_refs_stmt;
+    params->ins_relation_refs_stmt = ins_relation_refs_stmt;
 }
 
 static void
@@ -1335,7 +1169,8 @@ open_db (const char *path, sqlite3 ** handle, int cache_size)
     strcat (sql, "timestamp TEXT,\n");
     strcat (sql, "uid INTEGER NOT NULL,\n");
     strcat (sql, "user TEXT,\n");
-    strcat (sql, "changeset INTEGER NOT NULL)\n");
+    strcat (sql, "changeset INTEGER NOT NULL,\n");
+    strcat (sql, "filtered INTEGER NOT NULL)\n");
     ret = sqlite3_exec (db_handle, sql, NULL, NULL, &err_msg);
     if (ret != SQLITE_OK)
       {
@@ -1378,7 +1213,8 @@ open_db (const char *path, sqlite3 ** handle, int cache_size)
     strcat (sql, "timestamp TEXT,\n");
     strcat (sql, "uid INTEGER NOT NULL,\n");
     strcat (sql, "user TEXT,\n");
-    strcat (sql, "changeset INTEGER NOT NULL)\n");
+    strcat (sql, "changeset INTEGER NOT NULL,\n");
+    strcat (sql, "filtered INTEGER NOT NULL)\n");
     ret = sqlite3_exec (db_handle, sql, NULL, NULL, &err_msg);
     if (ret != SQLITE_OK)
       {
@@ -1405,7 +1241,7 @@ open_db (const char *path, sqlite3 ** handle, int cache_size)
 	  return;
       }
 /* creating the OSM "raw" way-node refs */
-    strcpy (sql, "CREATE TABLE osm_way_node_refs (\n");
+    strcpy (sql, "CREATE TABLE osm_way_refs (\n");
     strcat (sql, "way_id INTEGER NOT NULL,\n");
     strcat (sql, "sub INTEGER NOT NULL,\n");
     strcat (sql, "node_id INTEGER NOT NULL,\n");
@@ -1415,7 +1251,17 @@ open_db (const char *path, sqlite3 ** handle, int cache_size)
     ret = sqlite3_exec (db_handle, sql, NULL, NULL, &err_msg);
     if (ret != SQLITE_OK)
       {
-	  fprintf (stderr, "CREATE TABLE 'osm_way_node_refs' error: %s\n",
+	  fprintf (stderr, "CREATE TABLE 'osm_way_refs' error: %s\n", err_msg);
+	  sqlite3_free (err_msg);
+	  sqlite3_close (db_handle);
+	  return;
+      }
+/* creating an index supporting osm_way_refs.node_id */
+    strcpy (sql, "CREATE INDEX idx_osm_ref_way ON osm_way_refs (node_id)");
+    ret = sqlite3_exec (db_handle, sql, NULL, NULL, &err_msg);
+    if (ret != SQLITE_OK)
+      {
+	  fprintf (stderr, "CREATE INDEX 'idx_osm_node_way' error: %s\n",
 		   err_msg);
 	  sqlite3_free (err_msg);
 	  sqlite3_close (db_handle);
@@ -1428,7 +1274,8 @@ open_db (const char *path, sqlite3 ** handle, int cache_size)
     strcat (sql, "timestamp TEXT,\n");
     strcat (sql, "uid INTEGER NOT NULL,\n");
     strcat (sql, "user TEXT,\n");
-    strcat (sql, "changeset INTEGER NOT NULL)\n");
+    strcat (sql, "changeset INTEGER NOT NULL,\n");
+    strcat (sql, "filtered INTEGER NOT NULL)\n");
     ret = sqlite3_exec (db_handle, sql, NULL, NULL, &err_msg);
     if (ret != SQLITE_OK)
       {
@@ -1456,10 +1303,11 @@ open_db (const char *path, sqlite3 ** handle, int cache_size)
 	  return;
       }
 /* creating the OSM "raw" relation-node refs */
-    strcpy (sql, "CREATE TABLE osm_relation_node_refs (\n");
+    strcpy (sql, "CREATE TABLE osm_relation_refs (\n");
     strcat (sql, "rel_id INTEGER NOT NULL,\n");
     strcat (sql, "sub INTEGER NOT NULL,\n");
-    strcat (sql, "node_id INTEGER NOT NULL,\n");
+    strcat (sql, "type TEXT NOT NULL,\n");
+    strcat (sql, "ref INTEGER NOT NULL,\n");
     strcat (sql, "role TEXT,");
     strcat (sql, "CONSTRAINT pk_osm_relnoderefs PRIMARY KEY (rel_id, sub),\n");
     strcat (sql, "CONSTRAINT fk_osm_relnoderefs FOREIGN KEY (rel_id) ");
@@ -1467,44 +1315,19 @@ open_db (const char *path, sqlite3 ** handle, int cache_size)
     ret = sqlite3_exec (db_handle, sql, NULL, NULL, &err_msg);
     if (ret != SQLITE_OK)
       {
-	  fprintf (stderr, "CREATE TABLE 'osm_relation_node_refs' error: %s\n",
+	  fprintf (stderr, "CREATE TABLE 'osm_relation_refs' error: %s\n",
 		   err_msg);
 	  sqlite3_free (err_msg);
 	  sqlite3_close (db_handle);
 	  return;
       }
-/* creating the OSM "raw" relation-way refs */
-    strcpy (sql, "CREATE TABLE osm_relation_way_refs (\n");
-    strcat (sql, "rel_id INTEGER NOT NULL,\n");
-    strcat (sql, "sub INTEGER NOT NULL,\n");
-    strcat (sql, "way_id INTEGER NOT NULL,\n");
-    strcat (sql, "role TEXT,");
-    strcat (sql, "CONSTRAINT pk_osm_relwayrefs PRIMARY KEY (rel_id, sub),\n");
-    strcat (sql, "CONSTRAINT fk_osm_relwayrefs FOREIGN KEY (rel_id) ");
-    strcat (sql, "REFERENCES osm_relations (rel_id))\n");
+/* creating an index supporting osm_relation_refs.ref */
+    strcpy (sql,
+	    "CREATE INDEX idx_osm_ref_relation ON osm_relation_refs (type, ref)");
     ret = sqlite3_exec (db_handle, sql, NULL, NULL, &err_msg);
     if (ret != SQLITE_OK)
       {
-	  fprintf (stderr, "CREATE TABLE 'osm_relation_way_refs' error: %s\n",
-		   err_msg);
-	  sqlite3_free (err_msg);
-	  sqlite3_close (db_handle);
-	  return;
-      }
-/* creating the OSM "raw" relation-relation refs */
-    strcpy (sql, "CREATE TABLE osm_relation_relation_refs (\n");
-    strcat (sql, "rel_id INTEGER NOT NULL,\n");
-    strcat (sql, "sub INTEGER NOT NULL,\n");
-    strcat (sql, "relation_id INTEGER NOT NULL,\n");
-    strcat (sql, "role TEXT,");
-    strcat (sql, "CONSTRAINT pk_osm_relrelrefs PRIMARY KEY (rel_id, sub),\n");
-    strcat (sql, "CONSTRAINT fk_osm_relrelrefs FOREIGN KEY (rel_id) ");
-    strcat (sql, "REFERENCES osm_relations (rel_id))\n");
-    ret = sqlite3_exec (db_handle, sql, NULL, NULL, &err_msg);
-    if (ret != SQLITE_OK)
-      {
-	  fprintf (stderr,
-		   "CREATE TABLE 'osm_relation_relation_refs' error: %s\n",
+	  fprintf (stderr, "CREATE INDEX 'idx_osm_relation' error: %s\n",
 		   err_msg);
 	  sqlite3_free (err_msg);
 	  sqlite3_close (db_handle);
@@ -1567,22 +1390,18 @@ main (int argc, char *argv[])
     params.ins_node_tags_stmt = NULL;
     params.ins_ways_stmt = NULL;
     params.ins_way_tags_stmt = NULL;
-    params.ins_way_node_refs_stmt = NULL;
+    params.ins_way_refs_stmt = NULL;
     params.ins_relations_stmt = NULL;
     params.ins_relation_tags_stmt = NULL;
-    params.ins_relation_node_refs_stmt = NULL;
-    params.ins_relation_way_refs_stmt = NULL;
-    params.ins_relation_relation_refs_stmt = NULL;
+    params.ins_relation_refs_stmt = NULL;
     params.wr_nodes = 0;
     params.wr_node_tags = 0;
     params.wr_ways = 0;
     params.wr_way_tags = 0;
-    params.wr_way_node_refs = 0;
+    params.wr_way_refs = 0;
     params.wr_relations = 0;
     params.wr_rel_tags = 0;
-    params.wr_rel_node_refs = 0;
-    params.wr_rel_way_refs = 0;
-    params.wr_rel_rel_refs = 0;
+    params.wr_rel_refs = 0;
     params.current_tag = CURRENT_TAG_UNKNOWN;
 
     glob_node.timestamp = NULL;
@@ -1601,10 +1420,6 @@ main (int argc, char *argv[])
     glob_relation.user = NULL;
     glob_relation.first = NULL;
     glob_relation.last = NULL;
-    glob_relation.first_node = NULL;
-    glob_relation.last_node = NULL;
-    glob_relation.first_way = NULL;
-    glob_relation.last_way = NULL;
     glob_relation.first_rel = NULL;
     glob_relation.last_rel = NULL;
 
@@ -1794,12 +1609,10 @@ main (int argc, char *argv[])
     printf ("\t%d tags\n", params.wr_node_tags);
     printf ("inserted %d ways\n", params.wr_ways);
     printf ("\t%d tags\n", params.wr_way_tags);
-    printf ("\t%d node-refs\n", params.wr_way_node_refs);
+    printf ("\t%d node-refs\n", params.wr_way_refs);
     printf ("inserted %d relations\n", params.wr_relations);
     printf ("\t%d tags\n", params.wr_rel_tags);
-    printf ("\t%d node-refs\n", params.wr_rel_node_refs);
-    printf ("\t%d way-refs\n", params.wr_rel_way_refs);
-    printf ("\t%d relation-refs\n", params.wr_rel_rel_refs);
+    printf ("\t%d refs\n", params.wr_rel_refs);
 
     if (in_memory)
       {
