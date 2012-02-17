@@ -1055,6 +1055,75 @@ eval_way (struct aux_params *params, int area, unsigned char *blob,
       }
 }
 
+static int
+is_areal_layer ()
+{
+    struct tag *p_tag;
+    const char *p;
+    int i = 0;
+    const char *layer_name = NULL;
+    if (glob_way.first == NULL)
+	return;
+    while (1)
+      {
+	  p = base_layers[i++].name;
+	  if (!p)
+	      break;
+	  p_tag = glob_way.first;
+	  while (p_tag)
+	    {
+		if (strcmp (p_tag->k, p) == 0)
+		    layer_name = p;
+		p_tag = p_tag->next;
+	    }
+	  if (layer_name)
+	      break;
+      }
+    if (layer_name)
+      {
+	  /* possible "areal" layers */
+	  if (strcmp (layer_name, "amenity") == 0)
+	      return 1;
+	  if (strcmp (layer_name, "building") == 0)
+	      return 1;
+	  if (strcmp (layer_name, "historic") == 0)
+	      return 1;
+	  if (strcmp (layer_name, "landuse") == 0)
+	      return 1;
+	  if (strcmp (layer_name, "leisure") == 0)
+	      return 1;
+	  if (strcmp (layer_name, "natural") == 0)
+	      return 1;
+	  if (strcmp (layer_name, "parking") == 0)
+	      return 1;
+	  if (strcmp (layer_name, "place") == 0)
+	      return 1;
+	  if (strcmp (layer_name, "shop") == 0)
+	      return 1;
+	  if (strcmp (layer_name, "sport") == 0)
+	      return 1;
+	  if (strcmp (layer_name, "tourism") == 0)
+	      return 1;
+      }
+    return 0;
+}
+
+static int
+is_closed (gaiaGeomCollPtr geom)
+{
+    gaiaLinestringPtr ln = geom->FirstLinestring;
+    double x0;
+    double y0;
+    double x1;
+    double y1;
+    int last = ln->Points - 1;
+    gaiaGetPoint (ln->Coords, 0, &x0, &y0);
+    gaiaGetPoint (ln->Coords, last, &x1, &y1);
+    if (x0 == x1 && y0 == y1)
+	return 1;
+    return 0;
+}
+
 static gaiaGeomCollPtr
 convert_to_polygon (gaiaGeomCollPtr old)
 {
@@ -1088,7 +1157,7 @@ end_way (struct aux_params *params)
     struct nd *p_nd2;
     unsigned char *blob;
     int blob_size;
-    int area;
+    int area = 0;
 
     gaiaGeomCollPtr geom = build_linestring (params->db_handle);
     if (geom)
@@ -1105,6 +1174,11 @@ end_way (struct aux_params *params)
 		    area = 1;
 		p_tag = p_tag->next;
 	    }
+
+	  /* attempting to recover undeclared areas */
+	  if (is_areal_layer () && is_closed (geom))
+	      area = 1;
+
 	  if (area)
 	    {
 		free (blob);
@@ -1519,7 +1593,6 @@ build_multipolygon (sqlite3 * db_handle)
     char sql[8192];
     sqlite3_stmt *stmt;
     sqlite3_int64 id;
-    int area;
 
     const unsigned char *blob = NULL;
     int blob_size;
@@ -1608,7 +1681,6 @@ build_multipolygon (sqlite3 * db_handle)
 		  {
 		      /* ok, we've just fetched a valid row */
 		      id = sqlite3_column_int64 (stmt, 0);
-		      area = sqlite3_column_int (stmt, 1);
 		      blob = sqlite3_column_blob (stmt, 2);
 		      blob_size = sqlite3_column_bytes (stmt, 2);
 		      org_geom = gaiaFromSpatiaLiteBlobWkb (blob, blob_size);
@@ -2540,6 +2612,8 @@ main (int argc, char *argv[])
     XML_Parser parser;
     struct aux_params params;
     FILE *xml_file;
+    int last_line_no = 0;
+    int curr_line_no = 0;
 
 /* initializing the aux-struct */
     params.db_handle = NULL;
@@ -2661,7 +2735,6 @@ main (int argc, char *argv[])
     open_db (db_path, &handle, cache_size);
     if (!handle)
 	return -1;
-    params.db_handle = handle;
     if (in_memory)
       {
 	  /* loading the DB in-memory */
@@ -2698,6 +2771,7 @@ main (int argc, char *argv[])
 	  handle = mem_db_handle;
 	  printf ("\nusing IN-MEMORY database\n");
       }
+    params.db_handle = handle;
 
 /* creating SQL prepared statements */
     create_sql_stmts (&params);
@@ -2737,9 +2811,17 @@ main (int argc, char *argv[])
 		sqlite3_close (handle);
 		return -1;
 	    }
+	  curr_line_no = (int) XML_GetCurrentLineNumber (parser);
+	  if ((curr_line_no - last_line_no) > 1000)
+	    {
+		last_line_no = curr_line_no;
+		printf ("Parsing XML line: %d\r", curr_line_no);
+		fflush (stdout);
+	    }
       }
     XML_ParserFree (parser);
     fclose (xml_file);
+    printf ("                                                         \r");
 
 /* finalizing SQL prepared statements */
     finalize_sql_stmts (&params);

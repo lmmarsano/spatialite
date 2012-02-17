@@ -173,7 +173,6 @@ check_start_fid (struct gml_params *params, const char *el, const char **attr)
 /* checking if this element contains a "FID" attribute */
     int count = 0;
     const char *k;
-    const char *v;
     const char **attrib = attr;
     char prefix[1024];
     char name[1024];
@@ -184,7 +183,6 @@ check_start_fid (struct gml_params *params, const char *el, const char **attr)
 	      k = *attrib;
 	  else
 	    {
-		v = *attrib;
 		if (strcasecmp (k, "fid") == 0)
 		  {
 		      split_fid (el, prefix, name);
@@ -1598,7 +1596,6 @@ main (int argc, char *argv[])
     const char *db_path = NULL;
     const char *table = NULL;
     int in_memory = 0;
-    int spatial_index = 1;
     int error = 0;
     char Buff[BUFFSIZE];
     int done = 0;
@@ -1701,13 +1698,11 @@ main (int argc, char *argv[])
 	    }
 	  if (strcasecmp (argv[i], "-n") == 0)
 	    {
-		spatial_index = 0;
 		next_arg = ARG_NONE;
 		continue;
 	    }
 	  if (strcasecmp (argv[i], "-no-spatial-index") == 0)
 	    {
-		spatial_index = 0;
 		next_arg = ARG_NONE;
 		continue;
 	    }

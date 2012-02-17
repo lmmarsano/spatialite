@@ -83,6 +83,7 @@
 #include <io.h>
 #define isatty	_isatty
 #define access	_access
+#define strcasecmp	_stricmp
 #else
 /* Make sure isatty() has a prototype.
 */
@@ -531,7 +532,7 @@ convert_from_utf8 (char *buf, int maxlen)
 {
 /* converting from UTF8 to locale charset */
     char *utf8buf = 0;
-#ifdef __MINGW32__
+#if !defined(__MINGW32__) && defined(_WIN32)
     const char *pBuf;
 #else
     char *pBuf;
@@ -569,7 +570,7 @@ convert_to_utf8 (char *buf, int maxlen)
 {
 /* converting from locale charset to UTF8 */
     char *utf8buf = 0;
-#ifdef __MINGW32__
+#if !defined(__MINGW32__) && defined(_WIN32)
     const char *pBuf;
 #else
     char *pBuf;
@@ -607,7 +608,7 @@ convert_input_to_utf8 (char *buf, int maxlen)
 {
 /* converting from required charset to UTF8 */
     char *utf8buf = 0;
-#ifdef __MINGW32__
+#if !defined(__MINGW32__) && defined(_WIN32)
     const char *pBuf;
 #else
     char *pBuf;
@@ -1071,6 +1072,8 @@ output_csv (struct callback_data *p, const char *z, int bSep)
 static void
 interrupt_handler (int NotUsed)
 {
+    if (NotUsed != 0)
+	NotUsed = 0;		/* suppressing stupid compiler warnings */
     seenInterrupt = 1;
     if (db)
 	sqlite3_interrupt (db);
@@ -1823,6 +1826,9 @@ static char zHelp[] =
     "                         which one charset is used on your Command Prompt]\n\n"
     ".chkdupl <table>  Check a TABLE for duplicated rows\n\n"
     ".remdupl <table>  Removes any duplicated row from a TABLE\n\n"
+    ".elemgeo <args>   derives a new table from the original one, so to ensure that\n"
+    "                  only elementary Geometries (one for each row) will be present\n"
+    "                  arg_list: in_tbl geom out_tbl out_pk out_old_id\n\n"
     ".loadshp <args>   Loads a SHAPEFILE into a SpatiaLite table\n"
     "                  arg_list: shp_path table_name charset [SRID] [column_name]\n"
     "                      [2d | 3d] [compressed]\n\n"
@@ -1839,6 +1845,11 @@ static char zHelp[] =
     ".dumpkml <args>   Dumps a SpatiaLite table as a KML file\n"
     "                  arg_list: table_name geom_column kml_path\n"
     "                      [precision] [name_column] [desc_column]\n\n"
+    ".dumpgeojson <args>  Dumps a SpatiaLite table as a GeoJSON file\n"
+    "                  arg_list: table_name geom_column geojson_path\n"
+    "                      [format] [precision]\n"
+    "                  format={ none | MBR | withShortCRS | MBRwithShortCRS\n"
+    "                           | withLongCRS | MBRwithLongCRS }\n\n"
     ".read <args>      Execute an SQL script\n"
     "                  arg_list: script_path charset\n"
 /* end Sandro Furieri 2008-06-20 */
@@ -2047,10 +2058,12 @@ do_meta_command (char *zLine, struct callback_data *p)
 	  char *shp_path = azArg[3];
 	  char *outCS = azArg[4];
 	  char *type = NULL;
+	  int rows;
 	  if (nArg == 6)
 	      type = azArg[5];
 	  open_db (p);
-	  dump_shapefile (p->db, table, column, shp_path, outCS, type, 1, NULL);
+	  dump_shapefile (p->db, table, column, shp_path, outCS, type, 1, &rows,
+			  NULL);
       }
     else if (c == 'd' && n > 1 && strncmp (azArg[0], "dumpdbf", n) == 0
 	     && (nArg == 4))
@@ -2060,7 +2073,7 @@ do_meta_command (char *zLine, struct callback_data *p)
 	  char *dbf_path = azArg[2];
 	  char *outCS = azArg[3];
 	  open_db (p);
-	  dump_dbf (p->db, table, dbf_path, outCS);
+	  dump_dbf (p->db, table, dbf_path, outCS, NULL);
       }
     else if (c == 'd' && n > 1 && strncmp (azArg[0], "dumpkml", n) == 0
 	     && (nArg == 4 || nArg == 5 || nArg == 6 || nArg == 7))
@@ -2081,6 +2094,38 @@ do_meta_command (char *zLine, struct callback_data *p)
 	  open_db (p);
 	  dump_kml (p->db, table, geom, kml_path, name, desc, precision);
       }
+    else if (c == 'd' && n > 1 && strncmp (azArg[0], "dumpgeojson", n) == 0
+	     && (nArg == 4 || nArg == 5 || nArg == 6))
+      {
+	  /* 
+	     dumping a spatial table as file of GeoJSON 
+	     2011-11-09 Brad Hards
+	   */
+	  char *table = azArg[1];
+	  char *geom = azArg[2];
+	  char *gml_path = azArg[3];
+	  int format = 0;
+	  int precision = 8;
+	  if (nArg >= 5)
+	    {
+		if (strcmp (azArg[4], "none") == 0)
+		    format = 0;
+		else if (strcmp (azArg[4], "MBR") == 0)
+		    format = 1;
+		else if (strcmp (azArg[4], "withShortCRS") == 0)
+		    format = 2;
+		else if (strcmp (azArg[4], "MBRwithShortCRS") == 0)
+		    format = 3;
+		else if (strcmp (azArg[4], "withLongCRS") == 0)
+		    format = 4;
+		else if (strcmp (azArg[4], "MBRwithLongCRS") == 0)
+		    format = 5;
+	    }
+	  if (nArg == 6)
+	      precision = atoi (azArg[5]);
+	  open_db (p);
+	  dump_geojson (p->db, table, geom, gml_path, precision, format);
+      }
     else if (c == 'l' && n > 1 && strncmp (azArg[0], "loadshp", n) == 0
 	     && (nArg == 4 || nArg == 5 || nArg == 6 || nArg == 7 || nArg == 8))
       {
@@ -2091,6 +2136,7 @@ do_meta_command (char *zLine, struct callback_data *p)
 	  int coerce2d = 0;
 	  int compressed = 0;
 	  char *column = NULL;
+	  int rows;
 	  if (nArg >= 5)
 	      srid = atoi (azArg[4]);
 	  if (nArg >= 6)
@@ -2104,7 +2150,7 @@ do_meta_command (char *zLine, struct callback_data *p)
 	      compressed = 1;
 	  open_db (p);
 	  load_shapefile (p->db, shp_path, table, inCS, srid, column, coerce2d,
-			  compressed, 1, NULL);
+			  compressed, 1, 0, &rows, NULL);
       }
     else if (c == 'l' && n > 1 && strncmp (azArg[0], "loaddbf", n) == 0
 	     && nArg == 4)
@@ -2112,12 +2158,14 @@ do_meta_command (char *zLine, struct callback_data *p)
 	  char *dbf_path = azArg[1];
 	  char *table = azArg[2];
 	  char *inCS = azArg[3];
+	  int rows;
 	  open_db (p);
-	  load_dbf (p->db, dbf_path, table, inCS, 1, NULL);
+	  load_dbf (p->db, dbf_path, table, inCS, 1, &rows, NULL);
       }
     else if (c == 'l' && n > 1 && strncmp (azArg[0], "loadxl", n) == 0
 	     && (nArg == 3 || nArg == 4 || nArg == 5))
       {
+	  unsigned int rows;
 	  char *xl_path = azArg[1];
 	  char *table = azArg[2];
 	  unsigned int worksheet = 0;
@@ -2130,7 +2178,7 @@ do_meta_command (char *zLine, struct callback_data *p)
 		    firstLine = 1;
 	    }
 	  open_db (p);
-	  load_XL (p->db, xl_path, table, worksheet, firstLine);
+	  load_XL (p->db, xl_path, table, worksheet, firstLine, &rows, NULL);
       }
     else if (c == 'r' && strncmp (azArg[0], "read", n) == 0)
       {
@@ -2154,15 +2202,26 @@ do_meta_command (char *zLine, struct callback_data *p)
       }
     else if (c == 'c' && strncmp (azArg[0], "chkdupl", n) == 0 && nArg == 2)
       {
+	  int rows;
 	  char *table = azArg[1];
 	  open_db (p);
-	  check_duplicated_rows (p->db, table);
+	  check_duplicated_rows (p->db, table, &rows);
       }
     else if (c == 'r' && strncmp (azArg[0], "remdupl", n) == 0 && nArg == 2)
       {
 	  char *table = azArg[1];
 	  open_db (p);
 	  remove_duplicated_rows (p->db, table);
+      }
+    else if (c == 'e' && strncmp (azArg[0], "elemgeo", n) == 0 && nArg == 6)
+      {
+	  char *inTable = azArg[1];
+	  char *geom = azArg[2];
+	  char *outTable = azArg[3];
+	  char *pKey = azArg[4];
+	  char *multiId = azArg[5];
+	  open_db (p);
+	  elementary_geometries (p->db, inTable, geom, outTable, pKey, multiId);
       }
     else if (c == 'b' && n > 1 && strncmp (azArg[0], "bail", n) == 0
 	     && nArg > 1)
@@ -2294,7 +2353,7 @@ do_meta_command (char *zLine, struct callback_data *p)
       }
     else if (c == 'h' && strncmp (azArg[0], "help", n) == 0)
       {
-	  fprintf (stderr, zHelp);
+	  fprintf (stderr, "%s", zHelp);
       }
     else if (c == 'i' && strncmp (azArg[0], "import", n) == 0 && nArg >= 3)
       {

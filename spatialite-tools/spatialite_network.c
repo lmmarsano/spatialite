@@ -1110,24 +1110,19 @@ validate (char *path, char *table, char *from_column, char *to_column,
     int to_text = 0;
     int to_blob = 0;
     int cost_null = 0;
-    int cost_int = 0;
-    int cost_double = 0;
     int cost_text = 0;
     int cost_blob = 0;
     int tofrom_null = 0;
-    int tofrom_int = 0;
     int tofrom_double = 0;
     int tofrom_text = 0;
     int tofrom_blob = 0;
     int fromto_null = 0;
-    int fromto_int = 0;
     int fromto_double = 0;
     int fromto_text = 0;
     int fromto_blob = 0;
     int geom_null = 0;
     int geom_not_linestring = 0;
     int col_n;
-    int cost_n;
     int fromto_n;
     int tofrom_n;
     sqlite3_int64 rowid;
@@ -1324,7 +1319,6 @@ validate (char *path, char *table, char *from_column, char *to_column,
       {
 	  sprintf (sql2, ", \"%s\"", cost_column);
 	  strcat (sql, sql2);
-	  cost_n = col_n;
 	  col_n++;
       }
     if (oneway_tofrom)
@@ -1414,10 +1408,6 @@ validate (char *path, char *table, char *from_column, char *to_column,
 		      col_n++;
 		      if (type == SQLITE_NULL)
 			  cost_null = 1;
-		      if (type == SQLITE_INTEGER)
-			  cost_int = 1;
-		      if (type == SQLITE_FLOAT)
-			  cost_double = 1;
 		      if (type == SQLITE_TEXT)
 			  cost_text = 1;
 		      if (type == SQLITE_BLOB)
@@ -1430,8 +1420,6 @@ validate (char *path, char *table, char *from_column, char *to_column,
 		      col_n++;
 		      if (type == SQLITE_NULL)
 			  fromto_null = 1;
-		      if (type == SQLITE_INTEGER)
-			  fromto_int = 1;
 		      if (type == SQLITE_FLOAT)
 			  fromto_double = 1;
 		      if (type == SQLITE_TEXT)
@@ -1446,8 +1434,6 @@ validate (char *path, char *table, char *from_column, char *to_column,
 		      col_n++;
 		      if (type == SQLITE_NULL)
 			  tofrom_null = 1;
-		      if (type == SQLITE_INTEGER)
-			  tofrom_int = 1;
 		      if (type == SQLITE_FLOAT)
 			  tofrom_double = 1;
 		      if (type == SQLITE_TEXT)

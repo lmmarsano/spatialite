@@ -9,10 +9,10 @@ all: ./static_bin/spatialite.exe ./static_bin/spatialite_tool.exe \
 	./static_bin/spatialite_network.exe ./static_bin/shp_doctor.exe \
 	./static_bin/exif_loader.exe ./static_bin/spatialite_osm_net.exe \
 	./static_bin/spatialite_osm_map.exe ./static_bin/spatialite_gml.exe \
-	./static_bin/spatialite_osm_raw.exe
+	./static_bin/spatialite_osm_raw.exe ./static_bin/spatialite_osm_filter.exe
 
-./static_bin/spatialite.exe: shell.o shapefiles.o
-	$(GG) shell.o shapefiles.o -o ./static_bin/spatialite.exe \
+./static_bin/spatialite.exe: shell.o 
+	$(GG) shell.o -o ./static_bin/spatialite.exe \
 	/usr/local/lib/libspatialite.a \
 	/usr/local/lib/libproj.a \
 	/usr/local/lib/libgeos_c.a \
@@ -22,8 +22,8 @@ all: ./static_bin/spatialite.exe ./static_bin/spatialite_tool.exe \
 	-lm -static-libstdc++ -static-libgcc
 	strip --strip-all ./static_bin/spatialite.exe
 
-./static_bin/spatialite_tool.exe: shapefiles.o spatialite_tool.o
-	$(GG) shapefiles.o spatialite_tool.o -o \
+./static_bin/spatialite_tool.exe: spatialite_tool.o
+	$(GG) spatialite_tool.o -o \
 	./static_bin/spatialite_tool.exe \
 	/usr/local/lib/libspatialite.a \
 	/usr/local/lib/libproj.a \
@@ -114,12 +114,20 @@ all: ./static_bin/spatialite.exe ./static_bin/spatialite_tool.exe \
 	-lm -static-libstdc++ -static-libgcc
 	strip --strip-all ./static_bin/spatialite_osm_raw.exe
 
+./static_bin/spatialite_osm_filter.exe: spatialite_osm_filter.o
+	$(GG) spatialite_osm_filter.o -o ./static_bin/spatialite_osm_filter.exe \
+	/usr/local/lib/libspatialite.a \
+	/usr/local/lib/libproj.a \
+	/usr/local/lib/libgeos_c.a \
+	/usr/local/lib/libgeos.a \
+	/usr/local/lib/libfreexl.a \
+	/usr/local/lib/libiconv.a \
+	-lm -static-libstdc++ -static-libgcc
+	strip --strip-all ./static_bin/spatialite_osm_filter.exe
+
 shell.o: 
 	$(CC) $(CFLAGS) shell.c -c
 	
-shepefiles.o: 
-	$(CC) $(CFLAGS) shapefiles.c -c
-
 spatialite_tool.o:
 	$(CC) $(CFLAGS) spatialite_tool.c -c
 
@@ -143,3 +151,6 @@ spatialite_gml.o:
 
 spatialite_osm_raw.o:
 	$(CC) $(CFLAGS) spatialite_osm_raw.c -c
+
+spatialite_osm_filter.o:
+	$(CC) $(CFLAGS) spatialite_osm_filter.c -c

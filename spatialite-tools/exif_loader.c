@@ -970,7 +970,7 @@ load_file (sqlite3 * handle, const char *file_path, int gps_only, int metadata)
 	      printf ("SQL error(s): file '%s' was not loaded\n", file_path);
       }
     else
-	printf ("file '%s' succesfully loaded\n", file_path);
+	printf ("file '%s' successfully loaded\n", file_path);
     if (blob)
 	free (blob);
     if (tag_list)
@@ -1056,7 +1056,6 @@ checkExifTables (sqlite3 * handle)
     int ok_shotDateTime;
     int ok_gpsGeometry;
     int ok_gpsDirection;
-    int ok_gpsSatellites;
     int ok_gpsTimestamp;
     int ok_fromPath;
     int ok_tagId;
@@ -1114,7 +1113,6 @@ checkExifTables (sqlite3 * handle)
     ok_shotDateTime = 0;
     ok_gpsGeometry = 0;
     ok_gpsDirection = 0;
-    ok_gpsSatellites = 0;
     ok_gpsTimestamp = 0;
     ok_fromPath = 0;
     ok_photoIdPk = 0;
@@ -1424,7 +1422,7 @@ spatialite_autocreate (sqlite3 * db)
     if (count > 0)
 	return;
 
-/* all right, it's empty: proceding to initialize */
+/* all right, it's empty: proceeding to initialize */
     strcpy (sql, "SELECT InitSpatialMetadata()");
     ret = sqlite3_exec (db, sql, NULL, NULL, &err_msg);
     if (ret != SQLITE_OK)
@@ -1593,7 +1591,7 @@ main (int argc, char *argv[])
     if (!checkExifTables (handle))
       {
 	  fprintf (stderr,
-		   "An EXIF table is already defined, but has incompatibles columns\n\nSorry ...\n");
+		   "An EXIF table is already defined, but has incompatible columns\n\nSorry ...\n");
 	  sqlite3_close (handle);
 	  return -1;
       }
@@ -1607,7 +1605,7 @@ main (int argc, char *argv[])
 		 sqlite3_errmsg (handle));
     if (cnt)
 	fprintf (stderr,
-		 "\n\n***   %d EXIF photo%s succesfully inserted into the DB\n",
+		 "\n\n***   %d EXIF photo%s successfully inserted into the DB\n",
 		 cnt, (cnt > 1) ? "s where" : " was");
     return 0;
 }
