@@ -11,7 +11,7 @@ Build-Depends:
  , libproj-dev
  , libreadline-dev
  , libexpat1-dev
- , libfreexl-dev
+ , libfreexl-dev (>= 1.0.0)
  , pkg-config
 Standards-Version: 3.9.2
 Homepage: http://www.gaia-gis.it/spatialite/

@@ -6,8 +6,9 @@ spatialite (3.0.1-1) unstable; urgency=low
     Maybe upstream likes upsetting distribution details at every new release?
   * Patchset refreshed. Finally, Sandro is now following a sane policy with 
     SONAME versioning. Better than never.
+  * This version is compatible with Freexl >= 1.0.0 only.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 22 Feb 2012 11:11:10 +0100
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 22 Feb 2012 13:48:43 +0100
 
 spatialite (3.0.0~beta20110817-3) unstable; urgency=low
 
