@@ -1,0 +1,9 @@
+spatialite (3.0.0~beta20110817-3) unstable; urgency=medium
+
+  From this release, powerpc will lack full EPSG initialization.
+  .
+  This means that spatialite won't support all EPSG projections,
+  but only a small subset. The list of supported projections can be
+  found in '/usr/share/doc/libspatialite-dev/EPSG.powerpc'.
+
+ -- David Paleino <dapal@debian.org>  Mon, 21 Nov 2011 11:37:16 +0100
