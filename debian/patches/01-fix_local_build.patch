@@ -10,55 +10,79 @@ Forwarded: not-needed
  spatialite-tools/configure.ac |    3 +
  4 files changed, 14 insertions(+), 74 deletions(-)
 
---- spatialite.orig/spatialite-tools/Makefile.am
-+++ spatialite/spatialite-tools/Makefile.am
-@@ -1,7 +1,9 @@
- ACLOCAL_AMFLAGS = -I m4
+Index: spatialite/spatialite-tools/Makefile.am
+===================================================================
+--- spatialite.orig/spatialite-tools/Makefile.am	2012-02-22 11:15:13.000000000 +0100
++++ spatialite/spatialite-tools/Makefile.am	2012-02-22 11:15:13.000000000 +0100
+@@ -2,7 +2,10 @@
  
  AM_CFLAGS = -D_LARGE_FILE=1 -D_FILE_OFFSET_BITS=64 \
--	-D_LARGEFILE_SOURCE=1 @LIBSPATIALITE_CFLAGS@
-+	-D_LARGEFILE_SOURCE=1 @LIBSPATIALITE_CFLAGS@ \
+ 	-D_LARGEFILE_SOURCE=1 @LIBSPATIALITE_CFLAGS@ \
+-	@LIBFREEXL_CFLAGS@
++	@LIBFREEXL_CFLAGS@ \
 +	-L../libspatialite/src/.libs/ \
 +	-I../libspatialite/src/headers/
++	
  
  bin_PROGRAMS = spatialite \
  	spatialite_tool \
-@@ -32,7 +34,8 @@ spatialite_osm_raw_LDADD = @LIBSPATIALIT
- spatialite_gml_LDADD = @LIBSPATIALITE_LIBS@ \
+@@ -39,7 +42,8 @@
  	-lexpat 
  spatialite_LDADD = @LIBSPATIALITE_LIBS@ \
+ 	@LIBFREEXL_LIBS@ \
 -	@READLINE_LIBS@
 +	@READLINE_LIBS@ \
 +	-lfreexl
- LDADD = @LIBSPATIALITE_LIBS@ 
+ LDADD = @LIBSPATIALITE_LIBS@ \
+ 	@LIBFREEXL_LIBS@
  
- EXTRA_DIST = makefile.vc nmake.opt \
---- spatialite.orig/spatialite-tools/Makefile.in
-+++ spatialite/spatialite-tools/Makefile.in
-@@ -252,7 +252,9 @@ top_builddir = @top_builddir@
- top_srcdir = @top_srcdir@
+Index: spatialite/spatialite-tools/Makefile.in
+===================================================================
+--- spatialite.orig/spatialite-tools/Makefile.in	2012-02-22 11:15:13.000000000 +0100
++++ spatialite/spatialite-tools/Makefile.in	2012-02-22 11:15:13.000000000 +0100
+@@ -257,7 +257,9 @@
  ACLOCAL_AMFLAGS = -I m4
  AM_CFLAGS = -D_LARGE_FILE=1 -D_FILE_OFFSET_BITS=64 \
--	-D_LARGEFILE_SOURCE=1 @LIBSPATIALITE_CFLAGS@
-+	-D_LARGEFILE_SOURCE=1 @LIBSPATIALITE_CFLAGS@ \
+ 	-D_LARGEFILE_SOURCE=1 @LIBSPATIALITE_CFLAGS@ \
+-	@LIBFREEXL_CFLAGS@
++	@LIBFREEXL_CFLAGS@ \
 +	-L../libspatialite/src/.libs/ \
 +	-I../libspatialite/src/headers/
  
  INCLUDES = @CFLAGS@
- spatialite_SOURCES = shell.c shapefiles.c
-@@ -274,7 +276,8 @@ spatialite_gml_LDADD = @LIBSPATIALITE_LI
- 	-lexpat 
+ spatialite_SOURCES = shell.c
+@@ -287,7 +289,8 @@
+ 	@READLINE_LIBS@
  
- spatialite_LDADD = @LIBSPATIALITE_LIBS@ \
--	@READLINE_LIBS@
-+	@READLINE_LIBS@ \
+ LDADD = @LIBSPATIALITE_LIBS@ \
+-	@LIBFREEXL_LIBS@
++	@LIBFREEXL_LIBS@ \
 +	-lfreexl
  
- LDADD = @LIBSPATIALITE_LIBS@ 
  EXTRA_DIST = makefile.vc nmake.opt \
---- spatialite.orig/spatialite-tools/configure
-+++ spatialite/spatialite-tools/configure
-@@ -16710,75 +16710,6 @@ $as_echo "no" >&6; }
+ 	Makefile-static-MinGW \
+Index: spatialite/spatialite-tools/configure.ac
+===================================================================
+--- spatialite.orig/spatialite-tools/configure.ac	2012-02-22 11:10:56.000000000 +0100
++++ spatialite/spatialite-tools/configure.ac	2012-02-22 11:15:13.000000000 +0100
+@@ -74,9 +74,11 @@
+ AC_CHECK_LIB(proj,pj_init_plus,,AC_MSG_ERROR(['libproj' is required but it doesn't seem to be installed on this system.]),-lm)
+ AC_CHECK_LIB(geos_c,GEOSTopologyPreserveSimplify,,AC_MSG_ERROR(['libgeos_c' is required but it doesn't seem to be installed on this system.]),-lm -lgeos)
+ 
+-PKG_CHECK_MODULES([LIBSPATIALITE], [spatialite], , AC_MSG_ERROR(['libspatialite' is required but it doesn't seem to be installed on this system.]))
++LIBSPATIALITE_CFLAGS=
++LIBSPATIALITE_LIBS="-lspatialite -lsqlite3"
+ AC_SUBST(LIBSPATIALITE_CFLAGS)
+ AC_SUBST(LIBSPATIALITE_LIBS)
++
+ PKG_CHECK_MODULES([LIBFREEXL], [freexl], , AC_MSG_ERROR(['libfreexl' is required but it doesn't seem to be installed on this system.]))
+ AC_SUBST(LIBFREEXL_CFLAGS)
+ AC_SUBST(LIBFREEXL_LIBS)
+Index: spatialite/spatialite-tools/configure
+===================================================================
+--- spatialite.orig/spatialite-tools/configure	2012-02-22 11:14:40.000000000 +0100
++++ spatialite/spatialite-tools/configure	2012-02-22 11:17:05.000000000 +0100
+@@ -17316,77 +17316,6 @@
  fi
  
  pkg_failed=no
@@ -117,11 +141,11 @@ Forwarded: not-needed
 -	# Put the nasty error message in config.log where it belongs
 -	echo "$LIBSPATIALITE_PKG_ERRORS" >&5
 -
--	as_fn_error $? "'libspatialite' is required but it doesn't seems to be installed on this system." "$LINENO" 5
+-	as_fn_error $? "'libspatialite' is required but it doesn't seem to be installed on this system." "$LINENO" 5
 -elif test $pkg_failed = untried; then
 -     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 -$as_echo "no" >&6; }
--	as_fn_error $? "'libspatialite' is required but it doesn't seems to be installed on this system." "$LINENO" 5
+-	as_fn_error $? "'libspatialite' is required but it doesn't seem to be installed on this system." "$LINENO" 5
 -else
 -	LIBSPATIALITE_CFLAGS=$pkg_cv_LIBSPATIALITE_CFLAGS
 -	LIBSPATIALITE_LIBS=$pkg_cv_LIBSPATIALITE_LIBS
@@ -130,29 +154,9 @@ Forwarded: not-needed
 -
 -fi
 -
+-
+-
 -pkg_failed=no
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for LIBFREEXL" >&5
  $as_echo_n "checking for LIBFREEXL... " >&6; }
- 
-@@ -16846,6 +16777,8 @@ else
- $as_echo "yes" >&6; }
- 
- fi
-+LIBSPATIALITE_CFLAGS=
-+LIBSPATIALITE_LIBS="-lspatialite -lsqlite3"
- 
- 
- 
---- spatialite.orig/spatialite-tools/configure.ac
-+++ spatialite/spatialite-tools/configure.ac
-@@ -74,8 +74,9 @@ AC_CHECK_LIB(expat,XML_ParserCreate,,AC_
- AC_CHECK_LIB(proj,pj_init_plus,,AC_MSG_ERROR(['libproj' is required but it doesn't seems to be installed on this system.]),-lm)
- AC_CHECK_LIB(geos_c,GEOSTopologyPreserveSimplify,,AC_MSG_ERROR(['libgeos_c' is required but it doesn't seems to be installed on this system.]),-lm -lgeos)
- 
--PKG_CHECK_MODULES([LIBSPATIALITE], [spatialite], , AC_MSG_ERROR(['libspatialite' is required but it doesn't seems to be installed on this system.]))
- PKG_CHECK_MODULES([LIBFREEXL], [freexl], , AC_MSG_ERROR(['libfreexl' is required but it doesn't seems to be installed on this system.]))
-+LIBSPATIALITE_CFLAGS=
-+LIBSPATIALITE_LIBS="-lspatialite -lsqlite3"
- AC_SUBST(LIBSPATIALITE_CFLAGS)
- AC_SUBST(LIBSPATIALITE_LIBS)
  

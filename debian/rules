@@ -17,6 +17,10 @@ BASE_URL := http://www.gaia-gis.it/gaia-sins
 %:
 	dh $@
 
+versions:
+	@echo "Spatialite full version: $(FULL_VERSION)"
+	@echo "Spatialite version: $(LC_VERSION)"
+
 get-orig-source:
 	mkdir -p $(CURDIR)/tmp || true
 	for archive in $(ARCHIVES); \

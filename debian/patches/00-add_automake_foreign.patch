@@ -10,39 +10,47 @@ Forwarded: no
  spatialite-tools/Makefile.in |    2 +-
  4 files changed, 4 insertions(+), 4 deletions(-)
 
---- spatialite.orig/libspatialite/Makefile.am
-+++ spatialite/libspatialite/Makefile.am
+Index: spatialite/libspatialite/Makefile.am
+===================================================================
+--- spatialite.orig/libspatialite/Makefile.am	2012-02-17 16:53:35.000000000 +0100
++++ spatialite/libspatialite/Makefile.am	2012-02-17 17:02:17.000000000 +0100
 @@ -1,6 +1,6 @@
  ACLOCAL_AMFLAGS = -I m4
  
 -AUTOMAKE_OPTIONS = dist-zip
 +AUTOMAKE_OPTIONS = dist-zip foreign
  
- EXTRA_DIST = makefile.vc nmake.opt libspatialite.def
+ EXTRA_DIST = makefile.vc nmake.opt mainpage.doxy README.coverage
  
---- spatialite.orig/spatialite-tools/Makefile.am
-+++ spatialite/spatialite-tools/Makefile.am
-@@ -40,5 +40,5 @@ EXTRA_DIST = makefile.vc nmake.opt \
+Index: spatialite/spatialite-tools/Makefile.am
+===================================================================
+--- spatialite.orig/spatialite-tools/Makefile.am	2012-02-17 16:53:36.000000000 +0100
++++ spatialite/spatialite-tools/Makefile.am	2012-02-17 17:02:17.000000000 +0100
+@@ -48,5 +48,5 @@
  	Makefile-static-Linux \
  	Makefile-static-MacOsX
  
 -AUTOMAKE_OPTIONS = dist-zip
 +AUTOMAKE_OPTIONS = dist-zip foreign
  
---- spatialite.orig/libspatialite/Makefile.in
-+++ spatialite/libspatialite/Makefile.in
-@@ -252,7 +252,7 @@ top_build_prefix = @top_build_prefix@
+Index: spatialite/libspatialite/Makefile.in
+===================================================================
+--- spatialite.orig/libspatialite/Makefile.in	2012-02-17 16:53:35.000000000 +0100
++++ spatialite/libspatialite/Makefile.in	2012-02-17 17:03:14.000000000 +0100
+@@ -254,7 +254,7 @@
  top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
  ACLOCAL_AMFLAGS = -I m4
 -AUTOMAKE_OPTIONS = dist-zip
 +AUTOMAKE_OPTIONS = dist-zip foreign
- EXTRA_DIST = makefile.vc nmake.opt libspatialite.def
- SUBDIRS = src
+ EXTRA_DIST = makefile.vc nmake.opt mainpage.doxy README.coverage
+ SUBDIRS = src test examples
  pkgconfigdir = $(libdir)/pkgconfig
---- spatialite.orig/spatialite-tools/Makefile.in
-+++ spatialite/spatialite-tools/Makefile.in
-@@ -282,7 +282,7 @@ EXTRA_DIST = makefile.vc nmake.opt \
+Index: spatialite/spatialite-tools/Makefile.in
+===================================================================
+--- spatialite.orig/spatialite-tools/Makefile.in	2012-02-17 16:53:36.000000000 +0100
++++ spatialite/spatialite-tools/Makefile.in	2012-02-17 17:02:17.000000000 +0100
+@@ -294,7 +294,7 @@
  	Makefile-static-Linux \
  	Makefile-static-MacOsX
  

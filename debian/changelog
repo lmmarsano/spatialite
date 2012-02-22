@@ -4,8 +4,10 @@ spatialite (3.0.1-1) unstable; urgency=low
   * The get-orig-source target changed (again) but temporarly not working,
     because tools and lib currently have different versions.
     Maybe upstream likes upsetting distribution details at every new release?
+  * Patchset refreshed. Finally, Sandro is now following a sane policy with 
+    SONAME versioning. Better than never.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 17 Feb 2012 12:40:24 +0100
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 22 Feb 2012 11:11:10 +0100
 
 spatialite (3.0.0~beta20110817-3) unstable; urgency=low
 
