@@ -7,7 +7,6 @@
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-ARCHIVES=libspatialite spatialite-tools
 FULL_VERSION := $(shell dpkg-parsechangelog | grep ^Version | cut -d' ' -f2 | cut -d- -f1)
 VERSION := $(shell echo $(FULL_VERSION) | sed -e "s/~beta[[:digit:]]\+/-BETA/")
 LC_VERSION := $(shell echo $(VERSION) | tr A-Z a-z)
@@ -28,38 +27,12 @@ versions:
 	@echo "Spatialite full version: $(FULL_VERSION)"
 	@echo "Spatialite version: $(LC_VERSION)"
 
-get-orig-source:
-	mkdir -p $(CURDIR)/tmp || true
-	for archive in $(ARCHIVES); \
-	do \
-	    wget -O $(CURDIR)/$$archive.tar.gz $(BASE_URL)/$$archive-sources/$$archive-$(LC_VERSION).tar.gz; \
-		tar xzovf $(CURDIR)/$$archive.tar.gz -C $(CURDIR)/tmp; \
-		mv $(CURDIR)/tmp/$$archive-$(LC_VERSION) $(CURDIR)/tmp/$$archive; \
-	done
-	mv $(CURDIR)/tmp $(CURDIR)/spatialite-$(LC_VERSION)
-	rm -rf $(CURDIR)/*.tar.gz
-	tar czvf spatialite_$(FULL_VERSION).orig.tar.gz --exclude=debian --exclude-vcs spatialite-$(LC_VERSION)
-	rm -rf $(CURDIR)/spatialite-$(LC_VERSION)
-
 override_dh_auto_configure:
-	dh_auto_configure -Dlibspatialite -- \
+	dh_auto_configure -- \
 		--enable-geos \
 		--enable-proj \
 		$(EPSG) \
 		--disable-geosadvanced
-	dh_auto_configure -Dspatialite-tools
-
-override_dh_auto_build:
-	dh_auto_build -Dlibspatialite
-	dh_auto_build -Dspatialite-tools
-
-override_dh_auto_clean:
-	dh_auto_clean -Dlibspatialite
-	dh_auto_clean -Dspatialite-tools
-
-override_dh_auto_install:
-	dh_auto_install -Dlibspatialite
-	dh_auto_install -Dspatialite-tools
 
 override_dh_shlibdeps:
 	dh_shlibdeps -l/usr/lib:$(CURDIR)/debian/tmp/usr/lib

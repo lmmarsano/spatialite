@@ -1,3 +1,11 @@
+spatialite (3.0.1-1) unstable; urgency=low
+
+  Starting from this release Spatialite library and Spatialtools have been
+  decoupled in two different sources as in upstream kits. Each of them now
+  follows its own releasing process and has its own version.
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 23 Feb 2012 13:47:17 +0100
+
 spatialite (3.0.0~beta20110817-3) unstable; urgency=medium
 
   From this release, powerpc will lack full EPSG initialization.
