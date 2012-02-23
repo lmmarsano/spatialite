@@ -1,4 +1,2 @@
 00-add_automake_foreign.patch
-01-fix_local_build.patch
-03-fix_typos.patch
 04-fix_missing_define.patch
