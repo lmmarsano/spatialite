@@ -14,8 +14,9 @@ spatialite (3.0.1-1) unstable; urgency=low
   * Added a patch 05-dont_relink.patch to avoid (superfluous) relinking against
     the C++ geos library. It now causes a failure at configuration time
     because the C/C++ libraries are now splitted.
+  * Added a 06-fix_soname.patch patch to use a correct SONAME versioning.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 27 Feb 2012 12:26:08 +0100
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 27 Feb 2012 13:09:12 +0100
 
 spatialite (3.0.0~beta20110817-3) unstable; urgency=low
 

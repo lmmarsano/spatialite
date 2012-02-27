@@ -1,0 +1,31 @@
+Index: spatialite/src/Makefile.am
+===================================================================
+--- spatialite.orig/src/Makefile.am	2012-02-23 13:42:29.000000000 +0100
++++ spatialite/src/Makefile.am	2012-02-27 12:58:50.000000000 +0100
+@@ -25,9 +25,9 @@
+ 
+ 
+ if MINGW
+-libspatialite_la_LDFLAGS = -version-info 4:0:2 -no-undefined
++libspatialite_la_LDFLAGS = -version-info 4:0:1 -no-undefined
+ else
+-libspatialite_la_LDFLAGS = -version-info 4:0:2
++libspatialite_la_LDFLAGS = -version-info 4:0:1
+ libspatialite_la_LIBADD += -lpthread -ldl
+ endif
+ 
+Index: spatialite/src/Makefile.in
+===================================================================
+--- spatialite.orig/src/Makefile.in	2012-02-23 13:42:29.000000000 +0100
++++ spatialite/src/Makefile.in	2012-02-27 12:59:03.000000000 +0100
+@@ -279,8 +279,8 @@
+ 	./spatialite/libsplite.la ./shapefiles/libshapefiles.la \
+ 	./srsinit/libsrsinit.la ./virtualtext/libvirtualtext.la \
+ 	$(am__append_1)
+-@MINGW_FALSE@libspatialite_la_LDFLAGS = -version-info 4:0:2
+-@MINGW_TRUE@libspatialite_la_LDFLAGS = -version-info 4:0:2 -no-undefined
++@MINGW_FALSE@libspatialite_la_LDFLAGS = -version-info 4:0:1
++@MINGW_TRUE@libspatialite_la_LDFLAGS = -version-info 4:0:1 -no-undefined
+ MOSTLYCLEANFILES = *.gcna *.gcno *.gcda
+ all: all-recursive
+ 
