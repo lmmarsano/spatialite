@@ -1,2 +1,3 @@
 00-add_automake_foreign.patch
 04-fix_missing_define.patch
+05-dont_relink.patch
