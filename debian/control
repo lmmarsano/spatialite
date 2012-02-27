@@ -7,7 +7,7 @@ Build-Depends:
  debhelper (>= 8)
  , autotools-dev
  , libsqlite3-dev (>= 3.6.11)
- , libgeos-dev (>= 3.0.3)
+ , libgeos-dev (>= 3.3.0)
  , libproj-dev
  , libreadline-dev
  , libexpat1-dev
@@ -21,6 +21,7 @@ Vcs-Git: git://git.debian.org/pkg-grass/spatialite.git
 Package: libspatialite3
 Architecture: any
 Section: libs
+Breaks: spatialite-bin (<< 3.0.0-1~)
 Depends:
  ${shlibs:Depends}
  , ${misc:Depends}

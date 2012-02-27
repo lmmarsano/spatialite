@@ -30,9 +30,8 @@ versions:
 override_dh_auto_configure:
 	dh_auto_configure -- \
 		--enable-geos \
-		--enable-proj \
 		$(EPSG) \
-		--disable-geosadvanced
+		--enable-proj
 
 override_dh_shlibdeps:
 	dh_shlibdeps -l/usr/lib:$(CURDIR)/debian/tmp/usr/lib

@@ -7,8 +7,11 @@ spatialite (3.0.1-1) unstable; urgency=low
   * Now spatialite source includes the library only, spatialite-tools moved
     to a new package.
   * Rules script greatly semplified.
+  * For safety added a Breaks against previous version of spatialite-bin,
+    that should allow a more smooth upgrade with new splitted packages.
+  * Force Geos 3.3+ use for a working test suite.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Thu, 23 Feb 2012 13:55:06 +0100
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Mon, 27 Feb 2012 11:10:21 +0100
 
 spatialite (3.0.0~beta20110817-3) unstable; urgency=low
 
