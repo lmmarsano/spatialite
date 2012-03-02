@@ -1,7 +1,7 @@
 Index: spatialite/src/headers/spatialite/gaiaexif.h
 ===================================================================
---- spatialite.orig/src/headers/spatialite/gaiaexif.h	2012-02-17 16:53:35.000000000 +0100
-+++ spatialite/src/headers/spatialite/gaiaexif.h	2012-02-22 11:10:40.000000000 +0100
+--- spatialite.orig/src/headers/spatialite/gaiaexif.h	2012-03-02 11:56:59.000000000 +0100
++++ spatialite/src/headers/spatialite/gaiaexif.h	2012-03-02 11:57:11.000000000 +0100
 @@ -87,6 +87,7 @@
  #define GAIA_GEOMETRY_BLOB	8
  /** this BLOB does actually contain a TIFF image */

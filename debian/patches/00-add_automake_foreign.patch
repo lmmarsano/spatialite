@@ -12,26 +12,26 @@ Forwarded: no
 
 Index: spatialite/Makefile.am
 ===================================================================
---- spatialite.orig/Makefile.am	2012-02-17 16:53:35.000000000 +0100
-+++ spatialite/Makefile.am	2012-02-17 17:02:17.000000000 +0100
+--- spatialite.orig/Makefile.am	2012-03-02 11:53:36.000000000 +0100
++++ spatialite/Makefile.am	2012-03-02 11:55:51.000000000 +0100
 @@ -1,6 +1,6 @@
  ACLOCAL_AMFLAGS = -I m4
  
 -AUTOMAKE_OPTIONS = dist-zip
 +AUTOMAKE_OPTIONS = dist-zip foreign
  
- EXTRA_DIST = makefile.vc nmake.opt mainpage.doxy README.coverage
+ EXTRA_DIST = makefile.vc nmake.opt Android.mk mainpage.doxy README.coverage
  
 Index: spatialite/Makefile.in
 ===================================================================
---- spatialite.orig/Makefile.in	2012-02-17 16:53:35.000000000 +0100
-+++ spatialite/Makefile.in	2012-02-17 17:03:14.000000000 +0100
-@@ -254,7 +254,7 @@
+--- spatialite.orig/Makefile.in	2012-03-02 11:53:36.000000000 +0100
++++ spatialite/Makefile.in	2012-03-02 11:56:25.000000000 +0100
+@@ -257,7 +257,7 @@
  top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
  ACLOCAL_AMFLAGS = -I m4
 -AUTOMAKE_OPTIONS = dist-zip
 +AUTOMAKE_OPTIONS = dist-zip foreign
- EXTRA_DIST = makefile.vc nmake.opt mainpage.doxy README.coverage
+ EXTRA_DIST = makefile.vc nmake.opt Android.mk mainpage.doxy README.coverage
  SUBDIRS = src test examples
  pkgconfigdir = $(libdir)/pkgconfig

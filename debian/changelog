@@ -1,10 +1,12 @@
-spatialite (3.0.1-2) unstable; urgency=low
+spatialite (3.0.2~20120302-1) unstable; urgency=low
 
+  * New upstream pre-release.
   * Added 07-fix_spatialite_pc.patch: now avoid re-linking also in spatialite.pc 
     file.
-  * 
+  * Patchset refreshed.
+  * New SONAME set to be compatible with that issued until now.
 
- -- Francesco Paolo Lovergine <frankie@debian.org>  Wed, 29 Feb 2012 14:09:52 +0100
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Fri, 02 Mar 2012 12:00:56 +0100
 
 spatialite (3.0.1-1) unstable; urgency=low
 

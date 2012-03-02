@@ -1,8 +1,8 @@
 Index: spatialite/configure
 ===================================================================
---- spatialite.orig/configure	2012-02-23 13:42:29.000000000 +0100
-+++ spatialite/configure	2012-02-27 12:25:37.000000000 +0100
-@@ -17201,7 +17201,7 @@
+--- spatialite.orig/configure	2012-03-02 11:56:59.000000000 +0100
++++ spatialite/configure	2012-03-02 11:57:28.000000000 +0100
+@@ -17205,7 +17205,7 @@
      ac_res="none required"
    else
      ac_res=-l$ac_lib
@@ -11,7 +11,7 @@ Index: spatialite/configure
    fi
    if ac_fn_c_try_link "$LINENO"; then :
    ac_cv_search_GEOSTopologyPreserveSimplify=$ac_res
-@@ -17271,7 +17271,7 @@
+@@ -17275,7 +17275,7 @@
      ac_res="none required"
    else
      ac_res=-l$ac_lib
@@ -22,9 +22,9 @@ Index: spatialite/configure
    ac_cv_search_GEOSCoveredBy=$ac_res
 Index: spatialite/configure.ac
 ===================================================================
---- spatialite.orig/configure.ac	2012-02-23 13:42:29.000000000 +0100
-+++ spatialite/configure.ac	2012-02-27 12:25:14.000000000 +0100
-@@ -124,7 +124,7 @@
+--- spatialite.orig/configure.ac	2012-03-02 11:56:59.000000000 +0100
++++ spatialite/configure.ac	2012-03-02 11:57:28.000000000 +0100
+@@ -128,7 +128,7 @@
  if test x"$enable_geos" != "xno"; then
    OMIT_GEOS_FLAGS=
    AC_CHECK_HEADERS(geos_c.h,, [AC_MSG_ERROR([cannot find geos_c.h, bailing out])])
@@ -33,8 +33,8 @@ Index: spatialite/configure.ac
    #-----------------------------------------------------------------------
    #   --enable-geosadvanced
    #
-@@ -133,7 +133,7 @@
- 	  [], [geosadvanced=yes])
+@@ -137,7 +137,7 @@
+ 	  [], [enable_geosadvanced=yes])
    if test x"$enable_geosadvanced" != "xno"; then
  	  GEOSADVANCED_FLAGS=-DGEOS_ADVANCED
 -	  AC_SEARCH_LIBS(GEOSCoveredBy,geos_c,,AC_MSG_ERROR([obsolete 'libgeos_c' (< v.3.3.0). please retry specifying: --disable-geosadvanced.]),-lm -lgeos)
