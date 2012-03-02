@@ -49,11 +49,7 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <stdio.h>
 #include <string.h>
 
-#ifdef SPL_AMALGAMATION		/* spatialite-amalgamation */
-#include <spatialite/sqlite3ext.h>
-#else
-#include <sqlite3ext.h>
-#endif
+#include <spatialite/sqlite.h>
 
 #include <spatialite/gaiageo.h>
 
@@ -2352,6 +2348,22 @@ gaiaOutSvg (gaiaOutBufferPtr out_buf, gaiaGeomCollPtr geom, int relative,
 			}
 		      polyg = polyg->Next;
 		  }
+	    }
+      }
+
+    if (out_buf->Error == 0 && out_buf->WriteOffset > 0)
+      {
+	  /* sandro 2012-02-23 cleaning extra trailing spaces */
+	  int i;
+	  for (i = out_buf->WriteOffset - 1; i >= 0; i--)
+	    {
+		if (*(out_buf->Buffer + i) == ' ')
+		  {
+		      *(out_buf->Buffer + i) = '\0';
+		      out_buf->WriteOffset -= 1;
+		  }
+		else
+		    break;
 	    }
       }
 }

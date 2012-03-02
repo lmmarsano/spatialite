@@ -53,11 +53,7 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <geos_c.h>
 #endif
 
-#ifdef SPL_AMALGAMATION		/* spatialite-amalgamation */
-#include <spatialite/sqlite3ext.h>
-#else
-#include <sqlite3ext.h>
-#endif
+#include <spatialite/sqlite.h>
 
 #include <spatialite/gaiageo.h>
 
@@ -343,6 +339,8 @@ gaiaGeomCollRelate (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2,
     ret = GEOSRelatePattern (g1, g2, pattern);
     GEOSGeom_destroy (g1);
     GEOSGeom_destroy (g2);
+    if (ret == 2)
+	return -1;
     return ret;
 }
 
@@ -411,6 +409,8 @@ gaiaGeometryIntersection (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     GEOSGeometry *g3;
     if (!geom1 || !geom2)
 	return NULL;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
+	return NULL;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
     g3 = GEOSIntersection (g1, g2);
@@ -442,6 +442,8 @@ gaiaGeometryUnion (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     GEOSGeometry *g2;
     GEOSGeometry *g3;
     if (!geom1 || !geom2)
+	return NULL;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
 	return NULL;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
@@ -482,6 +484,8 @@ gaiaGeometryDifference (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     GEOSGeometry *g3;
     if (!geom1 || !geom2)
 	return NULL;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
+	return NULL;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
     g3 = GEOSDifference (g1, g2);
@@ -514,6 +518,8 @@ gaiaGeometrySymDifference (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     GEOSGeometry *g3;
     if (!geom1 || !geom2)
 	return NULL;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
+	return NULL;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
     g3 = GEOSSymDifference (g1, g2);
@@ -539,11 +545,13 @@ gaiaGeometrySymDifference (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
 GAIAGEO_DECLARE gaiaGeomCollPtr
 gaiaBoundary (gaiaGeomCollPtr geom)
 {
-/* builds a new geometry representing the conbinatorial boundary of GEOM */
+/* builds a new geometry representing the combinatorial boundary of GEOM */
     gaiaGeomCollPtr geo;
     GEOSGeometry *g1;
     GEOSGeometry *g2;
     if (!geom)
+	return NULL;
+    if (gaiaIsToxic (geom))
 	return NULL;
     g1 = gaiaToGeos (geom);
     g2 = GEOSBoundary (g1);
@@ -574,6 +582,10 @@ gaiaGeomCollCentroid (gaiaGeomCollPtr geom, double *x, double *y)
     GEOSGeometry *g2;
     if (!geom)
 	return 0;
+    if (gaiaIsToxic (geom))
+      {
+	  return 0;
+      }
     g1 = gaiaToGeos (geom);
     g2 = GEOSGetCentroid (g1);
     GEOSGeom_destroy (g1);
@@ -610,6 +622,10 @@ gaiaGetPointOnSurface (gaiaGeomCollPtr geom, double *x, double *y)
     GEOSGeometry *g2;
     if (!geom)
 	return 0;
+    if (gaiaIsToxic (geom))
+      {
+	  return 0;
+      }
     g1 = gaiaToGeos (geom);
     g2 = GEOSPointOnSurface (g1);
     GEOSGeom_destroy (g1);
@@ -811,6 +827,8 @@ gaiaConvexHull (gaiaGeomCollPtr geom)
     GEOSGeometry *g2;
     if (!geom)
 	return NULL;
+    if (gaiaIsToxic (geom))
+	return NULL;
     g1 = gaiaToGeos (geom);
     g2 = GEOSConvexHull (g1);
     GEOSGeom_destroy (g1);
@@ -863,400 +881,129 @@ gaiaGeomCollBuffer (gaiaGeomCollPtr geom, double radius, int points)
 }
 
 static void
-test_interior_ring (gaiaDynamicLinePtr dyn1, gaiaDynamicLinePtr dyn2,
-		    int *contains, int *within, int *crosses)
+auxFromGeosPolygon (const GEOSGeometry * geos, gaiaGeomCollPtr result)
 {
-/* testing if Ring-1 contains Ring-2 */
-    gaiaGeomCollPtr geom1;
-    gaiaGeomCollPtr geom2;
-    gaiaPolygonPtr pg;
-    gaiaRingPtr rng;
+/* converting a Polygon from GEOS to SpatiaLite */
+    const GEOSGeometry *geos_ring;
+    const GEOSCoordSequence *coords;
+    unsigned int pts;
+    unsigned int geos_dims;
+    int interiors;
     int iv;
-    int pts;
-    gaiaPointPtr pt;
-
-/* creating the Polygon-1 geometry */
-    pts = 0;
-    pt = dyn1->First;
-    while (pt)
-      {
-	  pts++;
-	  pt = pt->Next;
-      }
-    geom1 = gaiaAllocGeomColl ();
-    pg = gaiaAddPolygonToGeomColl (geom1, pts, 0);
-    rng = pg->Exterior;
-    iv = 0;
-    pt = dyn1->First;
-    while (pt)
-      {
-	  /* EXTERIOR RING */
-	  gaiaSetPoint (rng->Coords, iv, pt->X, pt->Y);
-	  iv++;
-	  pt = pt->Next;
-      }
-
-/* creating the Polygon-2 geometry */
-    pts = 0;
-    pt = dyn2->First;
-    while (pt)
-      {
-	  pts++;
-	  pt = pt->Next;
-      }
-    geom2 = gaiaAllocGeomColl ();
-    pg = gaiaAddPolygonToGeomColl (geom2, pts, 0);
-    rng = pg->Exterior;
-    iv = 0;
-    pt = dyn2->First;
-    while (pt)
-      {
-	  /* EXTERIOR RING */
-	  gaiaSetPoint (rng->Coords, iv, pt->X, pt->Y);
-	  iv++;
-	  pt = pt->Next;
-      }
-    *contains = gaiaGeomCollContains (geom1, geom2);
-    *within = gaiaGeomCollWithin (geom1, geom2);
-    *crosses = gaiaGeomCollCrosses (geom1, geom2);
-    gaiaFreeGeomColl (geom1);
-    gaiaFreeGeomColl (geom2);
-}
-
-static gaiaDynamicLinePtr
-build_dyn_ring (gaiaLinestringPtr ln)
-{
-/* creating a DynamicLine from a Linestring */
-    int iv;
+    int ib;
     double x;
     double y;
-    double m;
     double z;
-    gaiaDynamicLinePtr dyn = gaiaAllocDynamicLine ();
-    for (iv = 0; iv < ln->Points; iv++)
+    gaiaPolygonPtr pg;
+    gaiaRingPtr rng;
+
+    geos_ring = GEOSGetExteriorRing (geos);
+    interiors = GEOSGetNumInteriorRings (geos);
+    coords = GEOSGeom_getCoordSeq (geos_ring);
+    GEOSCoordSeq_getDimensions (coords, &geos_dims);
+    GEOSCoordSeq_getSize (coords, &pts);
+
+    pg = gaiaAddPolygonToGeomColl (result, pts, interiors);
+/* setting up the Exterior ring */
+    rng = pg->Exterior;
+    for (iv = 0; iv < (int) pts; iv++)
       {
-	  if (ln->DimensionModel == GAIA_XY_Z_M)
+	  if (geos_dims == 3)
 	    {
-		gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
-		gaiaAppendPointZMToDynamicLine (dyn, x, y, z, m);
-	    }
-	  else if (ln->DimensionModel == GAIA_XY_Z)
-	    {
-		gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
-		gaiaAppendPointZToDynamicLine (dyn, x, y, z);
-	    }
-	  else if (ln->DimensionModel == GAIA_XY_M)
-	    {
-		gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
-		gaiaAppendPointMToDynamicLine (dyn, x, y, m);
+		GEOSCoordSeq_getX (coords, iv, &x);
+		GEOSCoordSeq_getY (coords, iv, &y);
+		GEOSCoordSeq_getZ (coords, iv, &z);
 	    }
 	  else
 	    {
-		gaiaGetPoint (ln->Coords, iv, &x, &y);
-		gaiaAppendPointToDynamicLine (dyn, x, y);
+		GEOSCoordSeq_getX (coords, iv, &x);
+		GEOSCoordSeq_getY (coords, iv, &y);
+		z = 0.0;
+	    }
+	  if (rng->DimensionModel == GAIA_XY_Z)
+	    {
+		gaiaSetPointXYZ (rng->Coords, iv, x, y, z);
+	    }
+	  else if (rng->DimensionModel == GAIA_XY_M)
+	    {
+		gaiaSetPointXYM (rng->Coords, iv, x, y, 0.0);
+	    }
+	  else if (rng->DimensionModel == GAIA_XY_Z_M)
+	    {
+		gaiaSetPointXYZM (rng->Coords, iv, x, y, z, 0.0);
+	    }
+	  else
+	    {
+		gaiaSetPoint (rng->Coords, iv, x, y);
 	    }
       }
-    return dyn;
-}
 
-static int
-is_closed_dyn_ring (gaiaDynamicLinePtr dyn)
-{
-/* checking if a candidate Ring is already closed */
-    gaiaPointPtr pt1;
-    gaiaPointPtr pt2;
-    if (!dyn)
-	return 0;
-    pt1 = dyn->First;
-    pt2 = dyn->Last;
-    if (pt1 == NULL || pt2 == NULL)
-	return 0;
-    if (pt1 == pt2)
-	return 0;
-    if (pt1->X == pt2->X && pt1->Y == pt2->Y && pt1->Z == pt2->Z)
-	return 1;
-    return 0;
-}
-
-static int
-to_be_appended (gaiaDynamicLinePtr dyn, gaiaLinestringPtr ln)
-{
-/* checks is the Linestring has to be appended to the DynamicLine */
-    gaiaPointPtr pt = dyn->Last;
-    int iv = 0;
-    double x;
-    double y;
-    double z;
-    double m;
-    if (ln->DimensionModel == GAIA_XY_Z_M)
+    for (ib = 0; ib < interiors; ib++)
       {
-	  gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
-      }
-    else if (ln->DimensionModel == GAIA_XY_Z)
-      {
-	  gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
-      }
-    else if (ln->DimensionModel == GAIA_XY_M)
-      {
-	  gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
-      }
-    else
-      {
-	  gaiaGetPoint (ln->Coords, iv, &x, &y);
-      }
-    if (ln->DimensionModel == GAIA_XY_Z_M || ln->DimensionModel == GAIA_XY_Z)
-      {
-	  if (pt->X == x && pt->Y == y && pt->Z == z)
-	      return 1;
-      }
-    else
-      {
-	  if (pt->X == x && pt->Y == y)
-	      return 1;
-      }
-    return 0;
-}
-
-static int
-to_be_prepended (gaiaDynamicLinePtr dyn, gaiaLinestringPtr ln)
-{
-/* checks is the Linestring has to be prepended to the DynamicLine */
-    gaiaPointPtr pt = dyn->First;
-    int iv = ln->Points - 1;
-    double x;
-    double y;
-    double z;
-    double m;
-    if (ln->DimensionModel == GAIA_XY_Z_M)
-      {
-	  gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
-      }
-    else if (ln->DimensionModel == GAIA_XY_Z)
-      {
-	  gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
-      }
-    else if (ln->DimensionModel == GAIA_XY_M)
-      {
-	  gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
-      }
-    else
-      {
-	  gaiaGetPoint (ln->Coords, iv, &x, &y);
-      }
-    if (ln->DimensionModel == GAIA_XY_Z_M || ln->DimensionModel == GAIA_XY_Z)
-      {
-	  if (pt->X == x && pt->Y == y && pt->Z == z)
-	      return 1;
-      }
-    else
-      {
-	  if (pt->X == x && pt->Y == y)
-	      return 1;
-      }
-    return 0;
-}
-
-static int
-to_be_appended_reverse (gaiaDynamicLinePtr dyn, gaiaLinestringPtr ln)
-{
-/* checks is the Linestring (reversed) has to be appended to the DynamicLine */
-    gaiaPointPtr pt = dyn->Last;
-    int iv = ln->Points - 1;
-    double x;
-    double y;
-    double z;
-    double m;
-    if (ln->DimensionModel == GAIA_XY_Z_M)
-      {
-	  gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
-      }
-    else if (ln->DimensionModel == GAIA_XY_Z)
-      {
-	  gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
-      }
-    else if (ln->DimensionModel == GAIA_XY_M)
-      {
-	  gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
-      }
-    else
-      {
-	  gaiaGetPoint (ln->Coords, iv, &x, &y);
-      }
-    if (ln->DimensionModel == GAIA_XY_Z_M || ln->DimensionModel == GAIA_XY_Z)
-      {
-	  if (pt->X == x && pt->Y == y && pt->Z == z)
-	      return 1;
-      }
-    else
-      {
-	  if (pt->X == x && pt->Y == y)
-	      return 1;
-      }
-    return 0;
-}
-
-static int
-to_be_prepended_reverse (gaiaDynamicLinePtr dyn, gaiaLinestringPtr ln)
-{
-/* checks is the Linestring (reversed) has to be prepended to the DynamicLine */
-    gaiaPointPtr pt = dyn->First;
-    int iv = 0;
-    double x;
-    double y;
-    double z;
-    double m;
-    if (ln->DimensionModel == GAIA_XY_Z_M)
-      {
-	  gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
-      }
-    else if (ln->DimensionModel == GAIA_XY_Z)
-      {
-	  gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
-      }
-    else if (ln->DimensionModel == GAIA_XY_M)
-      {
-	  gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
-      }
-    else
-      {
-	  gaiaGetPoint (ln->Coords, iv, &x, &y);
-      }
-    if (ln->DimensionModel == GAIA_XY_Z_M || ln->DimensionModel == GAIA_XY_Z)
-      {
-	  if (pt->X == x && pt->Y == y && pt->Z == z)
-	      return 1;
-      }
-    else
-      {
-	  if (pt->X == x && pt->Y == y)
-	      return 1;
-      }
-    return 0;
-}
-
-static void
-append_to_ring (gaiaDynamicLinePtr dyn, gaiaLinestringPtr ln, int reversed)
-{
-/* appending a Linestring to a DynamicRing */
-    int iv;
-    double x;
-    double y;
-    double z;
-    double m;
-    if (reversed)
-      {
-	  for (iv = ln->Points - 2; iv >= 0; iv--)
+	  /* setting up any interior ring */
+	  geos_ring = GEOSGetInteriorRingN (geos, ib);
+	  coords = GEOSGeom_getCoordSeq (geos_ring);
+	  GEOSCoordSeq_getDimensions (coords, &geos_dims);
+	  GEOSCoordSeq_getSize (coords, &pts);
+	  rng = gaiaAddInteriorRing (pg, ib, pts);
+	  for (iv = 0; iv < (int) pts; iv++)
 	    {
-		if (ln->DimensionModel == GAIA_XY_Z_M)
+		if (geos_dims == 3)
 		  {
-		      gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
-		      gaiaAppendPointZMToDynamicLine (dyn, x, y, z, m);
-		  }
-		else if (ln->DimensionModel == GAIA_XY_Z)
-		  {
-		      gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
-		      gaiaAppendPointZToDynamicLine (dyn, x, y, z);
-		  }
-		else if (ln->DimensionModel == GAIA_XY_M)
-		  {
-		      gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
-		      gaiaAppendPointMToDynamicLine (dyn, x, y, m);
+		      GEOSCoordSeq_getX (coords, iv, &x);
+		      GEOSCoordSeq_getY (coords, iv, &y);
+		      GEOSCoordSeq_getZ (coords, iv, &z);
 		  }
 		else
 		  {
-		      gaiaGetPoint (ln->Coords, iv, &x, &y);
-		      gaiaAppendPointToDynamicLine (dyn, x, y);
+		      GEOSCoordSeq_getX (coords, iv, &x);
+		      GEOSCoordSeq_getY (coords, iv, &y);
+		      z = 0.0;
 		  }
-	    }
-      }
-    else
-      {
-	  for (iv = 1; iv < ln->Points; iv++)
-	    {
-		if (ln->DimensionModel == GAIA_XY_Z_M)
+		if (rng->DimensionModel == GAIA_XY_Z)
 		  {
-		      gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
-		      gaiaAppendPointZMToDynamicLine (dyn, x, y, z, m);
+		      gaiaSetPointXYZ (rng->Coords, iv, x, y, z);
 		  }
-		else if (ln->DimensionModel == GAIA_XY_Z)
+		else if (rng->DimensionModel == GAIA_XY_M)
 		  {
-		      gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
-		      gaiaAppendPointZToDynamicLine (dyn, x, y, z);
+		      gaiaSetPointXYM (rng->Coords, iv, x, y, 0.0);
 		  }
-		else if (ln->DimensionModel == GAIA_XY_M)
+		else if (rng->DimensionModel == GAIA_XY_Z_M)
 		  {
-		      gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
-		      gaiaAppendPointMToDynamicLine (dyn, x, y, m);
+		      gaiaSetPointXYZM (rng->Coords, iv, x, y, z, 0.0);
 		  }
 		else
 		  {
-		      gaiaGetPoint (ln->Coords, iv, &x, &y);
-		      gaiaAppendPointToDynamicLine (dyn, x, y);
+		      gaiaSetPoint (rng->Coords, iv, x, y);
 		  }
 	    }
       }
 }
 
 static void
-prepend_to_ring (gaiaDynamicLinePtr dyn, gaiaLinestringPtr ln, int reversed)
+auxGeosMbr (const GEOSCoordSequence * cs, unsigned int pts, double *min_x,
+	    double *min_y, double *max_x, double *max_y)
 {
-/* appending a Linestring to a DynamicRing */
+/* computing the MBR */
     int iv;
     double x;
     double y;
-    double z;
-    double m;
-    if (reversed)
+    *min_x = DBL_MAX;
+    *min_y = DBL_MAX;
+    *max_x = 0 - DBL_MAX;
+    *max_y = 0 - DBL_MAX;
+    for (iv = 0; iv < (int) pts; iv++)
       {
-	  for (iv = 1; iv < ln->Points; iv++)
-	    {
-		if (ln->DimensionModel == GAIA_XY_Z_M)
-		  {
-		      gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
-		      gaiaPrependPointZMToDynamicLine (dyn, x, y, z, m);
-		  }
-		else if (ln->DimensionModel == GAIA_XY_Z)
-		  {
-		      gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
-		      gaiaPrependPointZToDynamicLine (dyn, x, y, z);
-		  }
-		else if (ln->DimensionModel == GAIA_XY_M)
-		  {
-		      gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
-		      gaiaPrependPointMToDynamicLine (dyn, x, y, m);
-		  }
-		else
-		  {
-		      gaiaGetPoint (ln->Coords, iv, &x, &y);
-		      gaiaPrependPointToDynamicLine (dyn, x, y);
-		  }
-	    }
-      }
-    else
-      {
-	  for (iv = ln->Points - 2; iv >= 0; iv--)
-	    {
-		if (ln->DimensionModel == GAIA_XY_Z_M)
-		  {
-		      gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
-		      gaiaPrependPointZMToDynamicLine (dyn, x, y, z, m);
-		  }
-		else if (ln->DimensionModel == GAIA_XY_Z)
-		  {
-		      gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
-		      gaiaPrependPointZToDynamicLine (dyn, x, y, z);
-		  }
-		else if (ln->DimensionModel == GAIA_XY_M)
-		  {
-		      gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
-		      gaiaPrependPointMToDynamicLine (dyn, x, y, m);
-		  }
-		else
-		  {
-		      gaiaGetPoint (ln->Coords, iv, &x, &y);
-		      gaiaPrependPointToDynamicLine (dyn, x, y);
-		  }
-	    }
+	  GEOSCoordSeq_getX (cs, iv, &x);
+	  GEOSCoordSeq_getY (cs, iv, &y);
+	  if (x < *min_x)
+	      *min_x = x;
+	  if (x > *max_x)
+	      *max_x = x;
+	  if (y < *min_y)
+	      *min_y = y;
+	  if (y > *max_y)
+	      *max_y = y;
       }
 }
 
@@ -1264,37 +1011,43 @@ GAIAGEO_DECLARE gaiaGeomCollPtr
 gaiaPolygonize (gaiaGeomCollPtr geom, int force_multi)
 {
 /* attempts to rearrange a generic Geometry into a (multi)polygon */
+    int ig;
+    int ib;
+    int iv;
+    int interiors;
+    int geos_dims = 2;
     int pts = 0;
     int lns = 0;
     int pgs = 0;
-    gaiaGeomCollPtr result;
+    int items;
+    int error;
+    double x;
+    double y;
+    double z;
+    double m;
+    gaiaGeomCollPtr result = NULL;
     gaiaPointPtr pt;
     gaiaLinestringPtr ln;
     gaiaPolygonPtr pg;
-    gaiaRingPtr rng;
-    int dummy;
-    int ok;
-    int ok2;
-    int i;
-    int i2;
-    int iv;
-    int ib;
-    double x;
-    double y;
-    double m;
-    double z;
-    double x0;
-    double y0;
-    double z0;
-    int contains;
-    int within;
-    int crosses;
-    int num_interiors;
-    gaiaLinestringPtr *ln_array = NULL;
-    gaiaDynamicLinePtr *dyn_array = NULL;
-    gaiaDynamicLinePtr *ext_array = NULL;
-    gaiaDynamicLinePtr dyn;
-    gaiaDynamicLinePtr dyn2;
+    GEOSCoordSequence *cs;
+    const GEOSGeometry *const *geos_list = NULL;
+    GEOSGeometry **p_item;
+    GEOSGeometry *geos;
+    const GEOSGeometry *geos_item;
+    const GEOSGeometry *geos_item2;
+    const GEOSGeometry *geos_ring;
+    char *valid_polygons = NULL;
+    const GEOSCoordSequence *coords;
+    unsigned int pts1;
+    unsigned int pts2;
+    double min_x1;
+    double max_x1;
+    double min_y1;
+    double max_y1;
+    double min_x2;
+    double max_x2;
+    double min_y2;
+    double max_y2;
 
     if (!geom)
 	return NULL;
@@ -1320,319 +1073,184 @@ gaiaPolygonize (gaiaGeomCollPtr geom, int force_multi)
       }
     if (!lns)
 	return NULL;
-/* allocating and initializing aux-arrays */
-    ln_array = malloc (sizeof (gaiaLinestringPtr) * lns);
-    dyn_array = malloc (sizeof (gaiaDynamicLinePtr) * lns);
-    ext_array = malloc (sizeof (gaiaDynamicLinePtr) * lns);
-    i = 0;
+    if (geom->DimensionModel == GAIA_XY_Z
+	|| geom->DimensionModel == GAIA_XY_Z_M)
+	geos_dims = 3;
+
+/* allocating GEOS linestrings */
+    geos_list = malloc (sizeof (const GEOSGeometry * const *) * lns);
+    p_item = (GEOSGeometry **) geos_list;
+    for (iv = 0; iv < lns; iv++)
+      {
+	  /* initializing to NULL */
+	  *p_item++ = NULL;
+      }
+    p_item = (GEOSGeometry **) geos_list;
+
+/* initializing GEOS linestrings */
     ln = geom->FirstLinestring;
     while (ln)
       {
-	  ln_array[i] = ln;
-	  dyn_array[i] = NULL;
-	  ext_array[i] = NULL;
-	  i++;
+	  cs = GEOSCoordSeq_create (ln->Points, geos_dims);
+	  for (iv = 0; iv < ln->Points; iv++)
+	    {
+		/* exterior ring segments */
+		z = 0.0;
+		if (ln->DimensionModel == GAIA_XY_Z)
+		  {
+		      gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
+		  }
+		else if (ln->DimensionModel == GAIA_XY_M)
+		  {
+		      gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
+		  }
+		else if (ln->DimensionModel == GAIA_XY_Z_M)
+		  {
+		      gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
+		  }
+		else
+		  {
+		      gaiaGetPoint (ln->Coords, iv, &x, &y);
+		  }
+		if (geos_dims == 3)
+		  {
+		      GEOSCoordSeq_setX (cs, iv, x);
+		      GEOSCoordSeq_setY (cs, iv, y);
+		      GEOSCoordSeq_setZ (cs, iv, z);
+		  }
+		else
+		  {
+		      GEOSCoordSeq_setX (cs, iv, x);
+		      GEOSCoordSeq_setY (cs, iv, y);
+		  }
+	    }
+	  *p_item++ = GEOSGeom_createLineString (cs);
 	  ln = ln->Next;
       }
 
-    for (i = 0; i < lns; i++)
+/* calling GEOSPolygonize */
+    geos = GEOSPolygonize (geos_list, lns);
+    if (geos == NULL)
+	goto cleanup;
+
+/*
+/ 
+/ GEOSPolygonize is expected to return a collection of Polygons
+/
+/ CAVEAT: internal holes are returned as such (interior rings in
+/         some Polygon), but are returned as distinct Polygons too
+/
+/ we must check this, so to *not* return Polygons representing holes
+/
+*/
+    error = 0;
+    items = GEOSGetNumGeometries (geos);
+    for (ig = 0; ig < items; ig++)
       {
-	  /* processing closed rings */
-	  ln = ln_array[i];
-	  iv = ln->Points - 1;
-	  if (ln->DimensionModel == GAIA_XY_Z_M)
+	  /* looping on elementaty GEOS geometries */
+	  geos_item = GEOSGetGeometryN (geos, ig);
+	  if (GEOSGeomTypeId (geos_item) != GEOS_POLYGON)
 	    {
-		gaiaGetPointXYZM (ln->Coords, 0, &x0, &y0, &z0, &m);
-		gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
-		if (x0 == x && y0 == y && z0 == z)
-		  {
-		      dyn_array[i] = build_dyn_ring (ln);
-		      ln_array[i] = NULL;
-		  }
-	    }
-	  else if (ln->DimensionModel == GAIA_XY_Z)
-	    {
-		gaiaGetPointXYZ (ln->Coords, 0, &x0, &y0, &z0);
-		gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
-		if (x0 == x && y0 == y && z0 == z)
-		  {
-		      dyn_array[i] = build_dyn_ring (ln);
-		      ln_array[i] = NULL;
-		  }
-	    }
-	  else if (ln->DimensionModel == GAIA_XY_M)
-	    {
-		gaiaGetPointXYM (ln->Coords, 0, &x0, &y0, &m);
-		gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
-		if (x0 == x && y0 == y)
-		  {
-		      dyn_array[i] = build_dyn_ring (ln);
-		      ln_array[i] = NULL;
-		  }
-	    }
-	  else
-	    {
-		gaiaGetPoint (ln->Coords, 0, &x0, &y0);
-		gaiaGetPoint (ln->Coords, iv, &x, &y);
-		if (x0 == x && y0 == y)
-		  {
-		      dyn_array[i] = build_dyn_ring (ln);
-		      ln_array[i] = NULL;
-		  }
+		/* not a Polygon ... ouch ... */
+		error = 1;
+		goto cleanup;
 	    }
       }
 
-    ok = 1;
-    while (ok)
+/* identifying valid Polygons [excluding holes] */
+    valid_polygons = malloc (items);
+    for (ig = 0; ig < items; ig++)
+	valid_polygons[ig] = 'Y';
+    for (ig = 0; ig < items; ig++)
       {
-	  if (dummy == 0)
-	      ok = dummy;	/* simply suppressing stupid compiler warnings */
-	  ok = 0;
-	  for (i = 0; i < lns; i++)
+	  /* looping on elementaty GEOS Polygons */
+	  geos_item = GEOSGetGeometryN (geos, ig);
+	  interiors = GEOSGetNumInteriorRings (geos_item);
+	  for (ib = 0; ib < interiors; ib++)
 	    {
-		/* attempting to create rings */
-		ln = ln_array[i];
-		if (ln == NULL)
-		    continue;
-		ok = 1;
-		dyn_array[i] = build_dyn_ring (ln);
-		ln_array[i] = NULL;
-		dyn = dyn_array[i];
-		ok2 = 1;
-		while (ok2)
+		/* looping on any interior ring */
+		geos_ring = GEOSGetInteriorRingN (geos_item, ib);
+		coords = GEOSGeom_getCoordSeq (geos_ring);
+		GEOSCoordSeq_getSize (coords, &pts1);
+		auxGeosMbr (coords, pts1, &min_x1, &min_y1, &max_x1, &max_y1);
+		for (iv = 0; iv < items; iv++)
 		  {
-		      ok2 = 0;
-		      for (i2 = 0; i2 < lns; i2++)
+		      if (iv == ig)
 			{
-			    if (is_closed_dyn_ring (dyn) == 1)
-				goto ring_done;
-			    ln = ln_array[i2];
-			    if (ln == NULL)
-				continue;
-			    if (to_be_appended (dyn, ln) == 1)
+			    /* skipping the Polygon itself */
+			    continue;
+			}
+		      if (valid_polygons[iv] == 'N')
+			{
+			    /* skipping any already invalid Polygon */
+			    continue;
+			}
+		      geos_item2 = GEOSGetGeometryN (geos, iv);
+		      if (GEOSGetNumInteriorRings (geos_item2) > 0)
+			{
+			    /* this Polygon contains holes [surely valid] */
+			    continue;
+			}
+		      geos_ring = GEOSGetExteriorRing (geos_item2);
+		      coords = GEOSGeom_getCoordSeq (geos_ring);
+		      GEOSCoordSeq_getSize (coords, &pts2);
+		      if (pts1 == pts2)
+			{
+			    auxGeosMbr (coords, pts2, &min_x2, &min_y2, &max_x2,
+					&max_y2);
+			    if (min_x1 == min_x2 && min_y1 == min_y2
+				&& max_x1 == max_x2 && max_y1 == max_y2)
 			      {
-				  append_to_ring (dyn, ln, 0);
-				  ln_array[i2] = NULL;
-				  ok2 = 1;
-				  break;
-			      }
-			    if (to_be_prepended (dyn, ln) == 1)
-			      {
-				  prepend_to_ring (dyn, ln, 0);
-				  ln_array[i2] = NULL;
-				  ok2 = 1;
-				  break;
-			      }
-			    if (to_be_appended_reverse (dyn, ln) == 1)
-			      {
-				  append_to_ring (dyn, ln, 1);
-				  ln_array[i2] = NULL;
-				  ok2 = 1;
-				  break;
-			      }
-			    if (to_be_prepended_reverse (dyn, ln) == 1)
-			      {
-				  prepend_to_ring (dyn, ln, 1);
-				  ln_array[i2] = NULL;
-				  ok2 = 1;
-				  break;
+				  /* same #points, same MBRs: invalidating */
+				  valid_polygons[iv] = 'N';
 			      }
 			}
 		  }
 	    }
-	ring_done:
-	  dummy = 0;
       }
 
-    ok = 1;
-    for (i = 0; i < lns; i++)
-      {
-	  /* checking if any ring is closed */
-	  dyn = dyn_array[i];
-	  if (dyn == NULL)
-	      continue;
-	  if (is_closed_dyn_ring (dyn) == 0)
-	      ok = 0;
-      }
-    if (ok == 0)
-      {
-	  /* invalid: quitting */
-	  for (i = 0; i < lns; i++)
-	    {
-		dyn = dyn_array[i];
-		if (dyn == NULL)
-		    continue;
-		gaiaFreeDynamicLine (dyn);
-	    }
-	  free (dyn_array);
-	  free (ext_array);
-	  free (ln_array);
-	  return NULL;
-      }
-
-    ok = 1;
-    for (i = 0; i < lns; i++)
-      {
-	  /* testing interior/exterior relationships */
-	  dyn = dyn_array[i];
-	  if (dyn == NULL)
-	      continue;
-	  for (i2 = i + 1; i2 < lns; i2++)
-	    {
-		/* testing interior/exterior relationships */
-		dyn2 = dyn_array[i2];
-		if (dyn2 == NULL)
-		    continue;
-		test_interior_ring (dyn, dyn2, &contains, &within, &crosses);
-		if (contains)
-		    ext_array[i2] = dyn;
-		if (within)
-		    ext_array[i] = dyn2;
-		if (crosses)
-		    ok = 0;
-	    }
-      }
-    if (ok == 0)
-      {
-	  /* invalid: quitting */
-	  for (i = 0; i < lns; i++)
-	    {
-		dyn = dyn_array[i];
-		if (dyn == NULL)
-		    continue;
-		gaiaFreeDynamicLine (dyn);
-	    }
-	  free (dyn_array);
-	  free (ext_array);
-	  free (ln_array);
-	  return NULL;
-      }
-
-    if (geom->DimensionModel == GAIA_XY_Z_M)
-	result = gaiaAllocGeomCollXYZM ();
-    else if (geom->DimensionModel == GAIA_XY_Z)
+/* creating the Geometry to be returned */
+    if (geom->DimensionModel == GAIA_XY_Z)
 	result = gaiaAllocGeomCollXYZ ();
     else if (geom->DimensionModel == GAIA_XY_M)
 	result = gaiaAllocGeomCollXYM ();
+    else if (geom->DimensionModel == GAIA_XY_Z_M)
+	result = gaiaAllocGeomCollXYZM ();
     else
 	result = gaiaAllocGeomColl ();
+    if (result == NULL)
+	return NULL;
     result->Srid = geom->Srid;
     if (force_multi)
 	result->DeclaredType = GAIA_MULTIPOLYGON;
 
-    for (i = 0; i < lns; i++)
+    for (ig = 0; ig < items; ig++)
       {
-	  /* creating Polygons */
-	  dyn = dyn_array[i];
-	  if (dyn == NULL)
-	      continue;
-	  if (ext_array[i] != NULL)
-	    {
-		/* skipping any INTERIOR RING */
-		continue;
-	    }
-	  pts = 0;
-	  pt = dyn->First;
-	  while (pt)
-	    {
-		/* counting how many points are there */
-		pts++;
-		pt = pt->Next;
-	    }
-	  num_interiors = 0;
-	  for (i2 = 0; i2 < lns; i2++)
-	    {
-		if (ext_array[i2] == dyn)
-		    num_interiors++;
-	    }
-	  pg = gaiaAddPolygonToGeomColl (result, pts, num_interiors);
-	  rng = pg->Exterior;
-	  iv = 0;
-	  pt = dyn->First;
-	  while (pt)
-	    {
-		/* EXTERIOR RING */
-		if (result->DimensionModel == GAIA_XY_Z_M)
-		  {
-		      gaiaSetPointXYZM (rng->Coords, iv, pt->X, pt->Y, pt->Z,
-					pt->M);
-		  }
-		else if (result->DimensionModel == GAIA_XY_Z)
-		  {
-		      gaiaSetPointXYZ (rng->Coords, iv, pt->X, pt->Y, pt->Z);
-		  }
-		else if (result->DimensionModel == GAIA_XY_M)
-		  {
-		      gaiaSetPointXYM (rng->Coords, iv, pt->X, pt->Y, pt->M);
-		  }
-		else
-		  {
-		      gaiaSetPoint (rng->Coords, iv, pt->X, pt->Y);
-		  }
-		iv++;
-		pt = pt->Next;
-	    }
-	  ib = 0;
-	  for (i2 = 0; i2 < lns; i2++)
-	    {
-		/* inserting any INTERIOR RING */
-		if (ext_array[i2] == dyn)
-		  {
-		      dyn2 = dyn_array[i2];
-		      ok = 1;
-		      pts = 0;
-		      pt = dyn2->First;
-		      while (pt)
-			{
-			    /* counting how many points are there */
-			    pts++;
-			    pt = pt->Next;
-			}
-		      rng = gaiaAddInteriorRing (pg, ib, pts);
-		      ib++;
-		      iv = 0;
-		      pt = dyn2->First;
-		      while (pt)
-			{
-			    /* INTERIOR RING */
-			    if (result->DimensionModel == GAIA_XY_Z_M)
-			      {
-				  gaiaSetPointXYZM (rng->Coords, iv, pt->X,
-						    pt->Y, pt->Z, pt->M);
-			      }
-			    else if (result->DimensionModel == GAIA_XY_Z)
-			      {
-				  gaiaSetPointXYZ (rng->Coords, iv, pt->X,
-						   pt->Y, pt->Z);
-			      }
-			    else if (result->DimensionModel == GAIA_XY_M)
-			      {
-				  gaiaSetPointXYM (rng->Coords, iv, pt->X,
-						   pt->Y, pt->M);
-			      }
-			    else
-			      {
-				  gaiaSetPoint (rng->Coords, iv, pt->X, pt->Y);
-			      }
-			    iv++;
-			    pt = pt->Next;
-			}
-		  }
-	    }
+	  /* looping on GEOS Polygons */
+	  geos_item = GEOSGetGeometryN (geos, ig);
+	  if (valid_polygons[ig] == 'Y')
+	      auxFromGeosPolygon (geos_item, result);
       }
 
-/* memory cleanup */
-    for (i = 0; i < lns; i++)
+  cleanup:
+    if (valid_polygons != NULL)
+	free (valid_polygons);
+    if (geos_list != NULL)
       {
-	  dyn = dyn_array[i];
-	  if (dyn == NULL)
-	      continue;
-	  gaiaFreeDynamicLine (dyn);
+	  /* memory cleanup */
+	  p_item = (GEOSGeometry **) geos_list;
+	  for (iv = 0; iv < lns; iv++)
+	    {
+		if (*p_item != NULL)
+		    GEOSGeom_destroy (*p_item);
+		p_item++;
+	    }
+	  p_item = (GEOSGeometry **) geos_list;
+	  free (p_item);
       }
-    free (dyn_array);
-    free (ext_array);
-    free (ln_array);
-    if (result->FirstPolygon == NULL)
+    if (geos != NULL)
+	GEOSGeom_destroy (geos);
+    if (error || result->FirstPolygon == NULL)
       {
 	  gaiaFreeGeomColl (result);
 	  return NULL;
@@ -3705,6 +3323,440 @@ gaiaUnaryUnion (gaiaGeomCollPtr geom)
     if (result == NULL)
 	return NULL;
     result->Srid = geom->Srid;
+    return result;
+}
+
+static void
+rotateRingBeforeCut (gaiaLinestringPtr ln, gaiaPointPtr node)
+{
+/* rotating a Ring, so to ensure that Start/End points match the node */
+    int io = 0;
+    int iv;
+    int copy = 0;
+    int base_idx = -1;
+    double x;
+    double y;
+    double z;
+    double m;
+    gaiaLinestringPtr new_ln = NULL;
+
+    if (ln->DimensionModel == GAIA_XY_Z)
+	new_ln = gaiaAllocLinestringXYZ (ln->Points);
+    else if (ln->DimensionModel == GAIA_XY_M)
+	new_ln = gaiaAllocLinestringXYM (ln->Points);
+    else if (ln->DimensionModel == GAIA_XY_Z_M)
+	new_ln = gaiaAllocLinestringXYZM (ln->Points);
+    else
+	new_ln = gaiaAllocLinestring (ln->Points);
+
+/* first pass */
+    for (iv = 0; iv < ln->Points; iv++)
+      {
+	  if (ln->DimensionModel == GAIA_XY_Z)
+	    {
+		gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_M)
+	    {
+		gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_Z_M)
+	    {
+		gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
+	    }
+	  else
+	    {
+		gaiaGetPoint (ln->Coords, iv, &x, &y);
+	    }
+	  if (!copy)		/* CAZZO */
+	    {
+		if (ln->DimensionModel == GAIA_XY_Z
+		    || ln->DimensionModel == GAIA_XY_Z_M)
+		  {
+		      if (node->X == x && node->Y == y && node->Z == z)
+			{
+			    base_idx = iv;
+			    copy = 1;
+			}
+		  }
+		else if (node->X == x && node->Y == y)
+		  {
+		      base_idx = iv;
+		      copy = 1;
+		  }
+	    }
+	  if (copy)
+	    {
+		/* copying points */
+		if (ln->DimensionModel == GAIA_XY_Z)
+		  {
+		      gaiaSetPointXYZ (new_ln->Coords, io, x, y, z);
+		  }
+		else if (ln->DimensionModel == GAIA_XY_M)
+		  {
+		      gaiaSetPointXYM (new_ln->Coords, io, x, y, m);
+		  }
+		else if (ln->DimensionModel == GAIA_XY_Z_M)
+		  {
+		      gaiaSetPointXYZM (new_ln->Coords, io, x, y, z, m);
+		  }
+		else
+		  {
+		      gaiaSetPoint (new_ln->Coords, io, x, y);
+		  }
+		io++;
+	    }
+      }
+    if (base_idx <= 0)
+      {
+	  gaiaFreeLinestring (new_ln);
+	  return;
+      }
+
+/* second pass */
+    for (iv = 1; iv <= base_idx; iv++)
+      {
+	  if (ln->DimensionModel == GAIA_XY_Z)
+	    {
+		gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_M)
+	    {
+		gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_Z_M)
+	    {
+		gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
+	    }
+	  else
+	    {
+		gaiaGetPoint (ln->Coords, iv, &x, &y);
+	    }
+	  if (ln->DimensionModel == GAIA_XY_Z)
+	    {
+		gaiaSetPointXYZ (new_ln->Coords, io, x, y, z);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_M)
+	    {
+		gaiaSetPointXYM (new_ln->Coords, io, x, y, m);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_Z_M)
+	    {
+		gaiaSetPointXYZM (new_ln->Coords, io, x, y, z, m);
+	    }
+	  else
+	    {
+		gaiaSetPoint (new_ln->Coords, io, x, y);
+	    }
+	  io++;
+      }
+
+/* copying back */
+    for (iv = 0; iv < new_ln->Points; iv++)
+      {
+	  if (ln->DimensionModel == GAIA_XY_Z)
+	    {
+		gaiaGetPointXYZ (new_ln->Coords, iv, &x, &y, &z);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_M)
+	    {
+		gaiaGetPointXYM (new_ln->Coords, iv, &x, &y, &m);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_Z_M)
+	    {
+		gaiaGetPointXYZM (new_ln->Coords, iv, &x, &y, &z, &m);
+	    }
+	  else
+	    {
+		gaiaGetPoint (new_ln->Coords, iv, &x, &y);
+	    }
+	  if (ln->DimensionModel == GAIA_XY_Z)
+	    {
+		gaiaSetPointXYZ (ln->Coords, iv, x, y, z);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_M)
+	    {
+		gaiaSetPointXYM (ln->Coords, iv, x, y, m);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_Z_M)
+	    {
+		gaiaSetPointXYZM (ln->Coords, iv, x, y, z, m);
+	    }
+	  else
+	    {
+		gaiaSetPoint (ln->Coords, iv, x, y);
+	    }
+      }
+    gaiaFreeLinestring (new_ln);
+}
+
+static void
+extractSubLine (gaiaGeomCollPtr result, gaiaLinestringPtr ln, int i_start,
+		int i_end)
+{
+/* extracting s SubLine */
+    int iv;
+    int io = 0;
+    int pts = i_end - i_start + 1;
+    gaiaLinestringPtr new_ln = NULL;
+    double x;
+    double y;
+    double z;
+    double m;
+
+    new_ln = gaiaAddLinestringToGeomColl (result, pts);
+
+    for (iv = i_start; iv <= i_end; iv++)
+      {
+	  if (ln->DimensionModel == GAIA_XY_Z)
+	    {
+		gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_M)
+	    {
+		gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_Z_M)
+	    {
+		gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
+	    }
+	  else
+	    {
+		gaiaGetPoint (ln->Coords, iv, &x, &y);
+	    }
+	  if (ln->DimensionModel == GAIA_XY_Z)
+	    {
+		gaiaSetPointXYZ (new_ln->Coords, io, x, y, z);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_M)
+	    {
+		gaiaSetPointXYM (new_ln->Coords, io, x, y, m);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_Z_M)
+	    {
+		gaiaSetPointXYZM (new_ln->Coords, io, x, y, z, m);
+	    }
+	  else
+	    {
+		gaiaSetPoint (new_ln->Coords, io, x, y);
+	    }
+	  io++;
+      }
+}
+
+static void
+cutLineAtNodes (gaiaLinestringPtr ln, gaiaPointPtr pt_base,
+		gaiaGeomCollPtr result)
+{
+/* attempts to cut a single Line accordingly to given nodes */
+    int closed = 0;
+    int match = 0;
+    int iv;
+    int i_start;
+    double x;
+    double y;
+    double z;
+    double m;
+    gaiaPointPtr pt;
+    gaiaPointPtr node = NULL;
+
+    if (gaiaIsClosed (ln))
+	closed = 1;
+/* pre-check */
+    for (iv = 0; iv < ln->Points; iv++)
+      {
+	  if (ln->DimensionModel == GAIA_XY_Z)
+	    {
+		gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_M)
+	    {
+		gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_Z_M)
+	    {
+		gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
+	    }
+	  else
+	    {
+		gaiaGetPoint (ln->Coords, iv, &x, &y);
+	    }
+	  pt = pt_base;
+	  while (pt)
+	    {
+		if (ln->DimensionModel == GAIA_XY_Z
+		    || ln->DimensionModel == GAIA_XY_Z_M)
+		  {
+		      if (pt->X == x && pt->Y == y && pt->Z == z)
+			{
+			    node = pt;
+			    match++;
+			}
+		  }
+		else if (pt->X == x && pt->Y == y)
+		  {
+		      node = pt;
+		      match++;
+		  }
+		pt = pt->Next;
+	    }
+      }
+
+    if (closed && node)
+	rotateRingBeforeCut (ln, node);
+
+    i_start = 0;
+    for (iv = 1; iv < ln->Points - 1; iv++)
+      {
+	  /* identifying sub-linestrings */
+	  if (ln->DimensionModel == GAIA_XY_Z)
+	    {
+		gaiaGetPointXYZ (ln->Coords, iv, &x, &y, &z);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_M)
+	    {
+		gaiaGetPointXYM (ln->Coords, iv, &x, &y, &m);
+	    }
+	  else if (ln->DimensionModel == GAIA_XY_Z_M)
+	    {
+		gaiaGetPointXYZM (ln->Coords, iv, &x, &y, &z, &m);
+	    }
+	  else
+	    {
+		gaiaGetPoint (ln->Coords, iv, &x, &y);
+	    }
+	  match = 0;
+	  pt = pt_base;
+	  while (pt)
+	    {
+		if (ln->DimensionModel == GAIA_XY_Z
+		    || ln->DimensionModel == GAIA_XY_Z_M)
+		  {
+		      if (pt->X == x && pt->Y == y && pt->Z == z)
+			{
+			    match = 1;
+			    break;
+			}
+		  }
+		else if (pt->X == x && pt->Y == y)
+		  {
+		      match = 1;
+		      break;
+		  }
+		pt = pt->Next;
+	    }
+	  if (match)
+	    {
+		/* cutting the line */
+		extractSubLine (result, ln, i_start, iv);
+		i_start = iv;
+	    }
+      }
+    if (i_start != 0 && i_start != ln->Points - 1)
+      {
+	  /* extracting the last SubLine */
+	  extractSubLine (result, ln, i_start, ln->Points - 1);
+      }
+    else
+      {
+	  /* cloning the untouched Line */
+	  extractSubLine (result, ln, 0, ln->Points - 1);
+      }
+}
+
+GAIAGEO_DECLARE gaiaGeomCollPtr
+gaiaLinesCutAtNodes (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
+{
+/* attempts to cut lines accordingly to nodes */
+    int pts1 = 0;
+    int lns1 = 0;
+    int pgs1 = 0;
+    int pts2 = 0;
+    int lns2 = 0;
+    int pgs2 = 0;
+    gaiaPointPtr pt;
+    gaiaLinestringPtr ln;
+    gaiaPolygonPtr pg;
+    gaiaGeomCollPtr result = NULL;
+
+    if (!geom1)
+	return NULL;
+    if (!geom2)
+	return NULL;
+
+/* both Geometryes should have identical Dimensions */
+    if (geom1->DimensionModel != geom2->DimensionModel)
+	return NULL;
+
+    pt = geom1->FirstPoint;
+    while (pt)
+      {
+	  pts1++;
+	  pt = pt->Next;
+      }
+    ln = geom1->FirstLinestring;
+    while (ln)
+      {
+	  lns1++;
+	  ln = ln->Next;
+      }
+    pg = geom1->FirstPolygon;
+    while (pg)
+      {
+	  pgs1++;
+	  pg = pg->Next;
+      }
+    pt = geom2->FirstPoint;
+    while (pt)
+      {
+	  pts2++;
+	  pt = pt->Next;
+      }
+    ln = geom2->FirstLinestring;
+    while (ln)
+      {
+	  lns2++;
+	  ln = ln->Next;
+      }
+    pg = geom2->FirstPolygon;
+    while (pg)
+      {
+	  pgs2++;
+	  pg = pg->Next;
+      }
+
+/* the first Geometry is expected to contain one or more Linestring(s) */
+    if (pts1 == 0 && lns1 > 0 && pgs1 == 0)
+	;
+    else
+	return NULL;
+/* the second Geometry is expected to contain one or more Point(s) */
+    if (pts2 > 0 && lns2 == 0 && pgs2 == 0)
+	;
+    else
+	return NULL;
+
+/* attempting to cut Lines accordingly to Nodes */
+    if (geom1->DimensionModel == GAIA_XY_Z)
+	result = gaiaAllocGeomCollXYZ ();
+    else if (geom1->DimensionModel == GAIA_XY_M)
+	result = gaiaAllocGeomCollXYM ();
+    else if (geom1->DimensionModel == GAIA_XY_Z_M)
+	result = gaiaAllocGeomCollXYZM ();
+    else
+	result = gaiaAllocGeomColl ();
+    ln = geom1->FirstLinestring;
+    while (ln)
+      {
+	  cutLineAtNodes (ln, geom2->FirstPoint, result);
+	  ln = ln->Next;
+      }
+    if (result->FirstLinestring == NULL)
+      {
+	  gaiaFreeGeomColl (result);
+	  return NULL;
+      }
+    result->Srid = geom1->Srid;
     return result;
 }
 

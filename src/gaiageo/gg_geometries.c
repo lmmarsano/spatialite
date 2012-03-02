@@ -50,11 +50,7 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <math.h>
 #include <float.h>
 
-#ifdef SPL_AMALGAMATION		/* spatialite-amalgamation */
-#include <spatialite/sqlite3ext.h>
-#else
-#include <sqlite3ext.h>
-#endif
+#include <spatialite/sqlite.h>
 
 #include <spatialite/gaiageo.h>
 
@@ -3055,6 +3051,91 @@ gaiaMakePoint (double x, double y, int srid, unsigned char **result, int *size)
 }
 
 GAIAGEO_DECLARE void
+gaiaMakePointZ (double x, double y, double z, int srid, unsigned char **result,
+		int *size)
+{
+/* build a Blob encoded Geometry representing a POINT Z */
+    unsigned char *ptr;
+    int endian_arch = gaiaEndianArch ();
+/* computing the Blob size and then allocating it */
+    *size = 44;			/* header size */
+    *size += (sizeof (double) * 3);	/* [x,y,z] coords */
+    *result = malloc (*size);
+    ptr = *result;
+/* setting the Blob value */
+    *ptr = GAIA_MARK_START;	/* START signature */
+    *(ptr + 1) = GAIA_LITTLE_ENDIAN;	/* byte ordering */
+    gaiaExport32 (ptr + 2, srid, 1, endian_arch);	/* the SRID */
+    gaiaExport64 (ptr + 6, x, 1, endian_arch);	/* MBR - minimum X */
+    gaiaExport64 (ptr + 14, y, 1, endian_arch);	/* MBR - minimum Y */
+    gaiaExport64 (ptr + 22, x, 1, endian_arch);	/* MBR - maximum X */
+    gaiaExport64 (ptr + 30, y, 1, endian_arch);	/* MBR - maximum Y */
+    *(ptr + 38) = GAIA_MARK_MBR;	/* MBR signature */
+    gaiaExport32 (ptr + 39, GAIA_POINTZ, 1, endian_arch);	/* class POINT */
+    gaiaExport64 (ptr + 43, x, 1, endian_arch);	/* X */
+    gaiaExport64 (ptr + 51, y, 1, endian_arch);	/* Y */
+    gaiaExport64 (ptr + 59, z, 1, endian_arch);	/* Z */
+    *(ptr + 67) = GAIA_MARK_END;	/* END signature */
+}
+
+GAIAGEO_DECLARE void
+gaiaMakePointM (double x, double y, double m, int srid, unsigned char **result,
+		int *size)
+{
+/* build a Blob encoded Geometry representing a POINT M */
+    unsigned char *ptr;
+    int endian_arch = gaiaEndianArch ();
+/* computing the Blob size and then allocating it */
+    *size = 44;			/* header size */
+    *size += (sizeof (double) * 3);	/* [x,y,z] coords */
+    *result = malloc (*size);
+    ptr = *result;
+/* setting the Blob value */
+    *ptr = GAIA_MARK_START;	/* START signature */
+    *(ptr + 1) = GAIA_LITTLE_ENDIAN;	/* byte ordering */
+    gaiaExport32 (ptr + 2, srid, 1, endian_arch);	/* the SRID */
+    gaiaExport64 (ptr + 6, x, 1, endian_arch);	/* MBR - minimum X */
+    gaiaExport64 (ptr + 14, y, 1, endian_arch);	/* MBR - minimum Y */
+    gaiaExport64 (ptr + 22, x, 1, endian_arch);	/* MBR - maximum X */
+    gaiaExport64 (ptr + 30, y, 1, endian_arch);	/* MBR - maximum Y */
+    *(ptr + 38) = GAIA_MARK_MBR;	/* MBR signature */
+    gaiaExport32 (ptr + 39, GAIA_POINTM, 1, endian_arch);	/* class POINT */
+    gaiaExport64 (ptr + 43, x, 1, endian_arch);	/* X */
+    gaiaExport64 (ptr + 51, y, 1, endian_arch);	/* Y */
+    gaiaExport64 (ptr + 59, m, 1, endian_arch);	/* M */
+    *(ptr + 67) = GAIA_MARK_END;	/* END signature */
+}
+
+GAIAGEO_DECLARE void
+gaiaMakePointZM (double x, double y, double z, double m, int srid,
+		 unsigned char **result, int *size)
+{
+/* build a Blob encoded Geometry representing a POINT ZM */
+    unsigned char *ptr;
+    int endian_arch = gaiaEndianArch ();
+/* computing the Blob size and then allocating it */
+    *size = 44;			/* header size */
+    *size += (sizeof (double) * 4);	/* [x,y,z,m] coords */
+    *result = malloc (*size);
+    ptr = *result;
+/* setting the Blob value */
+    *ptr = GAIA_MARK_START;	/* START signature */
+    *(ptr + 1) = GAIA_LITTLE_ENDIAN;	/* byte ordering */
+    gaiaExport32 (ptr + 2, srid, 1, endian_arch);	/* the SRID */
+    gaiaExport64 (ptr + 6, x, 1, endian_arch);	/* MBR - minimum X */
+    gaiaExport64 (ptr + 14, y, 1, endian_arch);	/* MBR - minimum Y */
+    gaiaExport64 (ptr + 22, x, 1, endian_arch);	/* MBR - maximum X */
+    gaiaExport64 (ptr + 30, y, 1, endian_arch);	/* MBR - maximum Y */
+    *(ptr + 38) = GAIA_MARK_MBR;	/* MBR signature */
+    gaiaExport32 (ptr + 39, GAIA_POINTZM, 1, endian_arch);	/* class POINT */
+    gaiaExport64 (ptr + 43, x, 1, endian_arch);	/* X */
+    gaiaExport64 (ptr + 51, y, 1, endian_arch);	/* Y */
+    gaiaExport64 (ptr + 59, z, 1, endian_arch);	/* Z */
+    gaiaExport64 (ptr + 67, m, 1, endian_arch);	/* M */
+    *(ptr + 75) = GAIA_MARK_END;	/* END signature */
+}
+
+GAIAGEO_DECLARE void
 gaiaMakeLine (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2,
 	      unsigned char **result, int *size)
 {
@@ -3246,6 +3327,8 @@ gaiaMergeGeometries (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
 
     if (geom1 == NULL || geom2 == NULL)
 	return NULL;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
+	return NULL;
     dims1 = geom1->DimensionModel;
     dims2 = geom2->DimensionModel;
 /* building a new Geometry */
@@ -3407,11 +3490,11 @@ gaiaMergeGeometries (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
 		  {
 		      gaiaSetPointXYZM (new_ln->Coords, iv, x, y, z, m);
 		  }
-		else if (ln->DimensionModel == GAIA_XY_Z)
+		else if (new_ln->DimensionModel == GAIA_XY_Z)
 		  {
 		      gaiaSetPointXYZ (new_ln->Coords, iv, x, y, z);
 		  }
-		else if (ln->DimensionModel == GAIA_XY_M)
+		else if (new_ln->DimensionModel == GAIA_XY_M)
 		  {
 		      gaiaSetPointXYM (new_ln->Coords, iv, x, y, m);
 		  }
@@ -3452,11 +3535,11 @@ gaiaMergeGeometries (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
 		  {
 		      gaiaSetPointXYZM (new_ln->Coords, iv, x, y, z, m);
 		  }
-		else if (ln->DimensionModel == GAIA_XY_Z)
+		else if (new_ln->DimensionModel == GAIA_XY_Z)
 		  {
 		      gaiaSetPointXYZ (new_ln->Coords, iv, x, y, z);
 		  }
-		else if (ln->DimensionModel == GAIA_XY_M)
+		else if (new_ln->DimensionModel == GAIA_XY_M)
 		  {
 		      gaiaSetPointXYM (new_ln->Coords, iv, x, y, m);
 		  }
@@ -3501,11 +3584,11 @@ gaiaMergeGeometries (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
 		  {
 		      gaiaSetPointXYZM (new_rng->Coords, iv, x, y, z, m);
 		  }
-		else if (rng->DimensionModel == GAIA_XY_Z)
+		else if (new_rng->DimensionModel == GAIA_XY_Z)
 		  {
 		      gaiaSetPointXYZ (new_rng->Coords, iv, x, y, z);
 		  }
-		else if (rng->DimensionModel == GAIA_XY_M)
+		else if (new_rng->DimensionModel == GAIA_XY_M)
 		  {
 		      gaiaSetPointXYM (new_rng->Coords, iv, x, y, m);
 		  }
@@ -3543,11 +3626,11 @@ gaiaMergeGeometries (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
 			{
 			    gaiaSetPointXYZM (new_rng->Coords, iv, x, y, z, m);
 			}
-		      else if (rng->DimensionModel == GAIA_XY_Z)
+		      else if (new_rng->DimensionModel == GAIA_XY_Z)
 			{
 			    gaiaSetPointXYZ (new_rng->Coords, iv, x, y, z);
 			}
-		      else if (rng->DimensionModel == GAIA_XY_M)
+		      else if (new_rng->DimensionModel == GAIA_XY_M)
 			{
 			    gaiaSetPointXYM (new_rng->Coords, iv, x, y, m);
 			}
@@ -3593,11 +3676,11 @@ gaiaMergeGeometries (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
 		  {
 		      gaiaSetPointXYZM (new_rng->Coords, iv, x, y, z, m);
 		  }
-		else if (rng->DimensionModel == GAIA_XY_Z)
+		else if (new_rng->DimensionModel == GAIA_XY_Z)
 		  {
 		      gaiaSetPointXYZ (new_rng->Coords, iv, x, y, z);
 		  }
-		else if (rng->DimensionModel == GAIA_XY_M)
+		else if (new_rng->DimensionModel == GAIA_XY_M)
 		  {
 		      gaiaSetPointXYM (new_rng->Coords, iv, x, y, m);
 		  }
@@ -3635,11 +3718,11 @@ gaiaMergeGeometries (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
 			{
 			    gaiaSetPointXYZM (new_rng->Coords, iv, x, y, z, m);
 			}
-		      else if (rng->DimensionModel == GAIA_XY_Z)
+		      else if (new_rng->DimensionModel == GAIA_XY_Z)
 			{
 			    gaiaSetPointXYZ (new_rng->Coords, iv, x, y, z);
 			}
-		      else if (rng->DimensionModel == GAIA_XY_M)
+		      else if (new_rng->DimensionModel == GAIA_XY_M)
 			{
 			    gaiaSetPointXYM (new_rng->Coords, iv, x, y, m);
 			}
