@@ -52,11 +52,8 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <stdio.h>
 #include <string.h>
 
-#ifdef SPL_AMALGAMATION		/* spatialite-amalgamation */
-#include <spatialite/sqlite3.h>
-#else
-#include <sqlite3.h>
-#endif
+#include <spatialite/sqlite.h>
+#include <spatialite/debug.h>
 
 #include <spatialite/spatialite.h>
 #include <spatialite/gaiaaux.h>
@@ -266,8 +263,7 @@ vtxt_create (sqlite3 * db, void *pAux, int argc, const char *const *argv,
     if (!text)
       {
 	  /* something is going the wrong way; creating a stupid default table */
-	  fprintf (stderr, "VirtualText: invalid data source\n");
-	  fflush (stderr);
+	  spatialite_e ("VirtualText: invalid data source\n");
 	  sprintf (sql, "CREATE TABLE %s (ROWNO INTEGER)", vtable);
 	  if (sqlite3_declare_vtab (db, sql) != SQLITE_OK)
 	    {
@@ -1718,7 +1714,11 @@ gaiaTextReaderFetchField (gaiaTextReaderPtr txt, int field_idx, int *type,
 	    txt->field_lens[field_idx]);
     *(txt->field_buffer + txt->field_lens[field_idx]) = '\0';
     *value = txt->field_buffer;
-    if (*value == '\0')
+/* sandro 2012-02-01: fixing CR handling for last column [windows] */
+    if (*(txt->field_buffer) == '\r' && txt->field_lens[field_idx] == 1
+	&& (field_idx + 1) == txt->max_fields)
+	*(txt->field_buffer) = '\0';
+    if (*(txt->field_buffer) == '\0')
 	*type = VRTTXT_NULL;
     else if (*type == VRTTXT_TEXT)
       {
