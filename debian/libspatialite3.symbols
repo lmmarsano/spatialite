@@ -169,16 +169,18 @@ libspatialite.so.3 libspatialite3 #MINVER#
  VanuatuWktset_out@Base 3.0.0~beta20110817
  VanuatuWkttext@Base 3.0.0~beta20110817
  VanuatuWktwrap@Base 3.0.0~beta20110817
- check_duplicated_rows@Base 3.1.0
- dump_dbf@Base 3.1.0
- dump_geojson@Base 3.1.0
- dump_kml@Base 3.1.0
- dump_shapefile@Base 3.1.0
- elementary_geometries@Base 3.1.0
+ check_duplicated_rows@Base 3.0.2~20120302
+ dump_dbf@Base 3.0.2~20120302
+ dump_geojson@Base 3.0.2~20120302
+ dump_kml@Base 3.0.2~20120302
+ dump_shapefile@Base 3.0.2~20120302
+ elementary_geometries@Base 3.0.2~20120302
  ewktParse@Base 3.0.0~beta20110817
  ewktParseAlloc@Base 3.0.0~beta20110817
  ewktParseFree@Base 3.0.0~beta20110817
  ewkt_col@Base 3.0.0~beta20110817
+ ewkt_first_dyn_block@Base 3.0.2~20120302
+ ewkt_last_dyn_block@Base 3.0.2~20120302
  ewkt_line@Base 3.0.0~beta20110817
  ewkt_parse_error@Base 3.0.0~beta20110817
  ewkt_point_xyzm@Base 3.0.0~beta20110817
@@ -256,7 +258,7 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaDimension@Base 2.4.0~rc2
  gaiaDissolvePoints@Base 3.0.0~beta20110817
  gaiaDissolveSegments@Base 3.0.0~beta20110817
- gaiaDoubleQuotedSql@Base 3.1.0
+ gaiaDoubleQuotedSql@Base 3.0.2~20120302
  gaiaDynamicLineDeletePoint@Base 2.4.0~rc2
  gaiaDynamicLineFindByCoords@Base 2.4.0~rc2
  gaiaDynamicLineFindByPos@Base 2.4.0~rc2
@@ -326,8 +328,8 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaGeomCollBuffer@Base 2.4.0~rc2
  gaiaGeomCollCentroid@Base 2.4.0~rc2
  gaiaGeomCollContains@Base 2.4.0~rc2
- gaiaGeomCollCoveredBy@Base 3.1.0
- gaiaGeomCollCovers@Base 3.1.0
+ gaiaGeomCollCoveredBy@Base 3.0.2~20120302
+ gaiaGeomCollCovers@Base 3.0.2~20120302
  gaiaGeomCollCrosses@Base 2.4.0~rc2
  gaiaGeomCollDisjoint@Base 2.4.0~rc2
  gaiaGeomCollDistance@Base 2.4.0~rc2
@@ -365,7 +367,7 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaGreatCircleDistance@Base 2.4.0~rc2
  gaiaGreatCircleTotalLength@Base 2.4.0~rc2
  gaiaGuessBlobType@Base 2.4.0~rc2
- gaiaHausdorffDistance@Base 3.1.0
+ gaiaHausdorffDistance@Base 3.0.2~20120302
  gaiaIllegalSqlName@Base 2.4.0~rc2
  gaiaImport16@Base 2.4.0~rc2
  gaiaImport32@Base 2.4.0~rc2
@@ -389,12 +391,13 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaIsValid@Base 2.4.0~rc2
  gaiaIsValidDbfList@Base 2.4.0~rc2
  gaiaLineGetPoint@Base 2.4.0~rc2
- gaiaLineInterpolatePoint@Base 3.1.0
- gaiaLineLocatePoint@Base 3.1.0
- gaiaLineMerge@Base 3.1.0
+ gaiaLineInterpolatePoint@Base 3.0.2~20120302
+ gaiaLineLocatePoint@Base 3.0.2~20120302
+ gaiaLineMerge@Base 3.0.2~20120302
  gaiaLineSetPoint@Base 2.4.0~rc2
- gaiaLineSubstring@Base 3.1.0
+ gaiaLineSubstring@Base 3.0.2~20120302
  gaiaLinearize@Base 3.0.0~beta20110817
+ gaiaLinesCutAtNodes@Base 3.0.2~20120302
  gaiaLinestringEquals@Base 2.4.0~rc2
  gaiaMRangeGeometry@Base 2.4.0~rc2
  gaiaMRangeLinestring@Base 2.4.0~rc2
@@ -402,6 +405,9 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaMRangeRing@Base 2.4.0~rc2
  gaiaMakeLine@Base 3.0.0~beta20110817
  gaiaMakePoint@Base 2.4.0~rc2
+ gaiaMakePointM@Base 3.0.2~20120302
+ gaiaMakePointZ@Base 3.0.2~20120302
+ gaiaMakePointZM@Base 3.0.2~20120302
  gaiaMbrGeometry@Base 2.4.0~rc2
  gaiaMbrLinestring@Base 2.4.0~rc2
  gaiaMbrPolygon@Base 2.4.0~rc2
@@ -417,7 +423,7 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaMeasureLength@Base 2.4.0~rc2
  gaiaMergeGeometries@Base 3.0.0~beta20110817
  gaiaMinDistance@Base 2.4.0~rc2
- gaiaOffsetCurve@Base 3.1.0
+ gaiaOffsetCurve@Base 3.0.2~20120302
  gaiaOpenDbfRead@Base 2.4.0~rc2
  gaiaOpenDbfWrite@Base 3.0.0~beta20110817
  gaiaOpenShpRead@Base 2.4.0~rc2
@@ -449,7 +455,7 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaPrependPointToDynamicLine@Base 2.4.0~rc2
  gaiaPrependPointZMToDynamicLine@Base 3.0.0~beta20110817
  gaiaPrependPointZToDynamicLine@Base 3.0.0~beta20110817
- gaiaQuotedSql@Base 3.1.0
+ gaiaQuotedSql@Base 3.0.2~20120302
  gaiaRadsToDegs@Base 2.4.0~rc2
  gaiaReadDbfEntity@Base 2.4.0~rc2
  gaiaReadShpEntity@Base 2.4.0~rc2
@@ -469,13 +475,13 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaSetIntValue@Base 2.4.0~rc2
  gaiaSetNullValue@Base 2.4.0~rc2
  gaiaSetStrValue@Base 2.4.0~rc2
- gaiaSharedPaths@Base 3.1.0
+ gaiaSharedPaths@Base 3.0.2~20120302
  gaiaShiftCoords@Base 2.4.0~rc2
- gaiaShortestLine@Base 3.1.0
+ gaiaShortestLine@Base 3.0.2~20120302
  gaiaShpAnalyze@Base 2.4.0~rc2
- gaiaSingleQuotedSql@Base 3.1.0
- gaiaSingleSidedBuffer@Base 3.1.0
- gaiaSnap@Base 3.1.0
+ gaiaSingleQuotedSql@Base 3.0.2~20120302
+ gaiaSingleSidedBuffer@Base 3.0.2~20120302
+ gaiaSnap@Base 3.0.2~20120302
  gaiaSwapCoords@Base 2.4.0~rc2
  gaiaTextReaderAlloc@Base 3.0.0~beta20110817
  gaiaTextReaderDestroy@Base 3.0.0~beta20110817
@@ -491,7 +497,7 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaToSpatiaLiteBlobWkb@Base 2.4.0~rc2
  gaiaToWkb@Base 2.4.0~rc2
  gaiaTransform@Base 2.4.0~rc2
- gaiaUnaryUnion@Base 3.1.0
+ gaiaUnaryUnion@Base 3.0.2~20120302
  gaiaWriteDbfEntity@Base 3.0.0~beta20110817
  gaiaWriteShpEntity@Base 2.4.0~rc2
  gaiaZRangeGeometry@Base 2.4.0~rc2
@@ -507,31 +513,39 @@ libspatialite.so.3 libspatialite3 #MINVER#
  geoJSON_line@Base 3.0.0~beta20110817
  geoJSON_parse_error@Base 3.0.0~beta20110817
  geoJSON_reset_lexer@Base 3.0.0~beta20110817
+ geoJson_first_dyn_block@Base 3.0.2~20120302
+ geoJson_last_dyn_block@Base 3.0.2~20120302
  gmlParse@Base 3.0.0~beta20110817
  gmlParseAlloc@Base 3.0.0~beta20110817
  gmlParseFree@Base 3.0.0~beta20110817
  gml_col@Base 3.0.0~beta20110817
+ gml_first_dyn_block@Base 3.0.2~20120302
+ gml_last_dyn_block@Base 3.0.2~20120302
  gml_line@Base 3.0.0~beta20110817
  gml_parse_error@Base 3.0.0~beta20110817
  gml_reset_lexer@Base 3.0.0~beta20110817
- is_kml_constant@Base 3.1.0
+ insert_epsg_srid@Base 3.0.2~20120302
+ is_kml_constant@Base 3.0.2~20120302
  kmlParse@Base 3.0.0~beta20110817
  kmlParseAlloc@Base 3.0.0~beta20110817
  kmlParseFree@Base 3.0.0~beta20110817
  kml_col@Base 3.0.0~beta20110817
+ kml_first_dyn_block@Base 3.0.2~20120302
+ kml_last_dyn_block@Base 3.0.2~20120302
  kml_line@Base 3.0.0~beta20110817
  kml_parse_error@Base 3.0.0~beta20110817
  kml_reset_lexer@Base 3.0.0~beta20110817
- load_XL@Base 3.1.0
- load_dbf@Base 3.1.0
- load_shapefile@Base 3.1.0
+ load_XL@Base 3.0.2~20120302
+ load_dbf@Base 3.0.2~20120302
+ load_shapefile@Base 3.0.2~20120302
  math_llabs@Base 2.4.0~rc2
  math_round@Base 2.4.0~rc2
  mbrcache_extension_init@Base 2.4.0~rc2
  my_fdo_module@Base 2.4.0~rc2
- remove_duplicated_rows@Base 3.1.0
+ remove_duplicated_rows@Base 3.0.2~20120302
+ spatial_ref_sys_init2@Base 3.0.2~20120302
  spatial_ref_sys_init@Base 3.0.0~beta20110817
- spatialite_cleanup@Base 3.1.0
+ spatialite_cleanup@Base 3.0.2~20120302
  spatialite_init@Base 2.4.0~rc2
  spatialite_version@Base 2.4.0~rc2
  spatialiteversion@Base 2.4.0~rc2
@@ -543,12 +557,15 @@ libspatialite.so.3 libspatialite3 #MINVER#
  sqlite3VirtualSpatialIndexInit@Base 3.0.0~beta20110817
  sqlite3VirtualTextInit@Base 2.4.0~rc2
  sqlite3VirtualXLInit@Base 3.0.0~beta20110817
+ sqlite3_api@Base 3.0.2~20120302
  sqlite3_extension_init@Base 2.4.0~rc2
- update_layer_statistics@Base 3.1.0
+ update_layer_statistics@Base 3.0.2~20120302
  vanuatuParse@Base 3.0.0~beta20110817
  vanuatuParseAlloc@Base 3.0.0~beta20110817
  vanuatuParseFree@Base 3.0.0~beta20110817
  vanuatu_col@Base 3.0.0~beta20110817
+ vanuatu_first_dyn_block@Base 3.0.2~20120302
+ vanuatu_last_dyn_block@Base 3.0.2~20120302
  vanuatu_line@Base 3.0.0~beta20110817
  vanuatu_parse_error@Base 3.0.0~beta20110817
  vanuatu_point_xyzm@Base 3.0.0~beta20110817
@@ -562,4 +579,3 @@ libspatialite.so.3 libspatialite3 #MINVER#
  virtualshape_extension_init@Base 2.4.0~rc2
  virtualtext_extension_init@Base 2.4.0~rc2
  virtualtext_module@Base 2.4.0~rc2
- yytext_ptr@Base 3.0.0~beta20110817
