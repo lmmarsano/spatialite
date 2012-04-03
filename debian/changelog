@@ -1,3 +1,11 @@
+spatialite (3.1.0~rc2-1) unstable; urgency=low
+
+  * New upstream release candidate.
+  * Removed 05-dont_relink.patch and 06-fix_soname.patch, both merged
+    upstream.
+
+ -- Francesco Paolo Lovergine <frankie@debian.org>  Tue, 03 Apr 2012 15:07:12 +0200
+
 spatialite (3.0.2~20120302-1) unstable; urgency=low
 
   * New upstream pre-release.
