@@ -49,6 +49,8 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <stdio.h>
 #include <string.h>
 
+#include "config.h"
+
 #include <spatialite/sqlite.h>
 
 #include <spatialite/gaiageo.h>
@@ -67,6 +69,20 @@ gaiaOutClean (char *buffer)
       }
     if (buffer[i] == '.')
 	buffer[i] = '\0';
+    if (strcmp (buffer, "-0") == 0)
+      {
+	  /* avoiding to return embarassing NEGATIVE ZEROes */
+	  strcpy (buffer, "0");
+      }
+
+    if (strcmp (buffer, "-1.#QNAN") == 0
+	|| strcmp (buffer, "1.#QNAN") == 0
+	|| strcmp (buffer, "-1.#IND") == 0 || strcmp (buffer, "1.#IND") == 0)
+      {
+	  /* on Windows a NaN could be represented in "odd" ways */
+	  /* this is intended to restore a consistent behaviour  */
+	  strcpy (buffer, "nan");
+      }
 }
 
 GAIAGEO_DECLARE void

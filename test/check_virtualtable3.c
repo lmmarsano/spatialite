@@ -49,6 +49,10 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include "sqlite3.h"
 #include "spatialite.h"
 
+#ifdef _WIN32
+#include "asprintf4win.h"
+#endif
+
 int main (int argc, char *argv[])
 {
     sqlite3 *db_handle = NULL;
@@ -489,7 +493,7 @@ int main (int argc, char *argv[])
     }
     sqlite3_free_table (results);
 
-    asprintf(&sql_statement, "select PKUID, testcase1, testcase2 from dbftest where testcase1 LIKE \"wind\%\";");
+    asprintf(&sql_statement, "select PKUID, testcase1, testcase2 from dbftest where testcase1 LIKE \"wind%%\";");
     ret = sqlite3_get_table (db_handle, sql_statement, &results, &rows, &columns, &err_msg);
     free(sql_statement);
     if (ret != SQLITE_OK) {
@@ -574,7 +578,6 @@ int main (int argc, char *argv[])
 
     sqlite3_close (db_handle);
     spatialite_cleanup();
-    sqlite3_reset_auto_extension();
     
     return 0;
 }

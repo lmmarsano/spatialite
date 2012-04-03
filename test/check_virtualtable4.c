@@ -48,6 +48,10 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include "sqlite3.h"
 #include "spatialite.h"
 
+#ifdef _WIN32
+#include "asprintf4win.h"
+#endif
+
 struct test_step
 {
     const char *sql;
@@ -336,7 +340,6 @@ int main (int argc, char *argv[])
 
     sqlite3_close (db_handle);
     spatialite_cleanup();
-    sqlite3_reset_auto_extension();
     
     return 0;
 }

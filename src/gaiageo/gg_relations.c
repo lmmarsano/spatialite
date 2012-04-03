@@ -49,6 +49,8 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <string.h>
 #include <float.h>
 
+#include "config.h"
+
 #ifndef OMIT_GEOS		/* including GEOS */
 #include <geos_c.h>
 #endif
@@ -2086,6 +2088,8 @@ gaiaGeomCollCovers (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     ret = GEOSCovers (g1, g2);
     GEOSGeom_destroy (g1);
     GEOSGeom_destroy (g2);
+    if (ret == 2)
+	return -1;
     return ret;
 }
 
@@ -2103,6 +2107,8 @@ gaiaGeomCollCoveredBy (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     ret = GEOSCoveredBy (g1, g2);
     GEOSGeom_destroy (g1);
     GEOSGeom_destroy (g2);
+    if (ret == 2)
+	return -1;
     return ret;
 }
 

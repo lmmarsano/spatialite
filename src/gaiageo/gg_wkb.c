@@ -49,6 +49,8 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <float.h>
 #include <string.h>
 
+#include "config.h"
+
 #include <spatialite/sqlite.h>
 
 #include <spatialite/gaiageo.h>
@@ -991,6 +993,7 @@ ParseWkbGeometry (gaiaGeomCollPtr geo)
 		ParseWkbPoint (geo);
 		break;
 	    case GAIA_POINTZ:
+	    case GAIA_GEOSWKB_POINTZ:
 		ParseWkbPointZ (geo);
 		break;
 	    case GAIA_POINTM:
@@ -1003,6 +1006,7 @@ ParseWkbGeometry (gaiaGeomCollPtr geo)
 		ParseWkbLine (geo);
 		break;
 	    case GAIA_LINESTRINGZ:
+	    case GAIA_GEOSWKB_LINESTRINGZ:
 		ParseWkbLineZ (geo);
 		break;
 	    case GAIA_LINESTRINGM:
@@ -1015,6 +1019,7 @@ ParseWkbGeometry (gaiaGeomCollPtr geo)
 		ParseWkbPolygon (geo);
 		break;
 	    case GAIA_POLYGONZ:
+	    case GAIA_GEOSWKB_POLYGONZ:
 		ParseWkbPolygonZ (geo);
 		break;
 	    case GAIA_POLYGONM:
@@ -3437,7 +3442,12 @@ gaiaFromWkb (const unsigned char *blob, unsigned int size)
     type = gaiaImport32 (blob + 1, little_endian, endian_arch);
     if (type == GAIA_POINTZ || type == GAIA_LINESTRINGZ || type == GAIA_POLYGONZ
 	|| type == GAIA_MULTIPOINTZ || type == GAIA_MULTILINESTRINGZ
-	|| type == GAIA_MULTIPOLYGONZ || type == GAIA_GEOMETRYCOLLECTIONZ)
+	|| type == GAIA_MULTIPOLYGONZ || type == GAIA_GEOMETRYCOLLECTIONZ
+	|| type == GAIA_GEOSWKB_POINTZ || type == GAIA_GEOSWKB_LINESTRINGZ
+	|| type == GAIA_GEOSWKB_POLYGONZ || type == GAIA_GEOSWKB_MULTIPOINTZ
+	|| type == GAIA_GEOSWKB_MULTILINESTRINGZ
+	|| type == GAIA_GEOSWKB_MULTIPOLYGONZ
+	|| type == GAIA_GEOSWKB_GEOMETRYCOLLECTIONZ)
 	geo = gaiaAllocGeomCollXYZ ();
     else if (type == GAIA_POINTM || type == GAIA_LINESTRINGM
 	     || type == GAIA_POLYGONM || type == GAIA_MULTIPOINTM
@@ -3463,6 +3473,7 @@ gaiaFromWkb (const unsigned char *blob, unsigned int size)
 	  ParseWkbPoint (geo);
 	  break;
       case GAIA_POINTZ:
+      case GAIA_GEOSWKB_POINTZ:
 	  ParseWkbPointZ (geo);
 	  break;
       case GAIA_POINTM:
@@ -3475,6 +3486,7 @@ gaiaFromWkb (const unsigned char *blob, unsigned int size)
 	  ParseWkbLine (geo);
 	  break;
       case GAIA_LINESTRINGZ:
+      case GAIA_GEOSWKB_LINESTRINGZ:
 	  ParseWkbLineZ (geo);
 	  break;
       case GAIA_LINESTRINGM:
@@ -3487,6 +3499,7 @@ gaiaFromWkb (const unsigned char *blob, unsigned int size)
 	  ParseWkbPolygon (geo);
 	  break;
       case GAIA_POLYGONZ:
+      case GAIA_GEOSWKB_POLYGONZ:
 	  ParseWkbPolygonZ (geo);
 	  break;
       case GAIA_POLYGONM:
@@ -3503,6 +3516,10 @@ gaiaFromWkb (const unsigned char *blob, unsigned int size)
       case GAIA_MULTILINESTRINGZ:
       case GAIA_MULTIPOLYGONZ:
       case GAIA_GEOMETRYCOLLECTIONZ:
+      case GAIA_GEOSWKB_MULTIPOINTZ:
+      case GAIA_GEOSWKB_MULTILINESTRINGZ:
+      case GAIA_GEOSWKB_MULTIPOLYGONZ:
+      case GAIA_GEOSWKB_GEOMETRYCOLLECTIONZ:
       case GAIA_MULTIPOINTM:
       case GAIA_MULTILINESTRINGM:
       case GAIA_MULTIPOLYGONM:
@@ -3521,42 +3538,49 @@ gaiaFromWkb (const unsigned char *blob, unsigned int size)
       {
       case GAIA_POINT:
       case GAIA_POINTZ:
+      case GAIA_GEOSWKB_POINTZ:
       case GAIA_POINTM:
       case GAIA_POINTZM:
 	  geo->DeclaredType = GAIA_POINT;
 	  break;
       case GAIA_LINESTRING:
       case GAIA_LINESTRINGZ:
+      case GAIA_GEOSWKB_LINESTRINGZ:
       case GAIA_LINESTRINGM:
       case GAIA_LINESTRINGZM:
 	  geo->DeclaredType = GAIA_LINESTRING;
 	  break;
       case GAIA_POLYGON:
       case GAIA_POLYGONZ:
+      case GAIA_GEOSWKB_POLYGONZ:
       case GAIA_POLYGONM:
       case GAIA_POLYGONZM:
 	  geo->DeclaredType = GAIA_POLYGON;
 	  break;
       case GAIA_MULTIPOINT:
       case GAIA_MULTIPOINTZ:
+      case GAIA_GEOSWKB_MULTIPOINTZ:
       case GAIA_MULTIPOINTM:
       case GAIA_MULTIPOINTZM:
 	  geo->DeclaredType = GAIA_MULTIPOINT;
 	  break;
       case GAIA_MULTILINESTRING:
       case GAIA_MULTILINESTRINGZ:
+      case GAIA_GEOSWKB_MULTILINESTRINGZ:
       case GAIA_MULTILINESTRINGM:
       case GAIA_MULTILINESTRINGZM:
 	  geo->DeclaredType = GAIA_MULTILINESTRING;
 	  break;
       case GAIA_MULTIPOLYGON:
       case GAIA_MULTIPOLYGONZ:
+      case GAIA_GEOSWKB_MULTIPOLYGONZ:
       case GAIA_MULTIPOLYGONM:
       case GAIA_MULTIPOLYGONZM:
 	  geo->DeclaredType = GAIA_MULTIPOLYGON;
 	  break;
       case GAIA_GEOMETRYCOLLECTION:
       case GAIA_GEOMETRYCOLLECTIONZ:
+      case GAIA_GEOSWKB_GEOMETRYCOLLECTIONZ:
       case GAIA_GEOMETRYCOLLECTIONM:
       case GAIA_GEOMETRYCOLLECTIONZM:
 	  geo->DeclaredType = GAIA_GEOMETRYCOLLECTION;
@@ -4643,7 +4667,10 @@ gaiaFromEWKB (const unsigned char *in_buffer)
     if (!blob)
 	return NULL;
     if (blob_size < 9)
+      {
+	free (blob);
 	return NULL;
+      }
     if (*(blob + 0) == 0x01)
 	endian = 1;
     else
@@ -4711,6 +4738,7 @@ gaiaFromEWKB (const unsigned char *in_buffer)
 				    endian_arch, dims);
 	  break;
       };
+    free (blob);
     if (ret < 0)
       {
 	  /* invalid EWKB !!! */

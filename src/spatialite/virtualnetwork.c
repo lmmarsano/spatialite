@@ -51,6 +51,8 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <math.h>
 #include <float.h>
 
+#include "config.h"
+
 #include <spatialite/sqlite.h>
 
 #include <spatialite/spatialite.h>
@@ -1255,6 +1257,8 @@ network_free (NetworkPtr p)
 	  if (pN->Arcs)
 	      free (pN->Arcs);
       }
+    if (p->Nodes)
+        free(p->Nodes);
     if (p->TableName)
 	free (p->TableName);
     if (p->FromColumn)
