@@ -45,11 +45,21 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#ifndef _WIN32
 #include <dirent.h>
 #include <fnmatch.h>
+#endif
 
 #include "sqlite3.h"
 #include "spatialite.h"
+
+#ifdef _WIN32
+#include "fnmatch4win.h"
+#include "scandir4win.h"
+#include "asprintf4win.h"
+#include "fnmatch_impl4win.h"
+#endif
 
 struct test_data
 {
@@ -141,7 +151,23 @@ int get_clean_line(FILE *f, char ** line)
     ssize_t num_read = 0;
     size_t end = 0;
     char *tmp_line = NULL;
+
+#if !defined(_WIN32) &&!defined(__APPLE__)
+/* expecpting to be on a sane minded platform [linux-like] */
     num_read = getline(&(tmp_line), &len, f);
+#else
+/* neither Windows nor MacOsX support getline() */
+	len = 1024 * 1024;
+	tmp_line = malloc(len);
+	if (fgets(tmp_line, len, f) == NULL)
+	{
+		free(tmp_line);
+		num_read = -1;
+	}
+	else
+		num_read = strlen(tmp_line);
+#endif
+
     if (num_read < 1) {
 	fprintf(stderr, "failed to read at %li: %zi\n", ftell(f), num_read);
 	return -1;
@@ -303,9 +329,15 @@ int main (int argc, char *argv[])
     {
 	result = run_specified_testcases(argc, argv);
     }
+    if (result != 0)
+    {
+    /* it looks like if MinGW applies some wrong assumption   */ 
+    /* some negative values are incorrectly reported to be OK */
+    /* forcing -1 seems to resolve this issue                 */
+        result = -1;
+    }
 
     spatialite_cleanup();
-    sqlite3_reset_auto_extension();
 
     return result;
 }

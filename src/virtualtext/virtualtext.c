@@ -52,6 +52,8 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <stdio.h>
 #include <string.h>
 
+#include "config.h"
+
 #include <spatialite/sqlite.h>
 #include <spatialite/debug.h>
 
@@ -338,8 +340,33 @@ static int
 vtxt_best_index (sqlite3_vtab * pVTab, sqlite3_index_info * pIndex)
 {
 /* best index selection */
-    if (pVTab || pIndex)
+    int i;
+    int iArg = 0;
+    char str[2048];
+    char buf[64];
+
+    if (pVTab)
 	pVTab = pVTab;		/* unused arg warning suppression */
+
+    *str = '\0';
+    for (i = 0; i < pIndex->nConstraint; i++)
+      {
+	  if (pIndex->aConstraint[i].usable)
+	    {
+		iArg++;
+		pIndex->aConstraintUsage[i].argvIndex = iArg;
+		pIndex->aConstraintUsage[i].omit = 1;
+		sprintf (buf, "%d:%d,", pIndex->aConstraint[i].iColumn,
+			 pIndex->aConstraint[i].op);
+		strcat (str, buf);
+	    }
+      }
+    if (*str != '\0')
+      {
+	  pIndex->idxStr = sqlite3_mprintf ("%s", str);
+	  pIndex->needToFreeIdxStr = 1;
+      }
+
     return SQLITE_OK;
 }
 
@@ -472,13 +499,13 @@ vtxt_eval_constraints (VirtualTextCursorPtr cursor)
     int i;
     char buf[4096];
     int type;
-    const char *value;
+    const char *value = NULL;
     sqlite3_int64 int_value;
     double dbl_value;
-    const char *txt_value;
-    int is_int;
-    int is_dbl;
-    int is_txt;
+    char *txt_value = NULL;
+    int is_int = 0;
+    int is_dbl = 0;
+    int is_txt = 0;
     gaiaTextReaderPtr text = cursor->pVtab->reader;
     VirtualTextConstraintPtr pC;
     if (text->current_line_ready == 0)
@@ -491,6 +518,7 @@ vtxt_eval_constraints (VirtualTextCursorPtr cursor)
 	    {
 		/* the ROWNO column */
 		int_value = cursor->current_row;
+		is_int = 1;
 		goto eval;
 	    }
 	  nCol = 1;
@@ -501,6 +529,7 @@ vtxt_eval_constraints (VirtualTextCursorPtr cursor)
 		is_txt = 0;
 		if (nCol == pC->iColumn)
 		  {
+
 		      if (!gaiaTextReaderFetchField (text, i, &type, &value))
 			  ;
 		      else
@@ -526,7 +555,7 @@ vtxt_eval_constraints (VirtualTextCursorPtr cursor)
 			      }
 			    else if (type == VRTTXT_TEXT)
 			      {
-				  txt_value = value;
+				  txt_value = (char *) value;
 				  is_txt = 1;
 			      }
 			}
@@ -677,10 +706,17 @@ vtxt_eval_constraints (VirtualTextCursorPtr cursor)
 			};
 		  }
 	    }
+	  if (txt_value)
+	    {
+		free (txt_value);
+		txt_value = NULL;
+	    }
 	  if (!ok)
 	      return 0;
 	  pC = pC->next;
       }
+    if (txt_value)
+	free (txt_value);
     return 1;
 }
 

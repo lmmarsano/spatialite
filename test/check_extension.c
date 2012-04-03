@@ -45,8 +45,14 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <stdio.h>
 #include <string.h>
 
+#include "config.h"
+
 #include "sqlite3.h"
 #include "spatialite.h"
+
+#ifdef _WIN32
+#include "asprintf4win.h"
+#endif
 
 int main (int argc, char *argv[])
 {
@@ -69,7 +75,15 @@ int main (int argc, char *argv[])
     
     sqlite3_enable_load_extension (db_handle, 1);
     
+#if defined(_WIN32) || defined(__APPLE__)
+#ifdef __APPLE__	/* Mac Os X */
+    asprintf(&sql_statement, "SELECT load_extension('libspatialite.dylib')");
+#else	/* Windows */
+    asprintf(&sql_statement, "SELECT load_extension('libspatialite.dll')");
+#endif
+#else	/* neither Mac nor Windows: may be Linux or Unix */
     asprintf(&sql_statement, "SELECT load_extension('libspatialite.so')");
+#endif
     ret = sqlite3_exec (db_handle, sql_statement, NULL, NULL, &err_msg);
     free(sql_statement);
     if (ret != SQLITE_OK) {
@@ -136,8 +150,7 @@ int main (int argc, char *argv[])
     sqlite3_free_table (results);
  
     sqlite3_close (db_handle);
-    
-    sqlite3_reset_auto_extension();
+    spatialite_cleanup();
     
     return 0;
 }

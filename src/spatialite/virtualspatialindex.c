@@ -49,6 +49,8 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <string.h>
 #include <math.h>
 
+#include "config.h"
+
 #include <spatialite/sqlite.h>
 
 #include <spatialite/spatialite.h>
@@ -529,6 +531,8 @@ vspidx_filter (sqlite3_vtab_cursor * pCursor, int idxNum, const char *idxStr,
     else
 	cursor->eof = 1;
   stop:
+    if (geom)
+	gaiaFreeGeomColl (geom);
     return SQLITE_OK;
 }
 
