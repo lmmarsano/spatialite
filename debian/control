@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
 Uploaders: Francesco Paolo Lovergine <frankie@debian.org>, David Paleino <dapal@debian.org>
 Build-Depends:
- debhelper (>= 8)
+ debhelper (>= 9)
  , autotools-dev
  , libsqlite3-dev (>= 3.6.11)
  , libgeos-dev (>= 3.3.0)
