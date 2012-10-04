@@ -15,7 +15,7 @@ Build-Depends:
  , libexpat1-dev
  , libfreexl-dev (>= 1.0.0)
  , pkg-config
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Homepage: http://www.gaia-gis.it/spatialite/
 Vcs-Browser: http://git.debian.org/?p=pkg-grass/spatialite.git
 Vcs-Git: git://git.debian.org/pkg-grass/spatialite.git
