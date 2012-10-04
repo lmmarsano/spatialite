@@ -45,18 +45,24 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <stdio.h>
 #include <string.h>
 
+#include "config.h"
+
 #include "sqlite3.h"
 #include "spatialite.h"
 
 #include "spatialite/gaiageo.h"
 
+#ifndef OMIT_GEOS		/* including GEOS */
+#include <geos_c.h>
+#endif
+
 int main (int argc, char *argv[])
 {
+#ifndef OMIT_GEOS	/* only if GEOS is supported */
     int ret;
     sqlite3 *handle;
     char *err_msg = NULL;
     const char *sql;
-    int i;
     char **results;
     int rows;
     int columns;
@@ -94,9 +100,18 @@ int main (int argc, char *argv[])
       fprintf (stderr, "Unexpected error: NULL result\n");
       return -4;
     }
-    if (strcmp(results[1], "MULTIPOINT(430417.1 5448290.9, 430666.6 5448125.4)") != 0) {        
-      fprintf (stderr, "Unexpected error: invalid result\n");
-      return -5;
+    if (strcmp(GEOSversion (), "3.3") > 0) {
+    /* 3.4.0 trunk swaps relative ordering !!!! */
+        if (strcmp(results[1], "MULTIPOINT(430666.6 5448125.4, 430417.1 5448290.9)") != 0) {        
+      	    fprintf (stderr, "Unexpected error: invalid result |%s|\n", results[1]);
+        return -5;
+      }
+    }
+    else {
+        if (strcmp(results[1], "MULTIPOINT(430417.1 5448290.9, 430666.6 5448125.4)") != 0) {        
+      	    fprintf (stderr, "Unexpected error: invalid result |%s|\n", results[1]);
+        return -5;
+      }
     }
     sqlite3_free_table (results);
 
@@ -160,6 +175,7 @@ int main (int argc, char *argv[])
     }
     
     spatialite_cleanup();
+#endif	/* end GEOS conditional */
     
     return 0;
 }

@@ -2,7 +2,7 @@
 
  shapefiles.c -- implements shapefile support [import - export]
 
- version 2.3, 2008 October 13
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -24,7 +24,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s): Brad Hards <bradh@frogmouth.net>
@@ -60,6 +60,7 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <spatialite/gaiaaux.h>
 #include <spatialite/gaiageo.h>
 #include <spatialite.h>
+#include <spatialite_private.h>
 
 #ifndef OMIT_FREEXL
 #include <freexl.h>
@@ -276,6 +277,17 @@ load_shapefile (sqlite3 * sqlite, char *shp_path, char *table, char *charset,
 		int srid, char *column, int coerce2d, int compressed,
 		int verbose, int spatial_index, int *rows, char *err_msg)
 {
+    return load_shapefile_ex (sqlite, shp_path, table, charset, srid, column,
+			      NULL, NULL, coerce2d, compressed, verbose,
+			      spatial_index, rows, err_msg);
+}
+
+SPATIALITE_DECLARE int
+load_shapefile_ex (sqlite3 * sqlite, char *shp_path, char *table, char *charset,
+		   int srid, char *g_column, char *gtype, char *pk_column,
+		   int coerce2d, int compressed, int verbose, int spatial_index,
+		   int *rows, char *err_msg)
+{
     sqlite3_stmt *stmt = NULL;
     int ret;
     char *errMsg = NULL;
@@ -298,12 +310,65 @@ load_shapefile (sqlite3 * sqlite, char *shp_path, char *table, char *charset,
     int blob_size;
     char *geom_type;
     char *txt_dims;
-    char *geo_column = column;
+    char *geo_column = g_column;
+    char *xgtype = gtype;
+    char qtable[1024];
+    char *xtable = NULL;
+    char qpk_name[1024];
+    char *xpk_name = NULL;
+    char *pk_name = "PK_UID";
+    int pk_type = SQLITE_INTEGER;
+    int pk_set;
     if (!geo_column)
 	geo_column = "Geometry";
+    if (!xgtype)
+	;
+    else
+      {
+	  if (strcasecmp (xgtype, "LINESTRING") == 0)
+	      xgtype = "LINESTRING";
+	  else if (strcasecmp (xgtype, "LINESTRINGZ") == 0)
+	      xgtype = "LINESTRINGZ";
+	  else if (strcasecmp (xgtype, "LINESTRINGM") == 0)
+	      xgtype = "LINESTRINGM";
+	  else if (strcasecmp (xgtype, "LINESTRINGZM") == 0)
+	      xgtype = "LINESTRINGZM";
+	  else if (strcasecmp (xgtype, "MULTILINESTRING") == 0)
+	      xgtype = "MULTILINESTRING";
+	  else if (strcasecmp (xgtype, "MULTILINESTRINGZ") == 0)
+	      xgtype = "MULTILINESTRINGZ";
+	  else if (strcasecmp (xgtype, "MULTILINESTRINGM") == 0)
+	      xgtype = "MULTILINESTRINGM";
+	  else if (strcasecmp (xgtype, "MULTILINESTRINGZM") == 0)
+	      xgtype = "MULTILINESTRINGZM";
+	  else if (strcasecmp (xgtype, "POLYGON") == 0)
+	      xgtype = "POLYGON";
+	  else if (strcasecmp (xgtype, "POLYGONZ") == 0)
+	      xgtype = "POLYGONZ";
+	  else if (strcasecmp (xgtype, "POLYGONM") == 0)
+	      xgtype = "POLYGONM";
+	  else if (strcasecmp (xgtype, "POLYGONZM") == 0)
+	      xgtype = "POLYGONZM";
+	  else if (strcasecmp (xgtype, "MULTIPOLYGON") == 0)
+	      xgtype = "MULTIPOLYGON";
+	  else if (strcasecmp (xgtype, "MULTIPOLYGONZ") == 0)
+	      xgtype = "MULTIPOLYGONZ";
+	  else if (strcasecmp (xgtype, "MULTIPOLYGONM") == 0)
+	      xgtype = "MULTIPOLYGONM";
+	  else if (strcasecmp (xgtype, "MULTIPOLYGONZM") == 0)
+	      xgtype = "MULTIPOLYGONZM";
+	  else
+	      xgtype = NULL;
+      }
+    xtable = gaiaDoubleQuotedSql (table);
+    if (xtable)
+      {
+	  strcpy (qtable, xtable);
+	  free (xtable);
+      }
 /* checking if TABLE already exists */
     sprintf (sql,
-	     "SELECT name FROM sqlite_master WHERE type = 'table' AND name LIKE '%s'",
+	     "SELECT name FROM sqlite_master WHERE type = 'table' AND Lower(name) = Lower('%s')",
 	     table);
     ret = sqlite3_prepare_v2 (sqlite, sql, strlen (sql), &stmt, NULL);
     if (ret != SQLITE_OK)
@@ -410,10 +475,67 @@ load_shapefile (sqlite3 * sqlite, char *shp_path, char *table, char *charset,
     col_name = malloc (sizeof (char *) * col_cnt);
     cnt = 0;
     seed = 0;
+    if (pk_column != NULL)
+      {
+	  /* validating the Primary Key column */
+	  dbf_field = shp->Dbf->First;
+	  while (dbf_field)
+	    {
+		if (strcasecmp (pk_column, dbf_field->Name) == 0)
+		  {
+		      /* ok, using this field as Primary Key */
+		      pk_name = pk_column;
+		      switch (dbf_field->Type)
+			{
+			case 'C':
+			    pk_type = SQLITE_TEXT;
+			    break;
+			case 'N':
+			    if (dbf_field->Decimals)
+				pk_type = SQLITE_FLOAT;
+			    else
+			      {
+				  if (dbf_field->Length <= 18)
+				      pk_type = SQLITE_INTEGER;
+				  else
+				      pk_type = SQLITE_FLOAT;
+			      }
+			    break;
+			case 'D':
+			    pk_type = SQLITE_FLOAT;
+			    break;
+			case 'F':
+			    pk_type = SQLITE_FLOAT;
+			    break;
+			case 'L':
+			    pk_type = SQLITE_INTEGER;
+			    break;
+			};
+		  }
+		dbf_field = dbf_field->Next;
+	    }
+      }
+    xpk_name = gaiaDoubleQuotedSql (pk_name);
+    if (xpk_name)
+      {
+	  strcpy (qpk_name, xpk_name);
+	  free (xpk_name);
+      }
     dbf_field = shp->Dbf->First;
     while (dbf_field)
       {
 	  /* preparing column names */
+	  if (strcasecmp (pk_name, dbf_field->Name) == 0)
+	    {
+		/* skipping the Primary Key field */
+		strcpy (dummyName, dbf_field->Name);
+		len = strlen (dummyName);
+		*(col_name + cnt) = malloc (len + 1);
+		strcpy (*(col_name + cnt), dummyName);
+		cnt++;
+		dbf_field = dbf_field->Next;
+		continue;
+	    }
 	  strcpy (dummyName, dbf_field->Name);
 	  dup = 0;
 	  for (idup = 0; idup < cnt; idup++)
@@ -421,7 +543,7 @@ load_shapefile (sqlite3 * sqlite, char *shp_path, char *table, char *charset,
 		if (strcasecmp (dummyName, *(col_name + idup)) == 0)
 		    dup = 1;
 	    }
-	  if (strcasecmp (dummyName, "PK_UID") == 0)
+	  if (strcasecmp (dummyName, pk_name) == 0)
 	      dup = 1;
 	  if (strcasecmp (dummyName, geo_column) == 0)
 	      dup = 1;
@@ -452,12 +574,24 @@ load_shapefile (sqlite3 * sqlite, char *shp_path, char *table, char *charset,
 	  goto clean_up;
       }
 /* creating the Table */
-    sprintf (sql, "CREATE TABLE %s", table);
-    strcat (sql, " (\nPK_UID INTEGER PRIMARY KEY AUTOINCREMENT");
+    sprintf (sql, "CREATE TABLE \"%s\" (\n\"%s\" ", qtable, qpk_name);
+    if (pk_type == SQLITE_TEXT)
+	strcat (sql, "TEXT PRIMARY KEY NOT NULL");
+    else if (pk_type == SQLITE_FLOAT)
+	strcat (sql, "DOUBLE PRIMARY KEY NOT NULL");
+    else
+	strcat (sql, "INTEGER PRIMARY KEY AUTOINCREMENT");
     cnt = 0;
     dbf_field = shp->Dbf->First;
     while (dbf_field)
       {
+	  if (strcasecmp (pk_name, dbf_field->Name) == 0)
+	    {
+		/* skipping the Primary Key field */
+		dbf_field = dbf_field->Next;
+		cnt++;
+		continue;
+	    }
 	  strcat (sql, ",\n\"");
 	  strcat (sql, *(col_name + cnt));
 	  cnt++;
@@ -528,20 +662,132 @@ load_shapefile (sqlite3 * sqlite, char *shp_path, char *table, char *charset,
 	    case GAIA_SHP_POLYLINE:
 	    case GAIA_SHP_POLYLINEM:
 	    case GAIA_SHP_POLYLINEZ:
-		gaiaShpAnalyze (shp);
-		if (shp->EffectiveType == GAIA_LINESTRING)
-		    geom_type = "LINESTRING";
+		if (xgtype == NULL)
+		  {
+		      /* auto-decting if MULTILINESTRING is required */
+		      gaiaShpAnalyze (shp);
+		      if (shp->EffectiveType == GAIA_LINESTRING)
+			  geom_type = "LINESTRING";
+		      else
+			  geom_type = "MULTILINESTRING";
+		  }
 		else
-		    geom_type = "MULTILINESTRING";
+		  {
+		      /* user-defined geometry type */
+		      if (strcmp (xgtype, "LINESTRING") == 0)
+			{
+			    geom_type = "LINESTRING";
+			    shp->EffectiveType = GAIA_LINESTRING;
+			    shp->EffectiveDims = GAIA_XY;
+			}
+		      if (strcmp (xgtype, "LINESTRINGZ") == 0)
+			{
+			    geom_type = "LINESTRING";
+			    shp->EffectiveType = GAIA_LINESTRING;
+			    shp->EffectiveDims = GAIA_XY_Z;
+			}
+		      if (strcmp (xgtype, "LINESTRINGM") == 0)
+			{
+			    geom_type = "LINESTRING";
+			    shp->EffectiveType = GAIA_LINESTRING;
+			    shp->EffectiveDims = GAIA_XY_M;
+			}
+		      if (strcmp (xgtype, "LINESTRINGZM") == 0)
+			{
+			    geom_type = "LINESTRING";
+			    shp->EffectiveType = GAIA_LINESTRING;
+			    shp->EffectiveDims = GAIA_XY_Z_M;
+			}
+		      if (strcmp (xgtype, "MULTILINESTRING") == 0)
+			{
+			    geom_type = "MULTILINESTRING";
+			    shp->EffectiveType = GAIA_MULTILINESTRING;
+			    shp->EffectiveDims = GAIA_XY;
+			}
+		      if (strcmp (xgtype, "MULTILINESTRINGZ") == 0)
+			{
+			    geom_type = "MULTILINESTRING";
+			    shp->EffectiveType = GAIA_MULTILINESTRING;
+			    shp->EffectiveDims = GAIA_XY_Z;
+			}
+		      if (strcmp (xgtype, "MULTILINESTRINGM") == 0)
+			{
+			    geom_type = "MULTILINESTRING";
+			    shp->EffectiveType = GAIA_MULTILINESTRING;
+			    shp->EffectiveDims = GAIA_XY_M;
+			}
+		      if (strcmp (xgtype, "MULTILINESTRINGZM") == 0)
+			{
+			    geom_type = "MULTILINESTRING";
+			    shp->EffectiveType = GAIA_MULTILINESTRING;
+			    shp->EffectiveDims = GAIA_XY_Z_M;
+			}
+		  }
 		break;
 	    case GAIA_SHP_POLYGON:
 	    case GAIA_SHP_POLYGONM:
 	    case GAIA_SHP_POLYGONZ:
-		gaiaShpAnalyze (shp);
-		if (shp->EffectiveType == GAIA_POLYGON)
-		    geom_type = "POLYGON";
+		if (xgtype == NULL)
+		  {
+		      /* auto-decting if MULTIPOLYGON is required */
+		      gaiaShpAnalyze (shp);
+		      if (shp->EffectiveType == GAIA_POLYGON)
+			  geom_type = "POLYGON";
+		      else
+			  geom_type = "MULTIPOLYGON";
+		  }
 		else
-		    geom_type = "MULTIPOLYGON";
+		  {
+		      /* user-defined geometry type */
+		      if (strcmp (xgtype, "POLYGON") == 0)
+			{
+			    geom_type = "POLYGON";
+			    shp->EffectiveType = GAIA_POLYGON;
+			    shp->EffectiveDims = GAIA_XY;
+			}
+		      if (strcmp (xgtype, "POLYGONZ") == 0)
+			{
+			    geom_type = "POLYGON";
+			    shp->EffectiveType = GAIA_POLYGON;
+			    shp->EffectiveDims = GAIA_XY_Z;
+			}
+		      if (strcmp (xgtype, "POLYGONM") == 0)
+			{
+			    geom_type = "POLYGON";
+			    shp->EffectiveType = GAIA_POLYGON;
+			    shp->EffectiveDims = GAIA_XY_M;
+			}
+		      if (strcmp (xgtype, "POLYGONZM") == 0)
+			{
+			    geom_type = "POLYGON";
+			    shp->EffectiveType = GAIA_POLYGON;
+			    shp->EffectiveDims = GAIA_XY_Z_M;
+			}
+		      if (strcmp (xgtype, "MULTIPOLYGON") == 0)
+			{
+			    geom_type = "MULTIPOLYGON";
+			    shp->EffectiveType = GAIA_MULTIPOLYGON;
+			    shp->EffectiveDims = GAIA_XY;
+			}
+		      if (strcmp (xgtype, "MULTIPOLYGONZ") == 0)
+			{
+			    geom_type = "MULTIPOLYGON";
+			    shp->EffectiveType = GAIA_MULTIPOLYGON;
+			    shp->EffectiveDims = GAIA_XY_Z;
+			}
+		      if (strcmp (xgtype, "MULTIPOLYGONM") == 0)
+			{
+			    geom_type = "MULTIPOLYGON";
+			    shp->EffectiveType = GAIA_MULTIPOLYGON;
+			    shp->EffectiveDims = GAIA_XY_M;
+			}
+		      if (strcmp (xgtype, "MULTIPOLYGONZM") == 0)
+			{
+			    geom_type = "MULTIPOLYGON";
+			    shp->EffectiveType = GAIA_MULTIPOLYGON;
+			    shp->EffectiveDims = GAIA_XY_Z_M;
+			}
+		  }
 		break;
 	    };
 	  if (coerce2d)
@@ -614,12 +860,19 @@ load_shapefile (sqlite3 * sqlite, char *shp_path, char *table, char *charset,
 	    }
       }
     /* preparing the INSERT INTO parametrerized statement */
-    sprintf (sql, "INSERT INTO %s (PK_UID,", table);
+    sprintf (sql, "INSERT INTO \"%s\" (\"%s\",", qtable, qpk_name);
     cnt = 0;
     dbf_field = shp->Dbf->First;
     while (dbf_field)
       {
 	  /* columns corresponding to some DBF attribute */
+	  if (strcasecmp (pk_name, dbf_field->Name) == 0)
+	    {
+		/* skipping the Primary Key field */
+		dbf_field = dbf_field->Next;
+		cnt++;
+		continue;
+	    }
 	  strcat (sql, "\"");
 	  strcat (sql, *(col_name + cnt++));
 	  strcat (sql, "\" ,");
@@ -631,6 +884,12 @@ load_shapefile (sqlite3 * sqlite, char *shp_path, char *table, char *charset,
     while (dbf_field)
       {
 	  /* column values */
+	  if (strcasecmp (pk_name, dbf_field->Name) == 0)
+	    {
+		/* skipping the Primary Key field */
+		dbf_field = dbf_field->Next;
+		continue;
+	    }
 	  strcat (sql, ", ?");
 	  dbf_field = dbf_field->Next;
       }
@@ -668,12 +927,43 @@ load_shapefile (sqlite3 * sqlite, char *shp_path, char *table, char *charset,
 	  /* binding query params */
 	  sqlite3_reset (stmt);
 	  sqlite3_clear_bindings (stmt);
-	  sqlite3_bind_int (stmt, 1, current_row);
+	  pk_set = 0;
+	  cnt = 0;
+	  dbf_field = shp->Dbf->First;
+	  while (dbf_field)
+	    {
+		/* Primary Key value */
+		if (strcasecmp (pk_name, dbf_field->Name) == 0)
+		  {
+		      if (pk_type == SQLITE_TEXT)
+			  sqlite3_bind_text (stmt, 1,
+					     dbf_field->Value->TxtValue,
+					     strlen (dbf_field->
+						     Value->TxtValue),
+					     SQLITE_STATIC);
+		      else if (pk_type == SQLITE_FLOAT)
+			  sqlite3_bind_double (stmt, 1,
+					       dbf_field->Value->DblValue);
+		      else
+			  sqlite3_bind_int64 (stmt, 1,
+					      dbf_field->Value->IntValue);
+		      pk_set = 1;
+		  }
+		dbf_field = dbf_field->Next;
+	    }
+	  if (!pk_set)
+	      sqlite3_bind_int (stmt, 1, current_row);
 	  cnt = 0;
 	  dbf_field = shp->Dbf->First;
 	  while (dbf_field)
 	    {
 		/* column values */
+		if (strcasecmp (pk_name, dbf_field->Name) == 0)
+		  {
+		      /* skipping the Primary Key field */
+		      dbf_field = dbf_field->Next;
+		      continue;
+		  }
 		if (!(dbf_field->Value))
 		    sqlite3_bind_null (stmt, cnt + 2);
 		else
@@ -804,6 +1094,8 @@ output_prj_file (sqlite3 * sqlite, char *path, char *table, char *column)
     int ret;
     int rs_srid = 0;
     int rs_srs_wkt = 0;
+    int rs_srtext = 0;
+    int has_srtext = 0;
     const char *name;
     char srsWkt[8192];
     char dummy[8192];
@@ -852,7 +1144,7 @@ output_prj_file (sqlite3 * sqlite, char *path, char *table, char *column)
     if (srid < 0)
 	return;
 
-/* step II: checking if the SRS_WKT column actually exists */
+/* step II: checking if the SRS_WKT or SRTEXT column actually exists */
     ret =
 	sqlite3_get_table (sqlite, "PRAGMA table_info(spatial_ref_sys)",
 			   &results, &rows, &columns, &errMsg);
@@ -871,19 +1163,32 @@ output_prj_file (sqlite3 * sqlite, char *path, char *table, char *column)
 		name = results[(i * columns) + 1];
 		if (strcasecmp (name, "srid") == 0)
 		    rs_srid = 1;
-		if (strcasecmp (name, "auth_name") == 0)
+		if (strcasecmp (name, "srs_wkt") == 0)
 		    rs_srs_wkt = 1;
+		if (strcasecmp (name, "srtext") == 0)
+		    rs_srtext = 1;
 	    }
       }
     sqlite3_free_table (results);
-    if (rs_srid == 0 || rs_srs_wkt == 0)
+    if (rs_srs_wkt == 1 || rs_srtext == 1)
+	has_srtext = 1;
+    if (rs_srid == 0 || has_srtext == 0)
 	return;
 
 /* step III: fetching WKT SRS */
     *srsWkt = '\0';
-    sprintf (sql,
-	     "SELECT srs_wkt FROM spatial_ref_sys WHERE srid = %d AND srs_wkt IS NOT NULL",
-	     srid);
+    if (rs_srtext)
+      {
+	  sprintf (sql,
+		   "SELECT srtext FROM spatial_ref_sys WHERE srid = %d AND srtext IS NOT NULL",
+		   srid);
+      }
+    else
+      {
+	  sprintf (sql,
+		   "SELECT srs_wkt FROM spatial_ref_sys WHERE srid = %d AND srs_wkt IS NOT NULL",
+		   srid);
+      }
     ret = sqlite3_get_table (sqlite, sql, &results, &rows, &columns, &errMsg);
     if (ret != SQLITE_OK)
       {
@@ -963,6 +1268,7 @@ dump_shapefile (sqlite3 * sqlite, char *table, char *column, char *shp_path,
     gaiaDbfFieldPtr dbf_field;
     int *max_length = NULL;
     int *sql_type = NULL;
+    int metadata_version = checkSpatialMetaData (sqlite);
     if (geom_type)
       {
 	  /* normalizing required geometry type */
@@ -984,9 +1290,21 @@ dump_shapefile (sqlite3 * sqlite, char *table, char *column, char *shp_path,
 	  int i;
 	  char metatype[256];
 	  char metadims[256];
-	  sprintf (sql,
-		   "SELECT type, coord_dimension FROM geometry_columns WHERE f_table_name = '%s' AND f_geometry_column = '%s'",
-		   table, column);
+	  if (metadata_version == 3)
+	    {
+		/* current metadata style >= v.4.0.0 */
+		sprintf (sql,
+			 "SELECT geometry_type FROM geometry_columns WHERE Lower(f_table_name) = Lower('%s') AND Lower(f_geometry_column) = Lower('%s')",
+			 table, column);
+	    }
+	  else
+	    {
+		/* legacy metadata style <= v.3.1.0 */
+		sprintf (sql,
+			 "SELECT type, coord_dimension FROM geometry_columns WHERE Lower(f_table_name) = Lower('%s') AND Lower(f_geometry_column) = Lower('%s')",
+			 table, column);
+	    }
+
 	  ret =
 	      sqlite3_get_table (sqlite, sql, &results, &rows, &columns,
 				 &errMsg);
@@ -1005,8 +1323,147 @@ dump_shapefile (sqlite3 * sqlite, char *table, char *column, char *shp_path,
 	  *metadims = '\0';
 	  for (i = 1; i <= rows; i++)
 	    {
-		strcpy (metatype, results[(i * columns) + 0]);
-		strcpy (metadims, results[(i * columns) + 1]);
+		if (metadata_version == 3)
+		  {
+		      /* current metadata style >= v.3.1.0 */
+		      switch (atoi (results[(i * columns) + 0]))
+			{
+			case 0:
+			    strcpy (metatype, "GEOMETRY");
+			    strcpy (metadims, "XY");
+			    break;
+			case 1:
+			    strcpy (metatype, "POINT");
+			    strcpy (metadims, "XY");
+			    break;
+			case 2:
+			    strcpy (metatype, "LINESTRING");
+			    strcpy (metadims, "XY");
+			    break;
+			case 3:
+			    strcpy (metatype, "POLYGON");
+			    strcpy (metadims, "XY");
+			    break;
+			case 4:
+			    strcpy (metatype, "MULTIPOINT");
+			    strcpy (metadims, "XY");
+			    break;
+			case 5:
+			    strcpy (metatype, "MULTILINESTRING");
+			    strcpy (metadims, "XY");
+			    break;
+			case 6:
+			    strcpy (metatype, "MULTIPOLYGON");
+			    strcpy (metadims, "XY");
+			    break;
+			case 7:
+			    strcpy (metatype, "GEOMETRYCOLLECTION");
+			    strcpy (metadims, "XY");
+			    break;
+			case 1000:
+			    strcpy (metatype, "GEOMETRY");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1001:
+			    strcpy (metatype, "POINT");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1002:
+			    strcpy (metatype, "LINESTRING");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1003:
+			    strcpy (metatype, "POLYGON");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1004:
+			    strcpy (metatype, "MULTIPOINT");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1005:
+			    strcpy (metatype, "MULTILINESTRING");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1006:
+			    strcpy (metatype, "MULTIPOLYGON");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1007:
+			    strcpy (metatype, "GEOMETRYCOLLECTION");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 2000:
+			    strcpy (metatype, "GEOMETRY");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2001:
+			    strcpy (metatype, "POINT");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2002:
+			    strcpy (metatype, "LINESTRING");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2003:
+			    strcpy (metatype, "POLYGON");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2004:
+			    strcpy (metatype, "MULTIPOINT");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2005:
+			    strcpy (metatype, "MULTILINESTRING");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2006:
+			    strcpy (metatype, "MULTIPOLYGON");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2007:
+			    strcpy (metatype, "GEOMETRYCOLLECTION");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 3000:
+			    strcpy (metatype, "GEOMETRY");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3001:
+			    strcpy (metatype, "POINT");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3002:
+			    strcpy (metatype, "LINESTRING");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3003:
+			    strcpy (metatype, "POLYGON");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3004:
+			    strcpy (metatype, "MULTIPOINT");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3005:
+			    strcpy (metatype, "MULTILINESTRING");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3006:
+			    strcpy (metatype, "MULTIPOLYGON");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3007:
+			    strcpy (metatype, "GEOMETRYCOLLECTION");
+			    strcpy (metadims, "XYZM");
+			    break;
+			};
+		  }
+		else
+		  {
+		      /* legacy metadata style <= v.3.1.0 */
+		      strcpy (metatype, results[(i * columns) + 0]);
+		      strcpy (metadims, results[(i * columns) + 1]);
+		  }
 	    }
 	  sqlite3_free_table (results);
 	  if (strcasecmp (metatype, "POINT") == 0)
@@ -1070,11 +1527,21 @@ dump_shapefile (sqlite3 * sqlite, char *table, char *column, char *shp_path,
 	  char metatype[256];
 	  char metadims[256];
 	  char sql2[1024];
-	  strcpy (sql,
-		  "SELECT type, coord_dimension FROM views_geometry_columns ");
+	  if (metadata_version == 3)
+	    {
+		/* current metadata style >= v.4.0.0 */
+		strcpy (sql,
+			"SELECT geometry_type FROM views_geometry_columns ");
+	    }
+	  else
+	    {
+		/* legacy metadata style <= v.3.1.0 */
+		strcpy (sql,
+			"SELECT type, coord_dimension FROM views_geometry_columns ");
+	    }
 	  strcat (sql,
 		  "JOIN geometry_columns USING (f_table_name, f_geometry_column) ");
-	  sprintf (sql2, "WHERE view_name = '%s' AND view_geometry = '%s'",
+	  sprintf (sql2, "WHERE Lower(view_name) = Lower('%s') AND Lower(view_geometry) = Lower('%s')",
 		   table, column);
 	  strcat (sql, sql2);
 	  ret =
@@ -1095,8 +1562,147 @@ dump_shapefile (sqlite3 * sqlite, char *table, char *column, char *shp_path,
 	  *metadims = '\0';
 	  for (i = 1; i <= rows; i++)
 	    {
-		strcpy (metatype, results[(i * columns) + 0]);
-		strcpy (metadims, results[(i * columns) + 1]);
+		if (metadata_version == 3)
+		  {
+		      /* current metadata style >= v.4.0.0 */
+		      switch (atoi (results[(i * columns) + 0]))
+			{
+			case 0:
+			    strcpy (metatype, "GEOMETRY");
+			    strcpy (metadims, "XY");
+			    break;
+			case 1:
+			    strcpy (metatype, "POINT");
+			    strcpy (metadims, "XY");
+			    break;
+			case 2:
+			    strcpy (metatype, "LINESTRING");
+			    strcpy (metadims, "XY");
+			    break;
+			case 3:
+			    strcpy (metatype, "POLYGON");
+			    strcpy (metadims, "XY");
+			    break;
+			case 4:
+			    strcpy (metatype, "MULTIPOINT");
+			    strcpy (metadims, "XY");
+			    break;
+			case 5:
+			    strcpy (metatype, "MULTILINESTRING");
+			    strcpy (metadims, "XY");
+			    break;
+			case 6:
+			    strcpy (metatype, "MULTIPOLYGON");
+			    strcpy (metadims, "XY");
+			    break;
+			case 7:
+			    strcpy (metatype, "GEOMETRYCOLLECTION");
+			    strcpy (metadims, "XY");
+			    break;
+			case 1000:
+			    strcpy (metatype, "GEOMETRY");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1001:
+			    strcpy (metatype, "POINT");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1002:
+			    strcpy (metatype, "LINESTRING");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1003:
+			    strcpy (metatype, "POLYGON");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1004:
+			    strcpy (metatype, "MULTIPOINT");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1005:
+			    strcpy (metatype, "MULTILINESTRING");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1006:
+			    strcpy (metatype, "MULTIPOLYGON");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 1007:
+			    strcpy (metatype, "GEOMETRYCOLLECTION");
+			    strcpy (metadims, "XYZ");
+			    break;
+			case 2000:
+			    strcpy (metatype, "GEOMETRY");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2001:
+			    strcpy (metatype, "POINT");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2002:
+			    strcpy (metatype, "LINESTRING");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2003:
+			    strcpy (metatype, "POLYGON");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2004:
+			    strcpy (metatype, "MULTIPOINT");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2005:
+			    strcpy (metatype, "MULTILINESTRING");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2006:
+			    strcpy (metatype, "MULTIPOLYGON");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 2007:
+			    strcpy (metatype, "GEOMETRYCOLLECTION");
+			    strcpy (metadims, "XYM");
+			    break;
+			case 3000:
+			    strcpy (metatype, "GEOMETRY");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3001:
+			    strcpy (metatype, "POINT");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3002:
+			    strcpy (metatype, "LINESTRING");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3003:
+			    strcpy (metatype, "POLYGON");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3004:
+			    strcpy (metatype, "MULTIPOINT");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3005:
+			    strcpy (metatype, "MULTILINESTRING");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3006:
+			    strcpy (metatype, "MULTIPOLYGON");
+			    strcpy (metadims, "XYZM");
+			    break;
+			case 3007:
+			    strcpy (metatype, "GEOMETRYCOLLECTION");
+			    strcpy (metadims, "XYZM");
+			    break;
+			};
+		  }
+		else
+		  {
+		      /* legacy metadata style <= v.3.1.0 */
+		      strcpy (metatype, results[(i * columns) + 0]);
+		      strcpy (metadims, results[(i * columns) + 1]);
+		  }
 	    }
 	  sqlite3_free_table (results);
 	  if (strcasecmp (metatype, "POINT") == 0)
@@ -1273,6 +1879,8 @@ dump_shapefile (sqlite3 * sqlite, char *table, char *column, char *shp_path,
 	    }
 	  if (sql_type[i] == SQLITE_TEXT)
 	    {
+		if (max_length[i] == 0)	/* avoiding ZERO-length fields */
+		    max_length[i] = 1;
 		gaiaAddDbfField (dbf_list, dbf_field->Name, 'C', offset,
 				 max_length[i], 0);
 		offset += max_length[i];
@@ -1468,6 +2076,14 @@ SPATIALITE_DECLARE int
 load_dbf (sqlite3 * sqlite, char *dbf_path, char *table, char *charset,
 	  int verbose, int *rows, char *err_msg)
 {
+    return load_dbf_ex (sqlite, dbf_path, table, NULL, charset, verbose, rows,
+			err_msg);
+}
+
+SPATIALITE_DECLARE int
+load_dbf_ex (sqlite3 * sqlite, char *dbf_path, char *table, char *pk_column,
+	     char *charset, int verbose, int *rows, char *err_msg)
+{
     sqlite3_stmt *stmt;
     int ret;
     char *errMsg = NULL;
@@ -1486,9 +2102,22 @@ load_dbf (sqlite3 * sqlite, char *dbf_path, char *table, char *charset,
     int current_row;
     char **col_name = NULL;
     int deleted;
+    char qtable[1024];
+    char *xtable = NULL;
+    char qpk_name[1024];
+    char *xpk_name = NULL;
+    char *pk_name = "PK_UID";
+    int pk_type = SQLITE_INTEGER;
+    int pk_set;
+    xtable = gaiaDoubleQuotedSql (table);
+    if (xtable)
+      {
+	  strcpy (qtable, xtable);
+	  free (xtable);
+      }
 /* checking if TABLE already exists */
     sprintf (sql,
-	     "SELECT name FROM sqlite_master WHERE type = 'table' AND name LIKE '%s'",
+	     "SELECT name FROM sqlite_master WHERE type = 'table' AND Lower(name) = Lower('%s')",
 	     table);
     ret = sqlite3_prepare_v2 (sqlite, sql, strlen (sql), &stmt, NULL);
     if (ret != SQLITE_OK)
@@ -1560,10 +2189,67 @@ load_dbf (sqlite3 * sqlite, char *dbf_path, char *table, char *charset,
     col_name = malloc (sizeof (char *) * col_cnt);
     cnt = 0;
     seed = 0;
+    if (pk_column != NULL)
+      {
+	  /* validating the Primary Key column */
+	  dbf_field = dbf->Dbf->First;
+	  while (dbf_field)
+	    {
+		if (strcasecmp (pk_column, dbf_field->Name) == 0)
+		  {
+		      /* ok, using this field as Primary Key */
+		      pk_name = pk_column;
+		      switch (dbf_field->Type)
+			{
+			case 'C':
+			    pk_type = SQLITE_TEXT;
+			    break;
+			case 'N':
+			    if (dbf_field->Decimals)
+				pk_type = SQLITE_FLOAT;
+			    else
+			      {
+				  if (dbf_field->Length <= 18)
+				      pk_type = SQLITE_INTEGER;
+				  else
+				      pk_type = SQLITE_FLOAT;
+			      }
+			    break;
+			case 'D':
+			    pk_type = SQLITE_FLOAT;
+			    break;
+			case 'F':
+			    pk_type = SQLITE_FLOAT;
+			    break;
+			case 'L':
+			    pk_type = SQLITE_INTEGER;
+			    break;
+			};
+		  }
+		dbf_field = dbf_field->Next;
+	    }
+      }
+    xpk_name = gaiaDoubleQuotedSql (pk_name);
+    if (xpk_name)
+      {
+	  strcpy (qpk_name, xpk_name);
+	  free (xpk_name);
+      }
     dbf_field = dbf->Dbf->First;
     while (dbf_field)
       {
 	  /* preparing column names */
+	  if (strcasecmp (pk_name, dbf_field->Name) == 0)
+	    {
+		/* skipping the Primary Key field */
+		strcpy (dummyName, dbf_field->Name);
+		len = strlen (dummyName);
+		*(col_name + cnt) = malloc (len + 1);
+		strcpy (*(col_name + cnt), dummyName);
+		cnt++;
+		dbf_field = dbf_field->Next;
+		continue;
+	    }
 	  strcpy (dummyName, dbf_field->Name);
 	  dup = 0;
 	  for (idup = 0; idup < cnt; idup++)
@@ -1571,8 +2257,6 @@ load_dbf (sqlite3 * sqlite, char *dbf_path, char *table, char *charset,
 		if (strcasecmp (dummyName, *(col_name + idup)) == 0)
 		    dup = 1;
 	    }
-	  if (strcasecmp (dummyName, "PK_UID") == 0)
-	      dup = 1;
 	  if (dup)
 	      sprintf (dummyName, "COL_%d", seed++);
 	  len = strlen (dummyName);
@@ -1599,12 +2283,24 @@ load_dbf (sqlite3 * sqlite, char *dbf_path, char *table, char *charset,
 	  goto clean_up;
       }
 /* creating the Table */
-    sprintf (sql, "CREATE TABLE %s", table);
-    strcat (sql, " (\nPK_UID INTEGER PRIMARY KEY AUTOINCREMENT");
+    sprintf (sql, "CREATE TABLE \"%s\" (\n\"%s\" ", qtable, qpk_name);
+    if (pk_type == SQLITE_TEXT)
+	strcat (sql, "TEXT PRIMARY KEY NOT NULL");
+    else if (pk_type == SQLITE_FLOAT)
+	strcat (sql, "DOUBLE PRIMARY KEY NOT NULL");
+    else
+	strcat (sql, "INTEGER PRIMARY KEY AUTOINCREMENT");
     cnt = 0;
     dbf_field = dbf->Dbf->First;
     while (dbf_field)
       {
+	  if (strcasecmp (pk_name, dbf_field->Name) == 0)
+	    {
+		/* skipping the Primary Key field */
+		dbf_field = dbf_field->Next;
+		cnt++;
+		continue;
+	    }
 	  strcat (sql, ",\n\"");
 	  strcat (sql, *(col_name + cnt));
 	  cnt++;
@@ -1651,12 +2347,19 @@ load_dbf (sqlite3 * sqlite, char *dbf_path, char *table, char *charset,
 	  goto clean_up;
       }
     /* preparing the INSERT INTO parametrerized statement */
-    sprintf (sql, "INSERT INTO %s (PK_UID", table);
+    sprintf (sql, "INSERT INTO \"%s\" (\"%s\"", qtable, qpk_name);
     cnt = 0;
     dbf_field = dbf->Dbf->First;
     while (dbf_field)
       {
 	  /* columns corresponding to some DBF attribute */
+	  if (strcasecmp (pk_name, dbf_field->Name) == 0)
+	    {
+		/* skipping the Primary Key field */
+		dbf_field = dbf_field->Next;
+		cnt++;
+		continue;
+	    }
 	  strcat (sql, ",\"");
 	  strcat (sql, *(col_name + cnt++));
 	  strcat (sql, "\"");
@@ -1667,6 +2370,12 @@ load_dbf (sqlite3 * sqlite, char *dbf_path, char *table, char *charset,
     while (dbf_field)
       {
 	  /* column values */
+	  if (strcasecmp (pk_name, dbf_field->Name) == 0)
+	    {
+		/* skipping the Primary Key field */
+		dbf_field = dbf_field->Next;
+		continue;
+	    }
 	  strcat (sql, ", ?");
 	  dbf_field = dbf_field->Next;
       }
@@ -1707,12 +2416,44 @@ load_dbf (sqlite3 * sqlite, char *dbf_path, char *table, char *charset,
 	  /* binding query params */
 	  sqlite3_reset (stmt);
 	  sqlite3_clear_bindings (stmt);
+	  pk_set = 0;
+	  cnt = 0;
+	  dbf_field = dbf->Dbf->First;
+	  while (dbf_field)
+	    {
+		/* Primary Key value */
+		if (strcasecmp (pk_name, dbf_field->Name) == 0)
+		  {
+		      if (pk_type == SQLITE_TEXT)
+			  sqlite3_bind_text (stmt, 1,
+					     dbf_field->Value->TxtValue,
+					     strlen (dbf_field->
+						     Value->TxtValue),
+					     SQLITE_STATIC);
+		      else if (pk_type == SQLITE_FLOAT)
+			  sqlite3_bind_double (stmt, 1,
+					       dbf_field->Value->DblValue);
+		      else
+			  sqlite3_bind_int64 (stmt, 1,
+					      dbf_field->Value->IntValue);
+		      pk_set = 1;
+		  }
+		dbf_field = dbf_field->Next;
+	    }
+	  if (!pk_set)
+	      sqlite3_bind_int (stmt, 1, current_row);
 	  sqlite3_bind_int (stmt, 1, current_row);
 	  cnt = 0;
 	  dbf_field = dbf->Dbf->First;
 	  while (dbf_field)
 	    {
 		/* column values */
+		if (strcasecmp (pk_name, dbf_field->Name) == 0)
+		  {
+		      /* skipping the Primary Key field */
+		      dbf_field = dbf_field->Next;
+		      continue;
+		  }
 		if (!(dbf_field->Value))
 		    sqlite3_bind_null (stmt, cnt + 2);
 		else
@@ -2249,9 +2990,9 @@ is_table (sqlite3 * sqlite, const char *table)
     int ok = 0;
 
     strcpy (sql, "SELECT tbl_name FROM sqlite_master ");
-    strcat (sql, "WHERE type = 'table' AND tbl_name LIKE '");
+    strcat (sql, "WHERE type = 'table' AND Lower(tbl_name) = Lower('");
     strcat (sql, table);
-    strcat (sql, "'");
+    strcat (sql, "')");
     ret = sqlite3_get_table (sqlite, sql, &results, &rows, &columns, &errMsg);
     if (ret != SQLITE_OK)
       {
@@ -2752,24 +3493,34 @@ check_elementary (sqlite3 * sqlite, const char *inTable, const char *geom,
     char *gtp;
     char *dims;
     char *quoted;
+    int metadata_version = checkSpatialMetaData (sqlite);
 
 /* fetching metadata */
-    strcpy (sql, "SELECT type, coord_dimension, srid ");
-    strcat (sql, "FROM geometry_columns WHERE f_table_name LIKE '");
+    if (metadata_version == 3)
+      {
+	  /* current metadata style >= v.4.0.0 */
+	  strcpy (sql, "SELECT geometry_type, srid ");
+      }
+    else
+      {
+	  /* legacy metadata style <= v.3.1.0 */
+	  strcpy (sql, "SELECT type, coord_dimension, srid ");
+      }
+    strcat (sql, "FROM geometry_columns WHERE Lower(f_table_name) = Lower('");
     quoted = gaiaSingleQuotedSql (inTable);
     if (quoted)
       {
 	  strcat (sql, quoted);
 	  free (quoted);
       }
-    strcat (sql, "' AND f_geometry_column LIKE '");
+    strcat (sql, "') AND Lower(f_geometry_column) = Lower('");
     quoted = gaiaSingleQuotedSql (geom);
     if (quoted)
       {
 	  strcat (sql, quoted);
 	  free (quoted);
       }
-    strcat (sql, "'");
+    strcat (sql, "')");
     ret = sqlite3_get_table (sqlite, sql, &results, &rows, &columns, &errMsg);
     if (ret != SQLITE_OK)
       {
@@ -2783,9 +3534,151 @@ check_elementary (sqlite3 * sqlite, const char *inTable, const char *geom,
       {
 	  for (i = 1; i <= rows; i++)
 	    {
-		gtp = results[(i * columns) + 0];
-		dims = results[(i * columns) + 1];
-		*srid = atoi (results[(i * columns) + 2]);
+		if (metadata_version == 3)
+		  {
+		      /* current metadata style >= v.4.0.0 */
+		      gtp = "UNKNOWN";
+		      dims = "UNKNOWN";
+		      switch (atoi (results[(i * columns) + 0]))
+			{
+			case 0:
+			    gtp = "GEOMETRY";
+			    dims = "XY";
+			    break;
+			case 1:
+			    gtp = "POINT";
+			    dims = "XY";
+			    break;
+			case 2:
+			    gtp = "LINESTRING";
+			    dims = "XY";
+			    break;
+			case 3:
+			    gtp = "POLYGON";
+			    dims = "XY";
+			    break;
+			case 4:
+			    gtp = "MULTIPOINT";
+			    dims = "XY";
+			    break;
+			case 5:
+			    gtp = "MULTILINESTRING";
+			    dims = "XY";
+			    break;
+			case 6:
+			    gtp = "MULTIPOLYGON";
+			    dims = "XY";
+			    break;
+			case 7:
+			    gtp = "GEOMETRYCOLLECTION";
+			    dims = "XY";
+			    break;
+			case 1000:
+			    gtp = "GEOMETRY";
+			    dims = "XYZ";
+			    break;
+			case 1001:
+			    gtp = "POINT";
+			    dims = "XYZ";
+			    break;
+			case 1002:
+			    gtp = "LINESTRING";
+			    dims = "XYZ";
+			    break;
+			case 1003:
+			    gtp = "POLYGON";
+			    dims = "XYZ";
+			    break;
+			case 1004:
+			    gtp = "MULTIPOINT";
+			    dims = "XYZ";
+			    break;
+			case 1005:
+			    gtp = "MULTILINESTRING";
+			    dims = "XYZ";
+			    break;
+			case 1006:
+			    gtp = "MULTIPOLYGON";
+			    dims = "XYZ";
+			    break;
+			case 1007:
+			    gtp = "GEOMETRYCOLLECTION";
+			    dims = "XYZ";
+			    break;
+			case 2000:
+			    gtp = "GEOMETRY";
+			    dims = "XYM";
+			    break;
+			case 2001:
+			    gtp = "POINT";
+			    dims = "XYM";
+			    break;
+			case 2002:
+			    gtp = "LINESTRING";
+			    dims = "XYM";
+			    break;
+			case 2003:
+			    gtp = "POLYGON";
+			    dims = "XYM";
+			    break;
+			case 2004:
+			    gtp = "MULTIPOINT";
+			    dims = "XYM";
+			    break;
+			case 2005:
+			    gtp = "MULTILINESTRING";
+			    dims = "XYM";
+			    break;
+			case 2006:
+			    gtp = "MULTIPOLYGON";
+			    dims = "XYM";
+			    break;
+			case 2007:
+			    gtp = "GEOMETRYCOLLECTION";
+			    dims = "XYM";
+			    break;
+			case 3000:
+			    gtp = "GEOMETRY";
+			    dims = "XYZM";
+			    break;
+			case 3001:
+			    gtp = "POINT";
+			    dims = "XYZM";
+			    break;
+			case 3002:
+			    gtp = "LINESTRING";
+			    dims = "XYZM";
+			    break;
+			case 3003:
+			    gtp = "POLYGON";
+			    dims = "XYZM";
+			    break;
+			case 3004:
+			    gtp = "MULTIPOINT";
+			    dims = "XYZM";
+			    break;
+			case 3005:
+			    gtp = "MULTILINESTRING";
+			    dims = "XYZM";
+			    break;
+			case 3006:
+			    gtp = "MULTIPOLYGON";
+			    dims = "XYZM";
+			    break;
+			case 3007:
+			    gtp = "GEOMETRYCOLLECTION";
+			    dims = "XYZM";
+			    break;
+			};
+		      *srid = atoi (results[(i * columns) + 1]);
+		  }
+		else
+		  {
+		      /* legacy metadata style <= v.3.1.0 */
+		      gtp = results[(i * columns) + 0];
+		      dims = results[(i * columns) + 1];
+		      *srid = atoi (results[(i * columns) + 2]);
+		  }
 		if (strcasecmp (gtp, "POINT") == 0
 		    || strcasecmp (gtp, "MULTIPOINT") == 0)
 		    strcpy (type, "POINT");
@@ -2867,14 +3760,14 @@ check_elementary (sqlite3 * sqlite, const char *inTable, const char *geom,
 
 /* cheching if Output Table already exists */
     strcpy (sql, "SELECT Count(*) FROM sqlite_master WHERE type ");
-    strcat (sql, "LIKE 'table' AND tbl_name LIKE '");
+    strcat (sql, "= 'table' AND Lower(tbl_name) = Lower('");
     quoted = gaiaSingleQuotedSql (outTable);
     if (quoted)
       {
 	  strcat (sql, quoted);
 	  free (quoted);
       }
-    strcat (sql, "'");
+    strcat (sql, "')");
     ret = sqlite3_get_table (sqlite, sql, &results, &rows, &columns, &errMsg);
     if (ret != SQLITE_OK)
       {
@@ -3697,7 +4590,7 @@ load_XL (sqlite3 * sqlite, const char *path, const char *table,
     int already_exists = 0;
 /* checking if TABLE already exists */
     sprintf (sql,
-	     "SELECT name FROM sqlite_master WHERE type = 'table' AND name LIKE '%s'",
+	     "SELECT name FROM sqlite_master WHERE type = 'table' AND Lower(name) = Lower('%s')",
 	     table);
     ret = sqlite3_prepare_v2 (sqlite, sql, strlen (sql), &stmt, NULL);
     if (ret != SQLITE_OK)

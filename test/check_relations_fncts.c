@@ -48,6 +48,8 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <stdio.h>
 #include <string.h>
 
+#include "config.h"
+
 #include "sqlite3.h"
 #include "spatialite.h"
 #include "spatialite/gaiageo.h"
@@ -56,9 +58,11 @@ static const double double_eps = 0.00000001;
 
 int main (int argc, char *argv[])
 {
+#ifndef OMIT_GEOS	/* only if GEOS is supported */
     int result;
     double resultDouble;
     int returnValue = 0;
+    gaiaGeomCollPtr geom;
     
     /* Common setup */
     gaiaGeomCollPtr validGeometry = gaiaAllocGeomColl();
@@ -257,6 +261,7 @@ int main (int argc, char *argv[])
 	goto exit;
     }
     
+#ifdef GEOS_ADVANCED	/* only if GEOS_ADVANCED is supported */
     result = gaiaHausdorffDistance(0, validGeometry, &dummyResultArg);
     if (result != 0) {
 	fprintf(stderr, "bad result at %s:%i: %i\n", __FILE__, __LINE__, result);
@@ -319,6 +324,7 @@ int main (int argc, char *argv[])
 	returnValue = -42;
 	goto exit;
     }
+#endif	/* end GEOS_ADVANCED conditional */
     
     result = gaiaGeomCollDistance(0, validGeometry, &dummyResultArg);
     if (result != 0) {
@@ -384,6 +390,7 @@ int main (int argc, char *argv[])
 	goto exit;
     }
     
+#ifdef GEOS_ADVANCED	/* only if GEOS_ADVANCED is supported */
     resultDouble = gaiaLineLocatePoint(0, validGeometry);
     if (abs (resultDouble - -1.0) > double_eps) {
 	fprintf(stderr, "bad result at %s:%i: %f\n", __FILE__, __LINE__, resultDouble);
@@ -406,7 +413,7 @@ int main (int argc, char *argv[])
     }
 
     /* geometry generating functionality */
-    gaiaGeomCollPtr geom = NULL;
+    geom = NULL;
     geom = gaiaLinesCutAtNodes(0, validGeometry);
     if (geom != NULL) {
 	gaiaFree(geom);
@@ -502,6 +509,7 @@ int main (int argc, char *argv[])
 	returnValue = -61;
 	goto exit;
     }
+#endif	/* end GEOS_ADVANCED conditional */
   
     geom = gaiaGeometryIntersection(0, validGeometry);
     if (geom != NULL) {
@@ -639,6 +647,7 @@ int main (int argc, char *argv[])
 	goto exit;
     }
 
+#ifdef GEOS_ADVANCED		/* only if GEOS_ADVANCED is supported */
     geom = gaiaOffsetCurve (0, 1.5, 10, 1);
     if (geom != NULL) {
 	gaiaFree(geom);
@@ -686,6 +695,7 @@ int main (int argc, char *argv[])
 	returnValue = -87;
 	goto exit;
     }
+#endif	/* end GEOS_ADVANCED conditional */
     
     /* Test some strange conditions */
     result = gaiaGeomCollLength(validGeometry, &dummyResultArg);
@@ -699,4 +709,7 @@ int main (int argc, char *argv[])
 exit:
     gaiaFreeGeomColl (validGeometry);
     return returnValue;
+
+#endif	/* end GEOS conditional */
+    return 0;
 }

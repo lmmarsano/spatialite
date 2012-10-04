@@ -1,7 +1,7 @@
 /*
  gg_core.h -- Gaia common support for geometries: core functions
   
- version 3.0, 2011 July 20
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -23,7 +23,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -1169,11 +1169,44 @@ extern "C"
  \sa gaiaSanitize
 
  \note a \b toxic Geometry is a Geometry containing severely malformed
- Polygons: i.e. containing less than 4 Points, unclosed Rings and so on.
+ Polygons: i.e. containing less than 4 Points.
+ \n Or containing severely malformed Linestrings: i.e. containing less 
+ than 2 Points.
  \n Attempting to pass any toxic Geometry to GEOS supported functions
  will easily cause a crash.
  */
     GAIAGEO_DECLARE int gaiaIsToxic (gaiaGeomCollPtr geom);
+
+/**
+ Checks for not-closed Rings 
+
+ \param ring pointer to Ring object
+
+ \return 0 if the Ring in unclosed: otherwise any other different value.
+
+ \sa gaiaIsToxic, gaiaIsNotClosedGeomColl
+
+ \note unclosed Rings cause GEOS supported functions to crash.
+ \n SpatiaLite will always carefully check any Ring before passing it
+ to GEOS, eventually silently inserting a further point required so 
+ to properly close the figure.
+ \n This function allows to explicitly identify any unclosed Ring.
+ */
+    GAIAGEO_DECLARE int gaiaIsNotClosedRing (gaiaRingPtr ring);
+
+/**
+ Checks for not-closed Rings in a Geometry object
+
+ \param geom pointer to Geometry object
+
+ \return 0 if the Geometry has no unclosed Rings: otherwise any other different value.
+
+ \sa gaiaIsToxic, gaiaIsNotClosedRing
+
+ \note This function allows to explicitly identify any Geometry containing
+ at least one unclosed Ring.
+ */
+    GAIAGEO_DECLARE int gaiaIsNotClosedGeomColl (gaiaGeomCollPtr geom);
 
 /**
  Attempts to sanitize a possibly malformed Geometry object
@@ -1345,7 +1378,8 @@ extern "C"
  NULL will be returned.
  */
     GAIAGEO_DECLARE gaiaGeomCollPtr
-	gaiaLocateBetweenMeasures (gaiaGeomCollPtr geom, double m_start, double m_end);
+	gaiaLocateBetweenMeasures (gaiaGeomCollPtr geom, double m_start,
+				   double m_end);
 
 /**
  Measures the geometric length for a Linestring or Ring
@@ -1490,7 +1524,7 @@ extern "C"
  \param shift_z Z axis shift factor.
 
  \sa gaiaScaleCoords, gaiaRotateCoords, gaiaReflectCoords, gaiaSwapCoords,
-     gaiaShiftCoords, gaiaShiftLongitude, gaiaNormalizeLongLat
+     gaiaShiftCoords, gaiaShiftLongitude, gaiaNormalizeLonLat
  */
     GAIAGEO_DECLARE void gaiaShiftCoords3D (gaiaGeomCollPtr geom,
 					    double shift_x, double shift_y,
@@ -1501,7 +1535,7 @@ extern "C"
 
  \param geom pointer to Geometry object.
 
- \sa gaiaShiftCoords, gaiaShiftCoords3D, gaiaNormalizeLongLat
+ \sa gaiaShiftCoords, gaiaShiftCoords3D, gaiaNormalizeLonLat
 
  \note only intended for geographic (longitude/latitude) coordinates.
  Negative longitudes (-180/0) will be shifted by 360, thus allowing
@@ -1522,9 +1556,9 @@ extern "C"
  \sa gaiaScaleCoords, gaiaRotateCoords, gaiaReflectCoords, gaiaSwapCoords,
      gaiaShiftCoords3D, gaiaShiftLongitude
  */
-    GAIAGEO_DECLARE void gaiaNormalizeLongLat (gaiaGeomCollPtr geom);
+    GAIAGEO_DECLARE void gaiaNormalizeLonLat (gaiaGeomCollPtr geom);
 
-    
+
 /**
  Scales any coordinate within a Geometry object
 

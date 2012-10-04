@@ -42,15 +42,19 @@ the provisions above, a recipient may use your version of this file under
 the terms of any one of the MPL, the GPL or the LGPL.
  
 */
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "config.h"
 
 #include "sqlite3.h"
 #include "spatialite.h"
 
 int main (int argc, char *argv[])
 {
+#ifndef OMIT_ICONV	/* only if ICONV is supported */
     int ret;
     sqlite3 *handle;
     char *kmlname = __FILE__"test.kml";
@@ -113,6 +117,7 @@ int main (int argc, char *argv[])
 	return -8;
     }
 
+#ifndef OMIT_PROJ	/* only if PROJ is supported */
     if (is_kml_constant (handle, "route", "name")) {
 	fprintf(stderr, "unexpected result for is_kml_constant (1)\n");
 	return -9;
@@ -161,6 +166,8 @@ int main (int argc, char *argv[])
 	return -15;
     }
     unlink(kmlname);
+#endif	/* end PROJ conditional */
+
     ret = dump_geojson(handle, "route", "col1", geojsonname, 10, 5);
     if (!ret) {
         fprintf (stderr, "dump_geojson() error for shp/taiwan/route: %s\n", err_msg);
@@ -176,5 +183,7 @@ int main (int argc, char *argv[])
     }
     
     spatialite_cleanup();
+#endif	/* end ICONV conditional */
+
     return 0;
 }

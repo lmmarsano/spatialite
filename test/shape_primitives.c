@@ -42,9 +42,12 @@ the provisions above, a recipient may use your version of this file under
 the terms of any one of the MPL, the GPL or the LGPL.
  
 */
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "config.h"
 
 #include "sqlite3.h"
 #include "spatialite.h"
@@ -67,30 +70,15 @@ void cleanup_shapefile(const char *filename)
     unlink(nam);
 }
 
-int main (int argc, char *argv[])
+int do_test(sqlite3 *handle)
 {
-    int ret;
-    sqlite3 *handle;
+/* testing some DB */
+#ifndef OMIT_ICONV	/* only if ICONV is supported */
     char *dumpname = __FILE__"dump";
     char *err_msg = NULL;
     int row_count;
-
-    spatialite_init (0);
-    ret = sqlite3_open_v2 (":memory:", &handle, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
-    if (ret != SQLITE_OK) {
-	fprintf(stderr, "cannot open in-memory database: %s\n", sqlite3_errmsg (handle));
-	sqlite3_close(handle);
-	return -1;
-    }
-    
-    ret = sqlite3_exec (handle, "SELECT InitSpatialMetadata()", NULL, NULL, &err_msg);
-    if (ret != SQLITE_OK) {
-	fprintf (stderr, "InitSpatialMetadata() error: %s\n", err_msg);
-	sqlite3_free(err_msg);
-	sqlite3_close(handle);
-	return -2;
-    }
-
+	int ret;
+	
     ret = sqlite3_exec (handle, "CREATE TABLE Point_Test (Name TEXT, Description TEXT)", NULL, NULL, &err_msg);
     if (ret != SQLITE_OK) {
 	fprintf (stderr, "CREATE TABLE error: %s\n", err_msg);
@@ -466,7 +454,7 @@ int main (int argc, char *argv[])
 	sqlite3_close(handle);
 	return -51;
     }
-    // TODO: try dumping an empty table    
+    /* TODO: try dumping an empty table */ 
     
     ret = sqlite3_exec (handle, "INSERT INTO Polygon_Test (Name, Description, thing1, thing2, thing3, thing4, geom) VALUES ('Polygon 1', 'Some polygon', 2, 4.25, 343.343, zeroblob(40), GeomFromText('POLYGON((136 -33, 47 2, -20 -1, 136 -33),(10 -2, -20 -0.4, 40 0.1, 10 -2))', 4326))", NULL, NULL, &err_msg);
     if (ret != SQLITE_OK) {
@@ -570,8 +558,105 @@ int main (int argc, char *argv[])
 	sqlite3_close(handle);
 	return -65;
     }
+	
+/* final DB cleanup */
+    ret = sqlite3_exec (handle, "DELETE FROM geometry_columns", NULL, NULL, &err_msg);
+    if (ret != SQLITE_OK) {
+	fprintf (stderr, "DELETE FROM geometry_columns error: %s\n", err_msg);
+	sqlite3_free(err_msg);
+	sqlite3_close(handle);
+	return -66;
+    }
+    ret = sqlite3_exec (handle, "DELETE FROM spatialite_history WHERE geometry_column IS NOT NULL", NULL, NULL, &err_msg);
+    if (ret != SQLITE_OK) {
+	fprintf (stderr, "DELETE FROM spatialite_history error: %s\n", err_msg);
+	sqlite3_free(err_msg);
+	sqlite3_close(handle);
+	return -66;
+    }
+    ret = sqlite3_exec (handle, "VACUUM", NULL, NULL, &err_msg);
+    if (ret != SQLITE_OK) {
+	fprintf (stderr, "VACUUM error: %s\n", err_msg);
+	sqlite3_free(err_msg);
+	sqlite3_close(handle);
+	return -66;
+    }
+#endif	/* end ICONV conditional */
+	
+/* ok, succesfull termination */
+	return 0;
+}
+
+int main (int argc, char *argv[])
+{
+#ifndef OMIT_ICONV	/* only if ICONV is supported */
+    int ret;
+    sqlite3 *handle;
+    char *err_msg = NULL;
+
+    spatialite_init (0);
+/* testing current style metadata layout >= v.4.0.0 */
+    ret = sqlite3_open_v2 (":memory:", &handle, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
+    if (ret != SQLITE_OK) {
+	fprintf(stderr, "cannot open in-memory database: %s\n", sqlite3_errmsg (handle));
+	sqlite3_close(handle);
+	return -1;
+    }
+    
+    ret = sqlite3_exec (handle, "SELECT InitSpatialMetadata()", NULL, NULL, &err_msg);
+    if (ret != SQLITE_OK) {
+	fprintf (stderr, "InitSpatialMetadata() error: %s\n", err_msg);
+	sqlite3_free(err_msg);
+	sqlite3_close(handle);
+	return -2;
+    }
+	
+    ret = do_test(handle);
+    if (ret != 0) {
+	fprintf(stderr, "error while testing current style metadata layout\n");
+	return ret;
+    }
 
     spatialite_cleanup();
     sqlite3_close(handle);
+	
+/* testing legacy style metadata layout <= v.3.1.0 */
+    spatialite_init (0);
+    ret = sqlite3_open_v2 ("test-legacy-3.0.1.sqlite", &handle, SQLITE_OPEN_READWRITE, NULL);
+    if (ret != SQLITE_OK) {
+	fprintf(stderr, "cannot open legacy v.3.0.1 database: %s\n", sqlite3_errmsg (handle));
+	sqlite3_close(handle);
+	return -1;
+    }
+	
+    ret = do_test(handle);
+    if (ret != 0) {
+	fprintf(stderr, "error while testing legacy style metadata layout\n");
+	return ret;
+    }
+
+    spatialite_cleanup();
+    sqlite3_close(handle);
+	
+/* testing legacy style metadata layout (v.2.3.1) */
+    spatialite_init (0);
+    ret = sqlite3_open_v2 ("test-legacy-2.3.1.sqlite", &handle, SQLITE_OPEN_READWRITE, NULL);
+    if (ret != SQLITE_OK) {
+	fprintf(stderr, "cannot open legacy v.2.3.1 database: %s\n", sqlite3_errmsg (handle));
+	sqlite3_close(handle);
+	return -1;
+    }
+	
+    ret = do_test(handle);
+    if (ret != 0) {
+	fprintf(stderr, "error while testing legacy (2.3.1) style metadata layout\n");
+	return ret;
+    }
+
+    spatialite_cleanup();
+    sqlite3_close(handle);
+    
+#endif	/* end ICONV conditional */
+
     return 0;
 }

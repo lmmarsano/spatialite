@@ -2,7 +2,7 @@
 
  virtualshape.c -- SQLite3 extension [VIRTUAL TABLE accessing Shapefile]
 
- version 3.0, 2011 July 20
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -24,7 +24,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -176,7 +176,7 @@ vshp_create (sqlite3 * db, void *pAux, int argc, const char *const *argv,
 	  else
 	      strcpy (encoding, pEncoding);
 	  srid = atoi (argv[5]);
-	  if (srid <= 0)
+	  if (srid < 0)
 	      srid = -1;
       }
     else
