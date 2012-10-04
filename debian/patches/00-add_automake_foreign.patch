@@ -4,16 +4,12 @@ Origin: vendor
 Forwarded: no
 
 ---
- libspatialite/Makefile.am    |    2 +-
- libspatialite/Makefile.in    |    2 +-
- spatialite-tools/Makefile.am |    2 +-
- spatialite-tools/Makefile.in |    2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ Makefile.am |    2 +-
+ Makefile.in |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Index: spatialite/Makefile.am
-===================================================================
---- spatialite.orig/Makefile.am	2012-04-03 14:22:32.000000000 +0200
-+++ spatialite/Makefile.am	2012-04-03 14:57:53.000000000 +0200
+--- spatialite.orig/Makefile.am
++++ spatialite/Makefile.am
 @@ -1,6 +1,6 @@
  ACLOCAL_AMFLAGS = -I m4
  
@@ -22,11 +18,9 @@ Index: spatialite/Makefile.am
  
  EXTRA_DIST = makefile.vc nmake.opt Android.mk mainpage.doxy README.coverage \
  	spatialite-sql-latest.html
-Index: spatialite/Makefile.in
-===================================================================
---- spatialite.orig/Makefile.in	2012-04-03 14:22:32.000000000 +0200
-+++ spatialite/Makefile.in	2012-04-03 14:58:36.000000000 +0200
-@@ -253,7 +253,7 @@
+--- spatialite.orig/Makefile.in
++++ spatialite/Makefile.in
+@@ -263,7 +263,7 @@ top_build_prefix = @top_build_prefix@
  top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
  ACLOCAL_AMFLAGS = -I m4

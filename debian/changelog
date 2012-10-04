@@ -2,8 +2,9 @@ spatialite (4.0.0~rc1-1) UNRELEASED; urgency=low
 
   * New upstream release candidate.
   * Updated debian/watch
+  * Patchset refreshed, 04-fix_missing_define.patch dropped.
 
- -- David Paleino <dapal@debian.org>  Thu, 04 Oct 2012 11:33:55 +0200
+ -- David Paleino <dapal@debian.org>  Thu, 04 Oct 2012 11:37:18 +0200
 
 spatialite (3.1.0~rc2-1) unstable; urgency=low
 
