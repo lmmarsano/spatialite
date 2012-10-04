@@ -2,7 +2,9 @@ Source: spatialite
 Section: science
 Priority: extra
 Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
-Uploaders: Francesco Paolo Lovergine <frankie@debian.org>, David Paleino <dapal@debian.org>
+Uploaders:
+ Francesco Paolo Lovergine <frankie@debian.org>
+ , David Paleino <dapal@debian.org>
 Build-Depends:
  debhelper (>= 9)
  , autotools-dev
@@ -51,4 +53,3 @@ Description: Geospatial extension for SQLite - development files
  shapefiles and csv/text files as virtual tables.
  .
  This package contains development (static libraries and header files).
- 
