@@ -5,8 +5,9 @@ spatialite (4.0.0~rc1-1) UNRELEASED; urgency=low
   * Patchset refreshed, 04-fix_missing_define.patch dropped.
   * Debhelper compatibility bumped to 9.
   * Standards-Version bump to 3.9.4, no changes needed.
+  * Also build a debugging symbols package: libspatialite3-dbg.
 
- -- David Paleino <dapal@debian.org>  Thu, 04 Oct 2012 11:39:14 +0200
+ -- David Paleino <dapal@debian.org>  Thu, 04 Oct 2012 11:40:53 +0200
 
 spatialite (3.1.0~rc2-1) unstable; urgency=low
 
