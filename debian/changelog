@@ -1,7 +1,7 @@
 spatialite (4.0.0~rc1-1) UNRELEASED; urgency=low
 
   * New upstream release candidate.
-  * Updated debian/watch
+  * Updated debian/watch.
   * Patchset refreshed, 04-fix_missing_define.patch dropped.
   * Debhelper compatibility bumped to 9.
 
