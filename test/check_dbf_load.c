@@ -45,11 +45,14 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <stdio.h>
 #include <string.h>
 
+#include "config.h"
+
 #include "sqlite3.h"
 #include "spatialite.h"
 
 int main (int argc, char *argv[])
 {
+#ifndef OMIT_ICONV	/* only if ICONV is supported */
     int ret;
     sqlite3 *handle;
     char *err_msg = NULL;
@@ -77,14 +80,20 @@ int main (int argc, char *argv[])
 	sqlite3_close(handle);
 	return -3;
     }
+    if (row_count != 2) {
+	fprintf (stderr, "unexpected row count for load_dbf: %i\n", row_count);
+	sqlite3_close(handle);
+	return -4;
+    }
     
     ret = sqlite3_close (handle);
     if (ret != SQLITE_OK) {
         fprintf (stderr, "sqlite3_close() error: %s\n", sqlite3_errmsg (handle));
-	return -4;
+	return -5;
     }
     
     spatialite_cleanup();
+#endif	/* end ICONV conditional */
 
     return 0;
 }

@@ -2,7 +2,7 @@
 
  gg_sqlaux.c -- SQL ancillary functions
 
- version 3.0, 2011 July 20
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -24,7 +24,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -48,11 +48,16 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <stdio.h>
 #include <string.h>
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+#include "config-msvc.h"
+#else
 #include "config.h"
+#endif
 
 #include <spatialite/sqlite.h>
 
 #include <spatialite/gaiaaux.h>
+#include <spatialite_private.h>
 
 #ifdef _WIN32
 #define strcasecmp	_stricmp
@@ -541,6 +546,77 @@ gaiaIsReservedSqlName (const char *name)
 }
 
 GAIAAUX_DECLARE char *
+gaiaDequotedSql (const char *value)
+{
+/*
+/ returns a well formatted TEXT value from SQL
+/ 1] if the input string begins and ends with ' sigle quote will be the target
+/ 2] if the input string begins and ends with " double quote will be the target
+/ 3] in any othet case the string will simply be copied
+*/
+    const char *pi = value;
+    const char *start;
+    const char *end;
+    char *clean;
+    char *po;
+    int len;
+    char target;
+    int mark = 0;
+    if (value == NULL)
+	return NULL;
+
+    len = strlen (value);
+    clean = malloc (len + 1);
+    if (*(value + 0) == '"' && *(value + len - 1) == '"')
+	target = '"';
+    else if (*(value + 0) == '\'' && *(value + len - 1) == '\'')
+	target = '\'';
+    else
+      {
+	  /* no dequoting; simply copying */
+	  strcpy (clean, value);
+	  return clean;
+      }
+    start = value;
+    end = value + len - 1;
+    po = clean;
+    while (*pi != '\0')
+      {
+	  if (mark)
+	    {
+		if (*pi == target)
+		  {
+		      *po++ = *pi++;
+		      mark = 0;
+		      continue;
+		  }
+		else
+		  {
+		      /* error: mismatching quote */
+		      free (clean);
+		      return NULL;
+		  }
+	    }
+	  if (*pi == target)
+	    {
+		if (pi == start || pi == end)
+		  {
+		      /* first or last char */
+		      pi++;
+		      continue;
+		  }
+		/* found a quote marker */
+		mark = 1;
+		pi++;
+		continue;
+	    }
+	  *po++ = *pi++;
+      }
+    *po = '\0';
+    return clean;
+}
+
+GAIAAUX_DECLARE char *
 gaiaQuotedSql (const char *value, int quote)
 {
 /*
@@ -659,3 +735,68 @@ gaiaCleanSqlString (char *value)
     *p = '\0';
     strcpy (value, new_value);
 }
+
+GAIAAUX_DECLARE void
+gaiaInsertIntoSqlLog (sqlite3 * sqlite, const char *user_agent,
+		      const char *utf8Sql, sqlite3_int64 * sqllog_pk)
+{
+/* inserting an event into the SQL Log */
+    char *sql_statement;
+    int ret;
+
+    *sqllog_pk = -1;
+    if (checkSpatialMetaData (sqlite) != 3)
+      {
+/* CURRENT db-schema (>= 4.0.0) required */
+	  return;
+      }
+
+    sql_statement = sqlite3_mprintf ("INSERT INTO sql_statements_log "
+				     "(id, time_start, user_agent, sql_statement) VALUES ("
+				     "NULL, strftime('%%Y-%%m-%%dT%%H:%%M:%%fZ', 'now'), %Q, %Q)",
+				     user_agent, utf8Sql);
+    ret = sqlite3_exec (sqlite, sql_statement, NULL, 0, NULL);
+    sqlite3_free (sql_statement);
+    if (ret != SQLITE_OK)
+	return;
+    *sqllog_pk = sqlite3_last_insert_rowid (sqlite);
+}
+
+GAIAAUX_DECLARE void
+gaiaUpdateSqlLog (sqlite3 * sqlite, sqlite3_int64 sqllog_pk, int success,
+		  const char *errMsg)
+{
+/* completing an event already inserted into the SQL Log */
+    char *sql_statement;
+    char dummy[64];
+
+    if (checkSpatialMetaData (sqlite) != 3)
+      {
+/* CURRENT db-schema (>= 4.0.0) required */
+	  return;
+      }
+#if defined(_WIN32) || defined(__MINGW32__)
+    /* CAVEAT - M$ runtime doesn't supports %lld for 64 bits */
+    sprintf (dummy, "%I64d", sqllog_pk);
+#else
+    sprintf (dummy, "%lld", sqllog_pk);
+#endif
+    if (success)
+      {
+	  sql_statement = sqlite3_mprintf ("UPDATE sql_statements_log SET "
+					   "time_end = strftime('%%Y-%%m-%%dT%%H:%%M:%%fZ', 'now'), "
+					   "success = 1, error_cause = 'success' WHERE id = %s",
+					   dummy);
+      }
+    else
+      {
+	  sql_statement = sqlite3_mprintf ("UPDATE sql_statements_log SET "
+					   "time_end = strftime('%%Y-%%m-%%dT%%H:%%M:%%fZ', 'now'), "
+					   "success = 0, error_cause = %Q WHERE id = %s",
+					   (errMsg == NULL)
+					   ? "UNKNOWN" : errMsg, dummy);
+      }
+    sqlite3_exec (sqlite, sql_statement, NULL, 0, NULL);
+    sqlite3_free (sql_statement);
+}
+

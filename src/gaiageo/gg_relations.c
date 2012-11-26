@@ -2,7 +2,7 @@
 
  gg_relations.c -- Gaia spatial relations
     
- version 3.0, 2011 July 20
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -24,7 +24,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -49,12 +49,17 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <string.h>
 #include <float.h>
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+#include "config-msvc.h"
+#else
 #include "config.h"
+#endif
 
 #ifndef OMIT_GEOS		/* including GEOS */
 #include <geos_c.h>
 #endif
 
+#include <spatialite_private.h>
 #include <spatialite/sqlite.h>
 
 #include <spatialite/gaiageo.h>
@@ -199,6 +204,8 @@ gaiaGeomCollEquals (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     GEOSGeometry *g2;
     if (!geom1 || !geom2)
 	return -1;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
+	return -1;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
     ret = GEOSEquals (g1, g2);
@@ -215,6 +222,8 @@ gaiaGeomCollIntersects (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     GEOSGeometry *g1;
     GEOSGeometry *g2;
     if (!geom1 || !geom2)
+	return -1;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
 	return -1;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
@@ -233,6 +242,8 @@ gaiaGeomCollDisjoint (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     GEOSGeometry *g2;
     if (!geom1 || !geom2)
 	return -1;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
+	return -1;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
     ret = GEOSDisjoint (g1, g2);
@@ -249,6 +260,8 @@ gaiaGeomCollOverlaps (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     GEOSGeometry *g1;
     GEOSGeometry *g2;
     if (!geom1 || !geom2)
+	return -1;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
 	return -1;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
@@ -267,6 +280,8 @@ gaiaGeomCollCrosses (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     GEOSGeometry *g2;
     if (!geom1 || !geom2)
 	return -1;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
+	return -1;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
     ret = GEOSCrosses (g1, g2);
@@ -283,6 +298,8 @@ gaiaGeomCollTouches (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     GEOSGeometry *g1;
     GEOSGeometry *g2;
     if (!geom1 || !geom2)
+	return -1;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
 	return -1;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
@@ -301,6 +318,8 @@ gaiaGeomCollWithin (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     GEOSGeometry *g2;
     if (!geom1 || !geom2)
 	return -1;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
+	return -1;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
     ret = GEOSWithin (g1, g2);
@@ -317,6 +336,8 @@ gaiaGeomCollContains (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     GEOSGeometry *g1;
     GEOSGeometry *g2;
     if (!geom1 || !geom2)
+	return -1;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
 	return -1;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
@@ -335,6 +356,8 @@ gaiaGeomCollRelate (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2,
     GEOSGeometry *g1;
     GEOSGeometry *g2;
     if (!geom1 || !geom2)
+	return -1;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
 	return -1;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
@@ -355,7 +378,37 @@ gaiaGeomCollLength (gaiaGeomCollPtr geom, double *xlength)
     GEOSGeometry *g;
     if (!geom)
 	return 0;
+    if (gaiaIsToxic (geom))
+	return 0;
     g = gaiaToGeos (geom);
+    ret = GEOSLength (g, &length);
+    GEOSGeom_destroy (g);
+    if (ret)
+	*xlength = length;
+    return ret;
+}
+
+GAIAGEO_DECLARE int
+gaiaGeomCollLengthOrPerimeter (gaiaGeomCollPtr geom, int perimeter,
+			       double *xlength)
+{
+/* computes the total length or perimeter for this Geometry */
+    double length;
+    int ret;
+    GEOSGeometry *g;
+    int mode = GAIA2GEOS_ONLY_LINESTRINGS;
+    if (perimeter)
+	mode = GAIA2GEOS_ONLY_POLYGONS;
+    if (!geom)
+	return 0;
+    if (gaiaIsToxic (geom))
+	return 0;
+    g = gaiaToGeosSelective (geom, mode);
+    if (g == NULL)
+      {
+	  *xlength = 0.0;
+	  return 1;
+      }
     ret = GEOSLength (g, &length);
     GEOSGeom_destroy (g);
     if (ret)
@@ -371,6 +424,8 @@ gaiaGeomCollArea (gaiaGeomCollPtr geom, double *xarea)
     int ret;
     GEOSGeometry *g;
     if (!geom)
+	return 0;
+    if (gaiaIsToxic (geom))
 	return 0;
     g = gaiaToGeos (geom);
     ret = GEOSArea (g, &area);
@@ -390,6 +445,8 @@ gaiaGeomCollDistance (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2,
     GEOSGeometry *g1;
     GEOSGeometry *g2;
     if (!geom1 || !geom2)
+	return 0;
+    if (gaiaIsToxic (geom1) || gaiaIsToxic (geom2))
 	return 0;
     g1 = gaiaToGeos (geom1);
     g2 = gaiaToGeos (geom2);
@@ -474,6 +531,68 @@ gaiaGeometryUnion (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
 	geom1->DeclaredType == GAIA_MULTIPOLYGON)
 	geo->DeclaredType = GAIA_MULTIPOLYGON;
     return geo;
+}
+
+GAIAGEO_DECLARE gaiaGeomCollPtr
+gaiaUnionCascaded (gaiaGeomCollPtr geom)
+{
+/* UnionCascaded (single Collection of polygons) */
+    GEOSGeometry *g1;
+    GEOSGeometry *g2;
+    gaiaGeomCollPtr result;
+    int pts = 0;
+    int lns = 0;
+    int pgs = 0;
+    gaiaPointPtr pt;
+    gaiaLinestringPtr ln;
+    gaiaPolygonPtr pg;
+    if (!geom)
+	return NULL;
+    if (gaiaIsToxic (geom))
+	return NULL;
+
+/* testing if geom only contains Polygons */
+    pt = geom->FirstPoint;
+    while (pt)
+      {
+	  pts++;
+	  pt = pt->Next;
+      }
+    ln = geom->FirstLinestring;
+    while (ln)
+      {
+	  lns++;
+	  ln = ln->Next;
+      }
+    pg = geom->FirstPolygon;
+    while (pg)
+      {
+	  pgs++;
+	  pg = pg->Next;
+      }
+    if (pts || lns)
+	return NULL;
+    if (!pgs)
+	return NULL;
+
+    g1 = gaiaToGeos (geom);
+    g2 = GEOSUnionCascaded (g1);
+    GEOSGeom_destroy (g1);
+    if (!g2)
+	return NULL;
+    if (geom->DimensionModel == GAIA_XY_Z)
+	result = gaiaFromGeos_XYZ (g2);
+    else if (geom->DimensionModel == GAIA_XY_M)
+	result = gaiaFromGeos_XYM (g2);
+    else if (geom->DimensionModel == GAIA_XY_Z_M)
+	result = gaiaFromGeos_XYZM (g2);
+    else
+	result = gaiaFromGeos_XY (g2);
+    GEOSGeom_destroy (g2);
+    if (result == NULL)
+	return NULL;
+    result->Srid = geom->Srid;
+    return result;
 }
 
 GAIAGEO_DECLARE gaiaGeomCollPtr
@@ -734,6 +853,11 @@ gaiaIsRing (gaiaLinestringPtr line)
 		gaiaSetPoint (line2->Coords, iv, x, y);
 	    }
       }
+    if (gaiaIsToxic (geo))
+      {
+	  gaiaFreeGeomColl (geo);
+	  return -1;
+      }
     g = gaiaToGeos (geo);
     gaiaFreeGeomColl (geo);
     ret = GEOSisRing (g);
@@ -754,9 +878,63 @@ gaiaIsValid (gaiaGeomCollPtr geom)
 	return -1;
     if (gaiaIsToxic (geom))
 	return 0;
+    if (gaiaIsNotClosedGeomColl (geom))
+	return 0;
     g = gaiaToGeos (geom);
     ret = GEOSisValid (g);
     GEOSGeom_destroy (g);
+    if (ret == 2)
+	return -1;
+    return ret;
+}
+
+GAIAGEO_DECLARE int
+gaiaIsClosedGeom (gaiaGeomCollPtr geom)
+{
+/* checks if this geometry is a closed linestring (or multilinestring) */
+    int ret = 0;
+    gaiaLinestringPtr ln;
+    if (!geom)
+	return -1;
+    if (gaiaIsToxic (geom))
+	return 0;
+    ln = geom->FirstLinestring;
+    while (ln)
+      {
+	  /* unhappily GEOS v3.2.2 [system package on Debian Lenny and Ubuntu 12.04]
+	   * doesn't exposes the GEOSisClosed() API at all !!!!
+	   *
+	   GEOSGeometry *g;
+	   gaiaGeomCollPtr geoColl = gaiaAllocGeomColl();
+	   gaiaInsertLinestringInGeomColl(geoColl, gaiaCloneLinestring(ln));
+	   g = gaiaToGeos (geoColl);
+	   ret = GEOSisClosed (g);
+	   GEOSGeom_destroy (g);
+	   gaiaFreeGeomColl(geoColl);
+	   */
+
+	  /* so we'll use this internal default in order to circumvent the above issue */
+	  double x1;
+	  double y1;
+	  double z1;
+	  double m1;
+	  double x2;
+	  double y2;
+	  double z2;
+	  double m2;
+	  gaiaLineGetPoint (ln, 0, &x1, &y1, &z1, &m1);
+	  gaiaLineGetPoint (ln, ln->Points - 1, &x2, &y2, &z2, &m2);
+	  if (x1 == x2 && y1 == y2 && z1 == z2)
+	      ret = 1;
+	  else
+	      ret = 0;
+	  if (ret == 0)
+	    {
+		/* this line isn't closed, so we don't need to continue */
+		break;
+	    }
+	  ln = ln->Next;
+      }
     if (ret == 2)
 	return -1;
     return ret;
@@ -770,6 +948,8 @@ gaiaGeomCollSimplify (gaiaGeomCollPtr geom, double tolerance)
     GEOSGeometry *g1;
     GEOSGeometry *g2;
     if (!geom)
+	return NULL;
+    if (gaiaIsToxic (geom))
 	return NULL;
     g1 = gaiaToGeos (geom);
     g2 = GEOSSimplify (g1, tolerance);
@@ -799,6 +979,8 @@ gaiaGeomCollSimplifyPreserveTopology (gaiaGeomCollPtr geom, double tolerance)
     GEOSGeometry *g1;
     GEOSGeometry *g2;
     if (!geom)
+	return NULL;
+    if (gaiaIsToxic (geom))
 	return NULL;
     g1 = gaiaToGeos (geom);
     g2 = GEOSTopologyPreserveSimplify (g1, tolerance);
@@ -1053,6 +1235,8 @@ gaiaPolygonize (gaiaGeomCollPtr geom, int force_multi)
 
     if (!geom)
 	return NULL;
+    if (gaiaIsToxic (geom))
+	return NULL;
     pt = geom->FirstPoint;
     while (pt)
       {
@@ -1260,7 +1444,7 @@ gaiaPolygonize (gaiaGeomCollPtr geom, int force_multi)
     return result;
 }
 
-#ifdef GEOS_ADVANCED		/* GEOS advanced and experimental features */
+#ifdef GEOS_ADVANCED		/* GEOS advanced features */
 
 GAIAGEO_DECLARE gaiaGeomCollPtr
 gaiaOffsetCurve (gaiaGeomCollPtr geom, double radius, int points,
@@ -2190,6 +2374,151 @@ gaiaLineInterpolatePoint (gaiaGeomCollPtr geom, double fraction)
 	return NULL;
     result->Srid = geom->Srid;
     return result;
+}
+
+GAIAGEO_DECLARE gaiaGeomCollPtr
+gaiaLineInterpolateEquidistantPoints (gaiaGeomCollPtr geom, double distance)
+{
+/*
+ * attempts to intepolate a set of points on line at regular distances 
+ */
+    int pts = 0;
+    int lns = 0;
+    int pgs = 0;
+    gaiaGeomCollPtr result;
+    gaiaGeomCollPtr xpt;
+    gaiaPointPtr pt;
+    gaiaLinestringPtr ln;
+    gaiaPolygonPtr pg;
+    GEOSGeometry *g;
+    GEOSGeometry *g_pt;
+    double length;
+    double current_length = 0.0;
+    if (!geom)
+	return NULL;
+    if (distance <= 0.0)
+	return NULL;
+
+/* checking if a single Linestring has been passed */
+    pt = geom->FirstPoint;
+    while (pt)
+      {
+	  pts++;
+	  pt = pt->Next;
+      }
+    ln = geom->FirstLinestring;
+    while (ln)
+      {
+	  lns++;
+	  ln = ln->Next;
+      }
+    pg = geom->FirstPolygon;
+    while (pg)
+      {
+	  pgs++;
+	  pg = pg->Next;
+      }
+    if (pts == 0 && lns == 1 && pgs == 0)
+	;
+    else
+	return NULL;
+
+    g = gaiaToGeos (geom);
+    if (GEOSLength (g, &length))
+      {
+	  if (length <= distance)
+	    {
+		/* the line is too short to apply interpolation */
+		GEOSGeom_destroy (g);
+		return NULL;
+	    }
+      }
+    else
+      {
+	  GEOSGeom_destroy (g);
+	  return NULL;
+      }
+
+/* creating the MultiPoint [always supporting M] */
+    if (geom->DimensionModel == GAIA_XY_Z
+	|| geom->DimensionModel == GAIA_XY_Z_M)
+	result = gaiaAllocGeomCollXYZM ();
+    else
+	result = gaiaAllocGeomCollXYM ();
+    if (result == NULL)
+      {
+	  GEOSGeom_destroy (g);
+	  return NULL;
+      }
+
+    while (1)
+      {
+	  /* increasing the current distance */
+	  current_length += distance;
+	  if (current_length >= length)
+	      break;
+	  /* interpolating a point */
+	  g_pt = GEOSInterpolate (g, current_length);
+	  if (!g_pt)
+	      goto error;
+	  if (geom->DimensionModel == GAIA_XY_Z)
+	    {
+		xpt = gaiaFromGeos_XYZ (g_pt);
+		if (!xpt)
+		    goto error;
+		pt = xpt->FirstPoint;
+		if (!pt)
+		    goto error;
+		gaiaAddPointToGeomCollXYZM (result, pt->X, pt->Y, pt->Z,
+					    current_length);
+	    }
+	  else if (geom->DimensionModel == GAIA_XY_M)
+	    {
+		xpt = gaiaFromGeos_XYM (g_pt);
+		if (!xpt)
+		    goto error;
+		pt = xpt->FirstPoint;
+		if (!pt)
+		    goto error;
+		gaiaAddPointToGeomCollXYM (result, pt->X, pt->Y,
+					   current_length);
+	    }
+	  else if (geom->DimensionModel == GAIA_XY_Z_M)
+	    {
+		xpt = gaiaFromGeos_XYZM (g_pt);
+		if (!xpt)
+		    goto error;
+		pt = xpt->FirstPoint;
+		if (!pt)
+		    goto error;
+		gaiaAddPointToGeomCollXYZM (result, pt->X, pt->Y, pt->Z,
+					    current_length);
+	    }
+	  else
+	    {
+		xpt = gaiaFromGeos_XY (g_pt);
+		if (!xpt)
+		    goto error;
+		pt = xpt->FirstPoint;
+		if (!pt)
+		    goto error;
+		gaiaAddPointToGeomCollXYM (result, pt->X, pt->Y,
+					   current_length);
+	    }
+	  GEOSGeom_destroy (g_pt);
+	  gaiaFreeGeomColl (xpt);
+      }
+    GEOSGeom_destroy (g);
+    result->Srid = geom->Srid;
+    result->DeclaredType = GAIA_MULTIPOINT;
+    return result;
+
+  error:
+    if (g_pt)
+	GEOSGeom_destroy (g_pt);
+    GEOSGeom_destroy (g);
+    gaiaFreeGeomColl (result);
+    return NULL;
 }
 
 GAIAGEO_DECLARE double
@@ -3766,6 +4095,173 @@ gaiaLinesCutAtNodes (gaiaGeomCollPtr geom1, gaiaGeomCollPtr geom2)
     return result;
 }
 
-#endif /* end GEOS advanced and experimental features */
+#endif /* end GEOS advanced features */
+
+#ifdef GEOS_TRUNK		/* GEOS experimental features */
+
+GAIAGEO_DECLARE gaiaGeomCollPtr
+gaiaDelaunayTriangulation (gaiaGeomCollPtr geom, double tolerance,
+			   int only_edges)
+{
+/* Delaunay Triangulation */
+    GEOSGeometry *g1;
+    GEOSGeometry *g2;
+    gaiaGeomCollPtr result;
+    if (!geom)
+	return NULL;
+    g1 = gaiaToGeos (geom);
+    g2 = GEOSDelaunayTriangulation (g1, tolerance, only_edges);
+    GEOSGeom_destroy (g1);
+    if (!g2)
+	return NULL;
+    if (geom->DimensionModel == GAIA_XY_Z)
+	result = gaiaFromGeos_XYZ (g2);
+    else if (geom->DimensionModel == GAIA_XY_M)
+	result = gaiaFromGeos_XYM (g2);
+    else if (geom->DimensionModel == GAIA_XY_Z_M)
+	result = gaiaFromGeos_XYZM (g2);
+    else
+	result = gaiaFromGeos_XY (g2);
+    GEOSGeom_destroy (g2);
+    if (result == NULL)
+	return NULL;
+    result->Srid = geom->Srid;
+    if (only_edges)
+	result->DeclaredType = GAIA_MULTILINESTRING;
+    else
+	result->DeclaredType = GAIA_MULTIPOLYGON;
+    return result;
+}
+
+GAIAGEO_DECLARE gaiaGeomCollPtr
+gaiaVoronojDiagram (gaiaGeomCollPtr geom, double extra_frame_size,
+		    double tolerance, int only_edges)
+{
+/* Voronoj Diagram */
+    GEOSGeometry *g1;
+    GEOSGeometry *g2;
+    gaiaGeomCollPtr result;
+    gaiaPolygonPtr pg;
+    int pgs = 0;
+    int errs = 0;
+    void *voronoj;
+    if (!geom)
+	return NULL;
+    g1 = gaiaToGeos (geom);
+    g2 = GEOSDelaunayTriangulation (g1, tolerance, 0);
+    GEOSGeom_destroy (g1);
+    if (!g2)
+	return NULL;
+    if (geom->DimensionModel == GAIA_XY_Z)
+	result = gaiaFromGeos_XYZ (g2);
+    else if (geom->DimensionModel == GAIA_XY_M)
+	result = gaiaFromGeos_XYM (g2);
+    else if (geom->DimensionModel == GAIA_XY_Z_M)
+	result = gaiaFromGeos_XYZM (g2);
+    else
+	result = gaiaFromGeos_XY (g2);
+    GEOSGeom_destroy (g2);
+    if (result == NULL)
+	return NULL;
+    pg = result->FirstPolygon;
+    while (pg)
+      {
+	  /* counting how many triangles are in Delaunay */
+	  if (delaunay_triangle_check (pg))
+	      pgs++;
+	  else
+	      errs++;
+	  pg = pg->Next;
+      }
+    if (pgs == 0 || errs)
+      {
+	  gaiaFreeGeomColl (result);
+	  return NULL;
+      }
+
+/* building the Voronoj Diagram from Delaunay */
+    voronoj = voronoj_build (pgs, result->FirstPolygon, extra_frame_size);
+    gaiaFreeGeomColl (result);
+
+/* creating the Geometry representing Voronoj */
+    if (geom->DimensionModel == GAIA_XY_Z)
+	result = gaiaAllocGeomCollXYZ ();
+    else if (geom->DimensionModel == GAIA_XY_M)
+	result = gaiaAllocGeomCollXYM ();
+    else if (geom->DimensionModel == GAIA_XY_Z_M)
+	result = gaiaAllocGeomCollXYZM ();
+    else
+	result = gaiaAllocGeomColl ();
+    result = voronoj_export (voronoj, result, only_edges);
+    voronoj_free (voronoj);
+
+    result->Srid = geom->Srid;
+    if (only_edges)
+	result->DeclaredType = GAIA_MULTILINESTRING;
+    else
+	result->DeclaredType = GAIA_MULTIPOLYGON;
+    return result;
+}
+
+GAIAGEO_DECLARE gaiaGeomCollPtr
+gaiaConcaveHull (gaiaGeomCollPtr geom, double factor, double tolerance,
+		 int allow_holes)
+{
+/* Concave Hull */
+    GEOSGeometry *g1;
+    GEOSGeometry *g2;
+    gaiaGeomCollPtr result;
+    gaiaGeomCollPtr concave_hull;
+    gaiaPolygonPtr pg;
+    int pgs = 0;
+    int errs = 0;
+    if (!geom)
+	return NULL;
+    g1 = gaiaToGeos (geom);
+    g2 = GEOSDelaunayTriangulation (g1, tolerance, 0);
+    GEOSGeom_destroy (g1);
+    if (!g2)
+	return NULL;
+    if (geom->DimensionModel == GAIA_XY_Z)
+	result = gaiaFromGeos_XYZ (g2);
+    else if (geom->DimensionModel == GAIA_XY_M)
+	result = gaiaFromGeos_XYM (g2);
+    else if (geom->DimensionModel == GAIA_XY_Z_M)
+	result = gaiaFromGeos_XYZM (g2);
+    else
+	result = gaiaFromGeos_XY (g2);
+    GEOSGeom_destroy (g2);
+    if (result == NULL)
+	return NULL;
+    pg = result->FirstPolygon;
+    while (pg)
+      {
+	  /* counting how many triangles are in Delaunay */
+	  if (delaunay_triangle_check (pg))
+	      pgs++;
+	  else
+	      errs++;
+	  pg = pg->Next;
+      }
+    if (pgs == 0 || errs)
+      {
+	  gaiaFreeGeomColl (result);
+	  return NULL;
+      }
+
+/* building the Concave Hull from Delaunay */
+    concave_hull =
+	concave_hull_build (result->FirstPolygon, geom->DimensionModel, factor,
+			    allow_holes);
+    gaiaFreeGeomColl (result);
+    if (!concave_hull)
+	return NULL;
+    result = concave_hull;
+
+    result->Srid = geom->Srid;
+    return result;
+}
+
+#endif /* end GEOS experimental features */
 
 #endif /* end including GEOS */

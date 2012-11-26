@@ -2,7 +2,7 @@
 
  gg_geometries.c -- Gaia geometric objects
   
- version 3.0, 2011 July 20
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -24,7 +24,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -50,7 +50,11 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <math.h>
 #include <float.h>
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+#include "config-msvc.h"
+#else
 #include "config.h"
+#endif
 
 #include <spatialite/sqlite.h>
 
@@ -1530,7 +1534,7 @@ gaiaAllocGeomColl ()
 {
 /* GEOMETRYCOLLECTION object constructor */
     gaiaGeomCollPtr p = malloc (sizeof (gaiaGeomColl));
-    p->Srid = -1;
+    p->Srid = 0;
     p->endian = ' ';
     p->offset = 0;
     p->FirstPoint = NULL;
@@ -1554,7 +1558,7 @@ gaiaAllocGeomCollXYZ ()
 {
 /* GEOMETRYCOLLECTION object constructor */
     gaiaGeomCollPtr p = malloc (sizeof (gaiaGeomColl));
-    p->Srid = -1;
+    p->Srid = 0;
     p->endian = ' ';
     p->offset = 0;
     p->FirstPoint = NULL;
@@ -1578,7 +1582,7 @@ gaiaAllocGeomCollXYM ()
 {
 /* GEOMETRYCOLLECTION object constructor */
     gaiaGeomCollPtr p = malloc (sizeof (gaiaGeomColl));
-    p->Srid = -1;
+    p->Srid = 0;
     p->endian = ' ';
     p->offset = 0;
     p->FirstPoint = NULL;
@@ -1602,7 +1606,7 @@ gaiaAllocGeomCollXYZM ()
 {
 /* GEOMETRYCOLLECTION object constructor */
     gaiaGeomCollPtr p = malloc (sizeof (gaiaGeomColl));
-    p->Srid = -1;
+    p->Srid = 0;
     p->endian = ' ';
     p->offset = 0;
     p->FirstPoint = NULL;
@@ -1869,7 +1873,7 @@ gaiaAllocDynamicLine ()
 /* DYNAMIC LINE object constructor */
     gaiaDynamicLinePtr p = malloc (sizeof (gaiaDynamicLine));
     p->Error = 0;
-    p->Srid = -1;
+    p->Srid = 0;
     p->First = NULL;
     p->Last = NULL;
     return p;
@@ -4448,8 +4452,8 @@ gaiaLocateBetweenMeasures (gaiaGeomCollPtr geom, double m_start, double m_end)
 					else
 					  {
 					      gaiaSetPointXYM (new_line->Coords,
-							       cnt, pt->X, pt->Y,
-							       pt->M);
+							       cnt, pt->X,
+							       pt->Y, pt->M);
 					  }
 					cnt++;
 					pt = pt->Next;

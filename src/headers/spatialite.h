@@ -1,7 +1,7 @@
 /* 
  spatialite.h -- Gaia spatial support for SQLite 
   
- version 3.0, 2011 July 20
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -23,7 +23,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -48,10 +48,14 @@ the terms of any one of the MPL, the GPL or the LGPL.
  Main SpatiaLite header file
  */
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifdef _WIN32
 #ifdef DLL_EXPORT
 #define SPATIALITE_DECLARE __declspec(dllexport)
 #else
 #define SPATIALITE_DECLARE extern
+#endif
+#else
+#define SPATIALITE_DECLARE __attribute__ ((visibility("default")))
 #endif
 #endif
 
@@ -65,15 +69,7 @@ extern "C"
 {
 #endif
 
-/** spatial_ref_sys_init2: will create the "spatial_ref_sys" table
- and will populate this table with any supported EPSG SRID definition */
-#define GAIA_EPSG_ANY -9999
-/** spatial_ref_sys_init2: will create the "spatial_ref_sys" table
- and will populate this table only inserting WGS84-related definitions */
-#define GAIA_EPSG_WGS84_ONLY -9998
-/** spatial_ref_sys_init2: will create the "spatial_ref_sys" table
- but will avoid to insert any row at all */
-#define GAIA_EPSG_NONE -9997
+#include <spatialite/gaiageo.h>
 
 /**
  Return the current library version.
@@ -91,14 +87,22 @@ extern "C"
  */
     SPATIALITE_DECLARE void spatialite_init (int verbose);
 
-    /**
-     Cleanup spatialite 
-     
-     This function performs general cleanup, essentially undoing the effect
-     of spatialite_init().
-     
-     \sa spatialite_init
-    */
+/**
+ Initializes the GEOS library. 
+ 
+ \note You are never supposed to invoke this function (internally handled).
+
+ */
+    SPATIALITE_DECLARE void spatialite_init_geos (void);
+
+/**
+ Cleanup spatialite 
+
+ This function performs general cleanup, essentially undoing the effect
+ of spatialite_init().
+
+ \sa spatialite_init
+*/
     SPATIALITE_DECLARE void spatialite_cleanup (void);
 
 /**
@@ -139,6 +143,11 @@ extern "C"
  \param err_msg on completion will contain an error message (if any)
 
  \return 0 on failure, any other value on success
+
+ \sa load_shapefile_ex
+
+ \note this function simply calls load_shapefile_ex by passing 
+  implicit gype="AUTO" and pk_column=NULL arguments
  */
     SPATIALITE_DECLARE int load_shapefile (sqlite3 * sqlite, char *shp_path,
 					   char *table, char *charset, int srid,
@@ -146,6 +155,50 @@ extern "C"
 					   int compressed, int verbose,
 					   int spatial_index, int *rows,
 					   char *err_msg);
+
+/**
+ Loads an external Shapefile into a newly created table
+
+ \param sqlite handle to current DB connection
+ \param shp_path pathname of the Shapefile to be imported (no suffix) 
+ \param table the name of the table to be created
+ \param charset a valid GNU ICONV charset to be used for DBF text strings
+ \param srid the SRID to be set for Geometries
+ \param geo_column the name of the geometry column
+ \param gtype expected to be one of: "LINESTRING", "LINESTRINGZ", 
+  "LINESTRINGM", "LINESTRINGZM", "MULTILINESTRING", "MULTILINESTRINGZ",
+  "MULTILINESTRINGM", "MULTILINESTRINGZM", "POLYGON", "POLYGONZ", "POLYGONM", 
+  "POLYGONZM", "MULTIPOLYGON", "MULTIPOLYGONZ", "MULTIPOLYGONM", 
+  "MULTIPOLYGONZM" or "AUTO".
+ \param pk_column name of the Primary Key column; if NULL or mismatching
+ then "PK_UID" will be assumed by default.
+ \param coerce2d if TRUE any Geometry will be casted to 2D [XY]
+ \param compressed if TRUE compressed Geometries will be created
+ \param verbose if TRUE a short report is shown on stderr
+ \param spatial_index if TRUE an R*Tree Spatial Index will be created
+ \param rows on completion will contain the total number of actually exported rows
+ \param err_msg on completion will contain an error message (if any)
+
+ \return 0 on failure, any other value on success
+
+ \sa load_shapefile
+
+ \note the Shapefile format doesn't supports any distinction between
+  LINESTRINGs and MULTILINESTRINGs, or between POLYGONs and MULTIPOLYGONs;
+  as does not allows to clearly distinguish if the M-measure is required.
+ \n So a first preliminary scan of the Shapefile is required in order to
+  correctly identify the actual payload (gtype = "AUTO", default case).
+ \n By explicitly specifying some expected geometry type this first scan
+  will be skipped at all thus introducing a noticeable performance gain.
+ \n Anyway, declaring a mismatching geometry type will surely cause a failure.
+ */
+    SPATIALITE_DECLARE int load_shapefile_ex (sqlite3 * sqlite, char *shp_path,
+					      char *table, char *charset,
+					      int srid, char *geo_column,
+					      char *gtype, char *pk_column,
+					      int coerce2d, int compressed,
+					      int verbose, int spatial_index,
+					      int *rows, char *err_msg);
 
 /**
  Loads an external DBF file into a newly created table
@@ -158,11 +211,39 @@ extern "C"
  \param rows on completion will contain the total number of actually exported rows
  \param err_msg on completion will contain an error message (if any)
 
+ \sa load_dbf_ex
+
+ \note this function simply calls load_dbf_ex by passing an
+  implicit pk_column=NULL argument
+
  \return 0 on failure, any other value on success
  */
     SPATIALITE_DECLARE int load_dbf (sqlite3 * sqlite, char *dbf_path,
 				     char *table, char *charset, int verbose,
 				     int *rows, char *err_msg);
+
+/**
+ Loads an external DBF file into a newly created table
+
+ \param sqlite handle to current DB connection
+ \param dbf_path pathname of the DBF file to be imported
+ \param table the name of the table to be created
+ \param pk_column name of the Primary Key column; if NULL or mismatching
+ then "PK_UID" will be assumed by default.
+ \param charset a valid GNU ICONV charset to be used for DBF text strings
+ \param verbose if TRUE a short report is shown on stderr
+ \param rows on completion will contain the total number of actually exported rows
+ \param err_msg on completion will contain an error message (if any)
+
+ \sa load_shapefile
+
+ \return 0 on failure, any other value on success
+ */
+    SPATIALITE_DECLARE int load_dbf_ex (sqlite3 * sqlite, char *dbf_path,
+					char *table, char *pk_column,
+					char *charset, int verbose, int *rows,
+					char *err_msg);
+
 
 /**
  Dumps a full table into an external DBF file
@@ -391,6 +472,55 @@ extern "C"
     SPATIALITE_DECLARE int update_layer_statistics (sqlite3 * sqlite,
 						    const char *table,
 						    const char *column);
+
+/**
+ Queries the Metadata tables supporting Vector Layers
+
+ \param handle SQLite handle to current DB connection.
+ \param table VectorLayer Table (or View, or VirtualShape).
+ \param geometry Geometry Column name.
+ \param mode one of GAIA_VECTORS_LIST_LOOSE or GAIA_VECTORS_LIST_STRICT.
+ 
+ \return the pointer to the newly created VectorLayersList object: NULL on failure
+
+ \sa gaiaFreeVectorLayersList
+
+ \note you are responsible to destroy (before or after) any allocated
+ VectorLayersList returned by gaiaGetVectorLayersList().
+ \n If the table arg is NULL all VectorLayers defined within the DB will be reported;
+  otherwise only a single Layer will be reported (if existing).
+ \n By defining the geometry arg (not NULL) you can further restrict the returned report.
+ \n When the mode arg is set to GAIA_VECTORS_LIST_FAST (default) then the returned infos
+  will be simply retrieved from the staticized statistic tables (faster, but could be inaccurate).
+ \n If the mode arg is set to GAIA_VECTORS_LIST_PRECISE a preliminary attempt to update the
+  statistic tables will be always performed (probably slower, but surely accurate).
+ */
+    SPATIALITE_DECLARE gaiaVectorLayersListPtr gaiaGetVectorLayersList (sqlite3 *
+								    handle, const char *table, const char *geometry, int mode);
+
+/**
+ Destroys a VectorLayersList object
+
+ \param ptr pointer to the VectorLayersList object to be destroyed
+
+ \sa gaiaGetVectorLayersList
+ */
+    SPATIALITE_DECLARE void gaiaFreeVectorLayersList (gaiaVectorLayersListPtr ptr);
+
+/**
+ Drops a layer-table, removing any related dependency
+
+ \param sqlite handle to current DB connection
+ \param table name of the table to be removed
+
+ \note this function will drop a SpatialTable, SpatialView or VirtualShape being
+ properly registered within the Metadata tables.
+ \n an eventual Spatial Index will be dropped as well, and any row referring the
+ selected table will be removed from the Metadata tables.
+
+ \return 0 on failure, any other value on success
+ */
+    SPATIALITE_DECLARE int gaiaDropTable (sqlite3 * sqlite, const char *table);
 
 #ifdef __cplusplus
 }

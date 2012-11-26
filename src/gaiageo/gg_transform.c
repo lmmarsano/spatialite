@@ -2,7 +2,7 @@
 
  gg_transform.c -- Gaia PROJ.4 wrapping
   
- version 3.0, 2011 July 20
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -24,7 +24,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -47,7 +47,11 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <stdio.h>
 #include <string.h>
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+#include "config-msvc.h"
+#else
 #include "config.h"
+#endif
 
 #ifndef OMIT_PROJ		/* including PROJ.4 */
 #include <proj_api.h>
@@ -544,46 +548,46 @@ gaiaShiftLongitude (gaiaGeomCollPtr geom)
 }
 
 static void
-normalizePoint(double *x, double *y)
+normalizePoint (double *x, double *y)
 {
     if ((-180.0 <= *x) && (*x <= 180.0) && (-90.0 <= *y) && (*y <= 90.0))
       {
-	/* then this point is already OK */
-	return;
+	  /* then this point is already OK */
+	  return;
       }
     if ((*x > 180.0) || (*x < -180.0))
       {
-	int numCycles = (int)(*x / 360.0);
-	*x -= numCycles * 360.0;
+	  int numCycles = (int) (*x / 360.0);
+	  *x -= numCycles * 360.0;
       }
     if (*x > 180.0)
       {
-	*x -= 360.0;
+	  *x -= 360.0;
       }
     if (*x < -180.0)
       {
-	*x += 360.0;
+	  *x += 360.0;
       }
     if ((*y > 90.0) || (*y < -90.0))
       {
-	int numCycles = (int)(*y / 360.0);
-	*y -= numCycles * 360.0;
+	  int numCycles = (int) (*y / 360.0);
+	  *y -= numCycles * 360.0;
       }
     if (*y > 180.0)
       {
-	*y = -1.0 * (*y - 180.0);
+	  *y = -1.0 * (*y - 180.0);
       }
     if (*y < -180.0)
       {
-	*y = -1.0 * (*y + 180.0);
+	  *y = -1.0 * (*y + 180.0);
       }
     if (*y > 90.0)
       {
-	*y = 180 - *y;
+	  *y = 180 - *y;
       }
     if (*y < -90.0)
       {
-	*y = -180.0 - *y;
+	  *y = -180.0 - *y;
       }
 }
 
@@ -609,8 +613,8 @@ gaiaNormalizeLonLat (gaiaGeomCollPtr geom)
     point = geom->FirstPoint;
     while (point)
       {
-	normalizePoint(&(point->X), &(point->Y));
-	point = point->Next;
+	  normalizePoint (&(point->X), &(point->Y));
+	  point = point->Next;
       }
     line = geom->FirstLinestring;
     while (line)
@@ -634,7 +638,7 @@ gaiaNormalizeLonLat (gaiaGeomCollPtr geom)
 		  {
 		      gaiaGetPoint (line->Coords, iv, &x, &y);
 		  }
-		normalizePoint(&x, &y);
+		normalizePoint (&x, &y);
 		if (line->DimensionModel == GAIA_XY_Z)
 		  {
 		      gaiaSetPointXYZ (line->Coords, iv, x, y, z);
@@ -678,7 +682,7 @@ gaiaNormalizeLonLat (gaiaGeomCollPtr geom)
 		  {
 		      gaiaGetPoint (ring->Coords, iv, &x, &y);
 		  }
-		normalizePoint(&x, &y);
+		normalizePoint (&x, &y);
 		if (ring->DimensionModel == GAIA_XY_Z)
 		  {
 		      gaiaSetPointXYZ (ring->Coords, iv, x, y, z);
@@ -718,7 +722,7 @@ gaiaNormalizeLonLat (gaiaGeomCollPtr geom)
 			{
 			    gaiaGetPoint (ring->Coords, iv, &x, &y);
 			}
-		      normalizePoint(&x, &y);
+		      normalizePoint (&x, &y);
 		      if (ring->DimensionModel == GAIA_XY_Z)
 			{
 			    gaiaSetPointXYZ (ring->Coords, iv, x, y, z);
@@ -1443,6 +1447,17 @@ gaiaTransform (gaiaGeomCollPtr org, char *proj_from, char *proj_to)
     projPJ from_cs = pj_init_plus (proj_from);
     projPJ to_cs = pj_init_plus (proj_to);
     gaiaGeomCollPtr dst;
+    if (!from_cs)
+      {
+	  if (to_cs)
+	      pj_free (to_cs);
+	  return NULL;
+      }
+    if (!to_cs)
+      {
+	  pj_free (from_cs);
+	  return NULL;
+      }
     if (org->DimensionModel == GAIA_XY_Z)
 	dst = gaiaAllocGeomCollXYZ ();
     else if (org->DimensionModel == GAIA_XY_M)
@@ -1454,10 +1469,6 @@ gaiaTransform (gaiaGeomCollPtr org, char *proj_from, char *proj_to)
 /* setting up projection parameters */
     from_angle = gaiaIsLongLat (proj_from);
     to_angle = gaiaIsLongLat (proj_to);
-    if (!from_cs)
-	return dst;
-    if (!to_cs)
-	return dst;
     cnt = 0;
     pt = org->FirstPoint;
     while (pt)

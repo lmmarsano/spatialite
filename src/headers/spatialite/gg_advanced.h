@@ -1,7 +1,7 @@
 /*
  gg_advanced.h -- Gaia common support for geometries: advanced
   
- version 3.0, 2011 July 20
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -23,7 +23,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -43,6 +43,16 @@ the terms of any one of the MPL, the GPL or the LGPL.
  
 */
 
+/*
+ 
+CREDITS:
+
+this module has been partly funded by:
+Regione Toscana - Settore Sistema Informativo Territoriale ed Ambientale
+(wrapping liblwgeom APIs) 
+
+*/
+
 
 /**
  \file gg_advanced.h
@@ -54,6 +64,11 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define _GG_ADVANCED_H
 #endif
+
+#define GAIA2GEOS_ALL			0
+#define GAIA2GEOS_ONLY_POINTS		1
+#define GAIA2GEOS_ONLY_LINESTRINGS	2
+#define GAIA2GEOS_ONLY_POLYGONS		3
 
 #ifdef __cplusplus
 extern "C"
@@ -178,11 +193,33 @@ extern "C"
 
  \return handle to GEOS Geometry
  
- \sa gaiaFromGeos_XY, gaiaFromGeos_XYZ, gaiaFromGeos_XYM, gaiaFromGeos_XYZM
+ \sa gaiaFromGeos_XY, gaiaFromGeos_XYZ, gaiaFromGeos_XYM, gaiaFromGeos_XYZM,
+  gaiaToGeosSelective
+
+ \note convenience method, simply defaulting to gaiaToGeos(geom, GAIA2GEOS_ALL)
 
  \remark \b GEOS support required.
  */
     GAIAGEO_DECLARE void *gaiaToGeos (const gaiaGeomCollPtr gaia);
+
+/**
+ Converts a Geometry object into a GEOS Geometry
+
+ \param gaia pointer to Geometry object
+ \param mode one of GAIA2GEOS_ALL, GAIA2GEOS_ONLY_POINTS,
+  GAIA2GEOS_ONLY_LINESTRINGS or GAIA2GEOS_ONLY_POLYGONS
+
+ \return handle to GEOS Geometry
+ 
+ \sa gaiaFromGeos_XY, gaiaFromGeos_XYZ, gaiaFromGeos_XYM, gaiaFromGeos_XYZM
+
+ \note if the mode argument is not GAIA2GEOS_ALL only elementary geometries
+  of the selected type will be passed to GEOS, ignoring any other.
+
+ \remark \b GEOS support required.
+ */
+    GAIAGEO_DECLARE void *gaiaToGeosSelective (const gaiaGeomCollPtr gaia,
+					       int mode);
 
 /**
  Converts a GEOS Geometry into a Geometry object [XY dims]
@@ -263,16 +300,33 @@ extern "C"
 
 /**
  Checks if a Linestring object represents an OGC Closed Geometry
+ 
+ This function only works on a single linestring - if you pass in a multi-line
+ linestring geometry, it will return 0 (false). See gaiaIsClosedGeom for an
+ alternative.
+
+ \param line pointer to Linestring object.
+
+ \return 0 if false; any other value if true
+
+ \sa gaiaIsSimple, gaiaIsRing, gaiaIsValid, gaiaIsClosedGeom
+
+ \remark \b GEOS support required.
+ */
+    GAIAGEO_DECLARE int gaiaIsClosed (gaiaLinestringPtr line);
+
+/**
+ Checks if a Geometry object represents an OGC Closed Linestring
 
  \param line pointer to Geometry object.
 
  \return 0 if false; any other value if true
 
- \sa gaiaIsSimple, gaiaIsRing, gaiaIsValid
+ \sa gaiaIsSimple, gaiaIsRing, gaiaIsValid, gaiaIsClosed
 
  \remark \b GEOS support required.
  */
-    GAIAGEO_DECLARE int gaiaIsClosed (gaiaLinestringPtr line);
+    GAIAGEO_DECLARE int gaiaIsClosedGeom (gaiaGeomCollPtr geom);
 
 /**
  Checks if a Linestring object represents an OGC Ring Geometry
@@ -308,12 +362,31 @@ extern "C"
 
  \return 0 on failure: any other value on success
 
- \sa gaiaGeomCollArea, gaiaMeasureLength
+ \sa gaiaGeomCollArea, gaiaMeasureLength, gaiaGeomCollLengthOrPerimeter
 
  \remark \b GEOS support required.
  */
     GAIAGEO_DECLARE int gaiaGeomCollLength (gaiaGeomCollPtr geom,
 					    double *length);
+
+/**
+ Measures the total Length or Perimeter for a Geometry object
+
+ \param geom pointer to Geometry object
+ \param perimeter if TRUE only Polygons will be considered, ignoring any Linesting
+ \n the opposite if FALSE (considering only Linestrings and ignoring any Polygon)
+ \param length on completion this variable will contain the measured length
+  or perimeter
+
+ \return 0 on failure: any other value on success
+
+ \sa gaiaGeomCollArea, gaiaMeasureLength, gaiaGeomCollLength
+
+ \remark \b GEOS support required.
+ */
+    GAIAGEO_DECLARE int gaiaGeomCollLengthOrPerimeter (gaiaGeomCollPtr geom,
+						       int perimeter,
+						       double *length);
 /**
  Measures the total Area for a Geometry object
 
@@ -504,13 +577,17 @@ extern "C"
 					    const char *pattern);
 
 /**
- Calculates the minimum distance intercurring between two Geometry objects
+ Calculates the maximum distance intercurring between two Geometry objects
 
  \param geom1 the first Geometry object 
  \param geom2 the second Geometry object 
  \param dist on completion this variable will contain the calculated distance
 
- \return 0 on failuer: any other value on success.
+ \return 0 on failure: any other value on success.
+
+ \sa gaia3DDistance, gaiaMaxDistance, gaia3DMaxDistance
+
+ \note this function always computes the 2D cartesian distance.
 
  \remark \b GEOS support required.
  */
@@ -549,7 +626,7 @@ extern "C"
  \return the pointer to newly created Geometry object representing the
  geometry Union of both input Geometries: NULL on failure.
 
- \sa gaiaFreeGeomColl, gaiaUnaryUnion
+ \sa gaiaFreeGeomColl, gaiaUnaryUnion, gaiaUnionCascaded
 
  \note you are responsible to destroy (before or after) any allocated Geometry,
  this including any Geometry returned by gaiaGeometryUnion()
@@ -558,6 +635,25 @@ extern "C"
  */
     GAIAGEO_DECLARE gaiaGeomCollPtr gaiaGeometryUnion (gaiaGeomCollPtr geom1,
 						       gaiaGeomCollPtr geom2);
+
+/**
+ Spatial operator: Union Cascaded
+
+ \param geom the input Geometry object.
+
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n this function is similar to gaiaUnaryUnion, but it only accepts Polygons and 
+ MultiPolygons and it's now deprecated; anyway it's supported on older GEOS versions.
+ NULL on failure.
+
+ \sa gaiaFreeGeomColl, gaiaGeometryUnion, gaiaUnionUnion
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaUnionCascaded()
+
+ \remark \b GEOS support required.
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaUnionCascaded (gaiaGeomCollPtr geom);
 
 /**
  Spatial operator: Difference
@@ -824,6 +920,7 @@ extern "C"
  laying on the input Geometry and positioned at the given length fraction:
  NULL on failure.
 
+ \sa gaiaLineInterpolateEquidistantPoints
  \sa gaiaFreeGeomColl
 
  \note you are responsible to destroy (before or after) any allocated Geometry,
@@ -834,6 +931,30 @@ extern "C"
     GAIAGEO_DECLARE gaiaGeomCollPtr gaiaLineInterpolatePoint (gaiaGeomCollPtr
 							      ln_geom,
 							      double fraction);
+
+/**
+ Spatial operator: Line Interpolate Equidistant Points
+
+ \param ln_geom the input Geometry object [expected to be of lineal type]
+ \param distance regular distance between interpolated points
+
+ \return the pointer to newly created Geometry object representing a MultiPoint;
+ such MultiPoint always supports the M coordinate (the corresponding value
+ representing the progressive distance for each interpolated Point).
+ individual Points will be regularly spaced by the given distance:
+ NULL on failure.
+
+ \sa gaiaLineInterpolatePoint
+ \sa gaiaFreeGeomColl
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaLineInterpolateEquidistantPoints()
+
+ \remark \b GEOS-ADVANCED support required.
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr
+	gaiaLineInterpolateEquidistantPoints (gaiaGeomCollPtr ln_geom,
+					      double distance);
 
 /**
  Spatial operator: Line Substring
@@ -949,7 +1070,7 @@ extern "C"
  works internally to the input Geometry itself.
  NULL on failure.
 
- \sa gaiaFreeGeomColl, gaiaGeometryUnion
+ \sa gaiaFreeGeomColl, gaiaGeometryUnion, gaiaUnionCascaded
 
  \note you are responsible to destroy (before or after) any allocated Geometry,
  this including any Geometry returned by gaiaUnaryUnion()
@@ -1005,9 +1126,450 @@ extern "C"
     GAIAGEO_DECLARE int gaiaGeomCollCoveredBy (gaiaGeomCollPtr geom1,
 					       gaiaGeomCollPtr geom2);
 
-#endif				/* end GEOS advanced and experimental features */
+/**
+ Utility function: SquareGrid
+
+ \param geom the Geometry to be covered by the Grid.
+ \param origin_x the X ccordinate identifying the Grid Origin.
+ \param origin_y the Y coordinate identifiying the Grid Origin.
+ \param size the Grid cell-side size.
+ \param only_edges if non-zero will return a MULTILINESTRING, otherwise it will
+  return a MULTIPOLYGON containing square POLYGONs.
+ 
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n this function will always return a MultiPolygon 
+ \n NULL will be returned if any argument is invalid.
+
+ \sa gaiaFreeGeomColl, gaiaTriangularGrid, gaiaHexagonalGrid
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaSquareGrid()
+
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaSquareGrid (gaiaGeomCollPtr geom,
+						    double origin_x,
+						    double origin_y,
+						    double size,
+						    int only_edges);
+
+/**
+ Utility function: TriangularGrid
+
+ \param geom the Geometry to be covered by the Grid.
+ \param origin_x the X ccordinate identifying the Grid Origin.
+ \param origin_y the Y coordinate identifiying the Grid Origin.
+ \param size the Grid cell-side size.
+ \param only_edges if non-zero will return a MULTILINESTRING, otherwise it will
+  return a MULTIPOLYGON containing triangular POLYGONs.
+ 
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n this function will always return a MultiPolygon 
+ \n NULL will be returned if any argument is invalid.
+
+ \sa gaiaFreeGeomColl, gaiaSquareGrid, gaiaHexagonalGrid
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaTriangularGrid()
+
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaTriangularGrid (gaiaGeomCollPtr geom,
+							double origin_x,
+							double origin_y,
+							double size,
+							int only_edges);
+
+/**
+ Utility function: HexagonalGrid
+
+ \param geom the Geometry to be covered by the Grid.
+ \param origin_x the X ccordinate identifying the Grid Origin.
+ \param origin_y the Y coordinate identifiying the Grid Origin.
+ \param size the Grid cell-side size.
+ \param only_edges if non-zero will return a MULTILINESTRING, otherwise it will
+  return a MULTIPOLYGON containing hexagonal POLYGONs.
+ 
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n this function will always return a MultiPolygon 
+ \n NULL will be returned if any argument is invalid.
+
+ \sa gaiaFreeGeomColl, gaiaSquareGrid, gaiaTriangularGrid
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaHexagonalGrid()
+
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaHexagonalGrid (gaiaGeomCollPtr geom,
+						       double origin_x,
+						       double origin_y,
+						       double size,
+						       int only_edges);
+
+#endif				/* end GEOS advanced features */
+
+#ifndef DOXYGEN_SHOULD_IGNORE_THIS
+#ifdef GEOS_TRUNK
+#endif
+
+/**
+ Delaunay Triangulation
+                                            
+ \param geom pointer to input Geometry object.
+ \param tolerance optional snapping tolerance.
+ \param only_edges if non-zero will return a MULTILINESTRING, otherwise it will
+  return a MULTIPOLYGON containing triangular POLYGONs.
+ 
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n NULL will be returned if any argument is invalid.
+
+ \sa gaiaFreeGeomColl, gaiaVoronojDiagram, gaiaConcaveHull
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaDelaunayTriangulation()
+
+ \remark \b GEOS-TRUNK support required.
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaDelaunayTriangulation (gaiaGeomCollPtr
+							       geom,
+							       double tolerance,
+							       int only_edges);
+
+/**
+ Voronoj Diagram
+                                            
+ \param geom pointer to input Geometry object.
+ \param extra_frame_size percent factor expanding the BBOX of input Geometry
+ \param tolerance optional snapping tolerance.
+ \param only_edges if non-zero will return a MULTILINESTRING, otherwise it will
+  return a MULTIPOLYGON.
+ 
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n NULL will be returned if any argument is invalid.
+
+ \sa gaiaFreeGeomColl, gaiaDelaunayTriangulation
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaVoronojDiagram()
+
+ \remark \b GEOS-TRUNK support required.
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaVoronojDiagram (gaiaGeomCollPtr geom,
+							double extra_frame_size,
+							double tolerance,
+							int only_edges);
+
+/**
+ Concave Hull
+                                            
+ \param geom pointer to input Geometry object.
+ \param factor multiplier used for filtering Delaunay triangles: please read the note.
+ \param tolerance optional snapping tolerance.
+ \param allow_hows if FALSE any interior hole will be suppressed.
+ 
+ \return the pointer to newly created Geometry object (always of the Polygon type): 
+  NULL on failure.
+ \n NULL will be returned if any argument is invalid.
+
+ \sa gaiaFreeGeomColl, gaiaDelaunayTriangulation
+
+ \note This function will first create the Delauany Triangulation corresponding
+  to input Geometry, determining at the same time the \b standard \b deviation
+  for all edge's lengths.
+ \n Then in a second pass all Delaunay's triangles will be filtered, and all
+ triangles presenting at least one edge longer than \b standard \b deviation
+ \b * \b factor will be discarded. 
+ \n All filtered triangles will then be merged altogether so to create the Concave Hull.
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaConcaveHull()
+
+ \remark \b GEOS-TRUNK support required.
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaConcaveHull (gaiaGeomCollPtr geom,
+						     double factor,
+						     double tolerance,
+						     int allow_holes);
+
+#endif				/* end GEOS experimental features */
+
+#ifndef DOXYGEN_SHOULD_IGNORE_THIS
+#ifdef ENABLE_LWGEOM
+#endif
+
+/**
+ Utility function: MakeValid
+
+ \param geom the input Geometry object.
+
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n this function will attempt to create a valid representation of a given 
+ invalid geometry without loosing any of the input vertices. 
+ \n Already-valid geometries are returned without further intervention. 
+ \n NULL will be returned if the passed argument is invalid.
+
+ \sa gaiaFreeGeomColl, gaiaMakeValidDiscarded
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaMakeValid()
+
+ \remark \b LWGEOM support required.
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaMakeValid (gaiaGeomCollPtr geom);
+
+/**
+ Utility function: MakeValidDiscarded
+
+ \param geom the input Geometry object.
+
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n this function will attempt to collect any invalid item (offending
+ geometries) discarded by gaiaMakeValid while building a valid Geometry.
+ \n Saving any discarded item could be useful for a finer (manual) adjustment.
+ \n NULL will be returned if gaiaMakeValid hasn't identified any offending item 
+ to be discarded during the validation.
+
+ \sa gaiaFreeGeomColl, gaiaMakeValid
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaMakeValidDiscarded()
+
+ \remark \b LWGEOM support required.
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaMakeValidDiscarded (gaiaGeomCollPtr
+							    geom);
+
+/**
+ Utility function: Segmentize
+
+ \param geom the input Geometry object.
+ \param dist the meximum segment length.
+
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n this function will return a modified geometry having no segment longer than the given distance. 
+ \n Distance computation is performed in 2d only.
+ \n all Points or segments shorter than 'dist' will be returned without further intervention. 
+ \n NULL will be returned if the passed argument is invalid.
+
+ \sa gaiaFreeGeomColl
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaSegmentize()
+
+ \remark \b LWGEOM support required.
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaSegmentize (gaiaGeomCollPtr geom,
+						    double dist);
+
+/**
+ Utility function: Azimuth
+
+ \param xa the X ccordinate of PointA.
+ \param ya the Y coordinate of PointA.
+ \param xb the X ccordinate of PointB.
+ \param yb the Y coordinate of PointB.
+ \param azimuth on completion this variable will contain the angle in radians from 
+  the horizontal of the vector defined by pointA and pointB. 
+ \n Angle is computed clockwise from down-to-up: on the clock: 12=0; 3=PI/2; 6=PI; 9=3PI/2.
+
+ \return 0 on failure: any other value on success
+
+ \remark \b LWGEOM support required.
+ */
+    GAIAGEO_DECLARE int gaiaAzimuth (double xa, double ya, double xb,
+				     double yb, double *azimuth);
+
+/**
+ Utility function: GeoHash
+
+ \param geom the input geometry.
+ \param precision the expected precision: if <= 0 will be automatically determined.
+
+ \return NULL on failure: a null-terminated text string on success
+
+ \note you are responsible to free (before or after) any text string returned
+  by gaiaGeoHash()
+
+ \remark \b LWGEOM support required.
+ */
+    GAIAGEO_DECLARE char *gaiaGeoHash (gaiaGeomCollPtr geom, int precision);
+
+/**
+ Utility function: AsX3D
+
+ \param geom the input geometry.
+ \param srs the WKT SRS definition.
+ \param precision the expected precision (coord decimal digits).
+ \param options 
+ \param refid the X3D namespace
+
+ \return NULL on failure: a null-terminated text string on success
+
+ \note you are responsible to free (before or after) any text string returned
+  by gaiaAsX3D()
+
+ \remark \b LWGEOM support required.
+ */
+    GAIAGEO_DECLARE char *gaiaAsX3D (gaiaGeomCollPtr geom, const char *srs,
+				     int precision, int options,
+				     const char *defid);
+
+/**
+ Calculates the minimum 3D distance intercurring between two Geometry objects
+
+ \param geom1 the first Geometry object 
+ \param geom2 the second Geometry object 
+ \param dist on completion this variable will contain the calculated distance
+
+ \return 0 on failure: any other value on success.
+
+ \sa gaiaGeomCollDistance, gaiaMaxDistance, gaia3DMaxDisance
+
+ \note this function computes the 3D cartesian distance (if Z is supported)
+
+ \remark \b LWGEOM support required.
+ */
+    GAIAGEO_DECLARE int gaia3DDistance (gaiaGeomCollPtr geom1,
+					gaiaGeomCollPtr geom2, double *dist);
+
+/**
+ Calculates the maximum 2D distance intercurring between two Geometry objects
+
+ \param geom1 the first Geometry object 
+ \param geom2 the second Geometry object 
+ \param dist on completion this variable will contain the calculated distance
+
+ \return 0 on failure: any other value on success.
+
+ \sa gaiaGeomCollDistance, gaia3DDistance, gaia3DMaxDistance
+
+ \note this function computes the 2D maximum cartesian distance (Z is always ignored)
+
+ \remark \b LWGEOM support required.
+ */
+    GAIAGEO_DECLARE int gaiaMaxDistance (gaiaGeomCollPtr geom1,
+					 gaiaGeomCollPtr geom2, double *dist);
+
+/**
+ Calculates the maximum 3D distance intercurring between two Geometry objects
+
+ \param geom1 the first Geometry object 
+ \param geom2 the second Geometry object 
+ \param dist on completion this variable will contain the calculated distance
+
+ \return 0 on failure: any other value on success.
+
+ \sa gaiaGeomCollDistance, gaia3DDistance, gaiaMaxDistance
+
+ \note this function computes the 3D maximum cartesian distance (if Z is supported)
+
+ \remark \b LWGEOM support required.
+ */
+    GAIAGEO_DECLARE int gaia3DMaxDistance (gaiaGeomCollPtr geom1,
+					   gaiaGeomCollPtr geom2, double *dist);
+
+/**
+ Utility function: Split
+
+ \param input the input Geometry object.
+ \param blade the blade Geometry object.
+
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n The function supports splitting a line by point, a line by line, a polygon by line.
+
+ \sa gaiaFreeGeomColl, gaiaSplitLeft, gaiaSplitRight
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaSplit()
+ 
+ \note gaiaSplit will return both the \b left and the \b right split halves at the same time.
+
+ \remark \b LWGEOM support required.
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaSplit (gaiaGeomCollPtr input,
+					       gaiaGeomCollPtr blade);
+
+/**
+ Utility function: SplitLeft
+
+ \param input the input Geometry object.
+ \param blade the blade Geometry object.
+
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n The function supports splitting a line by point, a line by line, a polygon by line.
+
+ \sa gaiaFreeGeomColl, gaiaSplit, gaiaSplitRight
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaSplitLeft()
+ 
+ \note gaiaSplitLeft will only return the \b left split half; NULL may be eventually
+ returned if empty.
+
+ \remark \b LWGEOM support required.
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaSplitLeft (gaiaGeomCollPtr input,
+						   gaiaGeomCollPtr blade);
+
+/**
+ Utility function: SplitRight
+
+ \param input the input Geometry object.
+ \param blade the blade Geometry object.
+
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n The function supports splitting a line by point, a line by line, a polygon by line.
+
+ \sa gaiaFreeGeomColl, gaiaSplit, gaiaSplitLeft
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaSplitRight()
+ 
+ \note gaiaSplitLeft will only return the \b right split half; NULL may be eventually
+ returned if empty.
+
+ \remark \b LWGEOM support required.
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaSplitRight (gaiaGeomCollPtr input,
+						    gaiaGeomCollPtr blade);
+
+
+#endif				/* end LWGEOM support */
 
 #endif				/* end including GEOS */
+
+/**
+ Utility function: SnapToGrid
+
+ \param origin_x the X ccordinate identifying the Grid Origin.
+ \param origin_y the Y coordinate identifiying the Grid Origin.
+ \param size_x Grid cell size (X axis).
+ \param size_y Grid cell size (Y axis).
+ \param size_z Grid cell size (Z axis).
+ \param size_m Grid cell size (M axis).
+ 
+ \return the pointer to newly created Geometry object: NULL on failure.
+ \n this function will return a modified geometry having all points snapped to a regular Grid
+ defined by its origin and cell size.
+ \n Consecutive points falling on the same cell will be removed, eventually returning NULL if 
+ \n output points are not enough to define a geometry of the given type.
+ \n Collapsed geometries in a collection are stripped from it.
+ \n Specify 0 as size for any dimension you don't want to snap to a grid. 
+ \n NULL will be returned if the passed argument is invalid.
+
+ \sa gaiaFreeGeomColl
+
+ \note you are responsible to destroy (before or after) any allocated Geometry,
+ this including any Geometry returned by gaiaSnapToGrid()
+
+ */
+    GAIAGEO_DECLARE gaiaGeomCollPtr gaiaSnapToGrid (gaiaGeomCollPtr geom,
+						    double origin_x,
+						    double origin_y,
+						    double origin_z,
+						    double origin_m,
+						    double size_x,
+						    double size_y,
+						    double size_z,
+						    double size_m);
 
 #ifdef __cplusplus
 }

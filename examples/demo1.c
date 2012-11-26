@@ -18,6 +18,8 @@ redistribute it freely
 #include <stdio.h>
 #include <string.h>
 
+#include "config.h"
+
 /*
 these headers are required in order to support
 SQLite/SpatiaLite
@@ -351,6 +353,7 @@ for each column we'll then get:
 
   abort:
     sqlite3_close (handle);
+    spatialite_cleanup();
     if (p_geotables)
       {
 /* we have to free the dynamic pointer array used to store geotable names */

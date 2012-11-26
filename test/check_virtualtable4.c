@@ -41,9 +41,12 @@ the provisions above, a recipient may use your version of this file under
 the terms of any one of the MPL, the GPL or the LGPL.
  
 */
+#define _GNU_SOURCE
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "config.h"
 
 #include "sqlite3.h"
 #include "spatialite.h"
@@ -101,6 +104,7 @@ struct test_step steps[NUMSTEPS] = {
 
 int main (int argc, char *argv[])
 {
+#ifndef OMIT_FREEXL		/* only if FreeXL is supported */
     sqlite3 *db_handle = NULL;
     char *sql_statement;
     int ret;
@@ -340,6 +344,7 @@ int main (int argc, char *argv[])
 
     sqlite3_close (db_handle);
     spatialite_cleanup();
+#endif	/* end FreeXL conditional */
     
     return 0;
 }

@@ -52,6 +52,8 @@ the terms of any one of the MPL, the GPL or the LGPL.
 
 int main (int argc, char *argv[])
 {
+    int ret;
+    sqlite3 *handle;
     gaiaDynamicLinePtr dyn;
     gaiaDynamicLinePtr dyn2;
     gaiaDynamicLinePtr dyn3;
@@ -80,6 +82,12 @@ int main (int argc, char *argv[])
     gaiaOutBuffer wkt;
 
     spatialite_init (0);
+    ret = sqlite3_open_v2 (":memory:", &handle, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
+    if (ret != SQLITE_OK) {
+	fprintf(stderr, "cannot open in-memory db: %s\n", sqlite3_errmsg (handle));
+	sqlite3_close(handle);
+	return -1000;
+    }
     gaiaOutBufferInitialize (&wkt);
 
 /* testing Dynamic Line */
@@ -669,6 +677,37 @@ int main (int argc, char *argv[])
         return -51;
     }
 
+/* same, reversed line direction */
+    gaiaIntersect(&min, &max, 20.0, 10.0, 0.0, 10.0, 5.0, 20.0, 5.0, 0.0);
+    if (min != 5.0 || max != 10.0)
+    {
+    /* unexpected result */ 
+        fprintf(stderr, "gaiaIntersect: unexpected result %1.6f %1.6f|\n", min, max);
+        return -52;
+    }
+
+/* non-intersecting MBRs*/
+    min = -20;
+    max = -20;
+    gaiaIntersect(&min, &max, 20.0, 12.0, 0.0, 10.0, 25.0, 40.0, 45.0, 40.0);
+    if (min != -20 || max != -20)
+    { 
+    /* unexpected result */ 
+        fprintf(stderr, "gaiaIntersect: unexpected result %1.6f %1.6f|\n", min, max);  
+        return -53;
+    }
+
+/* Just intersecting */  
+    min = 0;
+    max = 0; 
+    gaiaIntersect(&min, &max, 0.0, 10.0, 20.0, 10.0, 5.0, 0.0, 5.0, 10.0);
+    if (min != 5.0 || max != 10.0)
+    {
+    /* unexpected result */
+        fprintf(stderr, "gaiaIntersect: unexpected result %1.6f %1.6f|\n", min, max);
+        return -54;
+    }
+
 /* cloning a Linestring XY */
     line1 = gaiaAllocLinestring(4);
     gaiaLineSetPoint(line1, 0, 1.1, 1.2, 100.1, 10.1);
@@ -945,6 +984,11 @@ int main (int argc, char *argv[])
     gaiaFreePolygon(polyg2);
     gaiaFreePolygon(polyg1);
 
+    ret = sqlite3_close (handle);
+    if (ret != SQLITE_OK) {
+        fprintf (stderr, "sqlite3_close() error: %s\n", sqlite3_errmsg (handle));
+	return -1001;
+    }
     spatialite_cleanup();
 
     return 0;

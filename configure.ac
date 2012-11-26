@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(libspatialite, 3.1.0-RC2, a.furieri@lqt.it)
+AC_INIT(libspatialite, 4.0.0, a.furieri@lqt.it)
 AC_LANG(C)
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -31,6 +31,10 @@ AH_TEMPLATE([OMIT_GEOS],
             [Should be defined in order to disable GEOS support.])
 AH_TEMPLATE([GEOS_ADVANCED],
             [Should be defined in order to enable GEOS_ADVANCED support.])
+AH_TEMPLATE([GEOS_TRUNK],
+            [Should be defined in order to enable GEOS_TRUNK experimental support.])
+AH_TEMPLATE([ENABLE_LWGEOM],
+            [Should be defined in order to enable LWGEOM support.])
 AH_TEMPLATE([OMIT_PROJ],
             [Should be defined in order to disable PROJ.4 support.])
 AH_TEMPLATE([OMIT_ICONV],
@@ -148,68 +152,6 @@ fi
 #-----------------------------------------------------------------------
 
 #-----------------------------------------------------------------------
-#   --enable-geos
-#
-AC_ARG_ENABLE(geos, [AS_HELP_STRING(
-  [--enable-geos], [enables GEOS inclusion [default=yes]])],
-  [], [enable_geos=yes])
-if test x"$enable_geos" != "xno"; then
-  #-----------------------------------------------------------------------
-  #   --with-geosconfig
-  #
-  AC_ARG_WITH([geosconfig],
-        [AS_HELP_STRING([--with-geosconfig=FILE], [specify an alternative geos-config file])],
-	[GEOSCONFIG="$withval"], [GEOSCONFIG=""])
-  if test "x$GEOSCONFIG" = "x"; then
-        # GEOSCONFIG was not specified, so search within the current path
-        AC_PATH_PROG([GEOSCONFIG], [geos-config])	
-        # If we couldn't find geos-config, display an error
-        if test "x$GEOSCONFIG" = "x"; then
-                AC_MSG_ERROR([could not find geos-config within the current path. You may need to try re-running configure with a --with-geosconfig parameter.])
-        fi
-  else
-        # GEOSCONFIG was specified; display a message to the user
-        if test "x$GEOSCONFIG" = "xyes"; then
-                AC_MSG_ERROR([you must specify a parameter to --with-geosconfig, e.g. --with-geosconfig=/path/to/geos-config])
-        else
-                if test -f $GEOSCONFIG; then
-                        AC_MSG_RESULT([Using user-specified geos-config file: $GEOSCONFIG])
-                else
-                        AC_MSG_ERROR([the user-specified geos-config file $GEOSCONFIG does not exist])
-                fi     
-        fi
-  fi
-  # Extract the linker and include flags
-  GEOS_LDFLAGS=`$GEOSCONFIG --ldflags`
-  GEOS_CPPFLAGS=-I`$GEOSCONFIG --includes`
-  AC_SUBST([GEOS_LDFLAGS])
-  AC_SUBST([GEOS_CPPFLAGS])	
-  # Ensure that we can parse geos_c.h
-  CPPFLAGS_SAVE="$CPPFLAGS"
-  CPPFLAGS="$GEOS_CPPFLAGS"
-  AC_CHECK_HEADERS([geos_c.h],, [AC_MSG_ERROR([could not find geos_c.h - you may need to specify the directory of a geos-config file using --with-geosconfig])])
-  CPPFLAGS="$CPPFLAGS_SAVE"	
-  # Ensure we can link against libgeos_c
-  LIBS_SAVE="$LIBS"
-  LIBS="$GEOS_LDFLAGS"
-  AC_SEARCH_LIBS(GEOSTopologyPreserveSimplify,geos_c,,AC_MSG_ERROR([could not find libgeos_c - you may need to specify the directory of a geos-config file using --with-geosconfig]))
-  LIBS="$LIBS_SAVE"
-
-  #-----------------------------------------------------------------------
-  #   --enable-geosadvanced
-  #
-  AC_ARG_ENABLE(geosadvanced, [AS_HELP_STRING(
-	  [--enable-geosadvanced], [enables GEOS advanced features [default=yes]])],
-	  [], [enable_geosadvanced=yes])
-  if test x"$enable_geosadvanced" != "xno"; then
-	  AC_SEARCH_LIBS(GEOSCoveredBy,geos_c,,AC_MSG_ERROR([obsolete 'libgeos_c' (< v.3.3.0). please retry specifying: --disable-geosadvanced.]))
-	  AC_DEFINE(GEOS_ADVANCED)
-  fi
-else
-  AC_DEFINE(OMIT_GEOS)
-fi
-
-#-----------------------------------------------------------------------
 #   --enable-iconv
 #
 AC_ARG_ENABLE(iconv, [AS_HELP_STRING(
@@ -252,6 +194,97 @@ if test x"$enable_epsg" != "xyes"; then
 fi
 #-----------------------------------------------------------------------
 
+#-----------------------------------------------------------------------
+#   --enable-geos
+#
+AC_ARG_ENABLE(geos, [AS_HELP_STRING(
+  [--enable-geos], [enables GEOS inclusion [default=yes]])],
+  [], [enable_geos=yes])
+if test x"$enable_geos" != "xno"; then
+  #-----------------------------------------------------------------------
+  #   --with-geosconfig
+  #
+  AC_ARG_WITH([geosconfig],
+        [AS_HELP_STRING([--with-geosconfig=FILE], [specify an alternative geos-config file])],
+	[GEOSCONFIG="$withval"], [GEOSCONFIG=""])
+  if test "x$GEOSCONFIG" = "x"; then
+        # GEOSCONFIG was not specified, so search within the current path
+        AC_PATH_PROG([GEOSCONFIG], [geos-config])	
+        # If we couldn't find geos-config, display an error
+        if test "x$GEOSCONFIG" = "x"; then
+                AC_MSG_ERROR([could not find geos-config within the current path. You may need to try re-running configure with a --with-geosconfig parameter.])
+        fi
+  else
+        # GEOSCONFIG was specified; display a message to the user
+        if test "x$GEOSCONFIG" = "xyes"; then
+                AC_MSG_ERROR([you must specify a parameter to --with-geosconfig, e.g. --with-geosconfig=/path/to/geos-config])
+        else
+                if test -f $GEOSCONFIG; then
+                        AC_MSG_RESULT([Using user-specified geos-config file: $GEOSCONFIG])
+                else
+                        AC_MSG_ERROR([the user-specified geos-config file $GEOSCONFIG does not exist])
+                fi     
+        fi
+  fi
+  # Extract the linker and include flags
+  GEOS_LDFLAGS=`$GEOSCONFIG --ldflags`
+  GEOS_CFLAGS=-I`$GEOSCONFIG --includes`
+  AC_SUBST([GEOS_LDFLAGS])
+  AC_SUBST([GEOS_CFLAGS])	
+  # Ensure that we can parse geos_c.h
+  CPPFLAGS_SAVE="$CPPFLAGS"
+  CPPFLAGS="$GEOS_CFLAGS"
+  AC_CHECK_HEADERS([geos_c.h],, [AC_MSG_ERROR([could not find geos_c.h - you may need to specify the directory of a geos-config file using --with-geosconfig])])
+  CPPFLAGS="$CPPFLAGS_SAVE"	
+  # Ensure we can link against libgeos_c
+  LIBS_SAVE="$LIBS"
+  LIBS="$GEOS_LDFLAGS"
+  AC_SEARCH_LIBS(GEOSTopologyPreserveSimplify,geos_c,,AC_MSG_ERROR([could not find libgeos_c - you may need to specify the directory of a geos-config file using --with-geosconfig]))
+  LIBS="$LIBS_SAVE"
+  LIBS=$LIBS$GEOS_LDFLAGS' -lgeos_c'
+
+  #-----------------------------------------------------------------------
+  #   --enable-geosadvanced
+  #
+  AC_ARG_ENABLE(geosadvanced, [AS_HELP_STRING(
+	  [--enable-geosadvanced], [enables GEOS advanced features [default=yes]])],
+	  [], [enable_geosadvanced=yes])
+  if test x"$enable_geosadvanced" != "xno"; then
+	  AC_SEARCH_LIBS(GEOSCoveredBy,geos_c,,AC_MSG_ERROR([obsolete 'libgeos_c' (< v.3.3.0). please retry specifying: --disable-geosadvanced.]))
+	  AC_DEFINE(GEOS_ADVANCED)
+  fi
+
+  #-----------------------------------------------------------------------
+  #   --enable-geostrunk
+  #
+  AC_ARG_ENABLE(geostrunk, [AS_HELP_STRING(
+	  [--enable-geostrunk], [enables GEOS-trunk experimental features [default=no]])],
+	  [], [enable_geostrunk=no])
+  if test x"$enable_geostrunk" != "xno"; then
+	  AC_SEARCH_LIBS(GEOSDelaunayTriangulation,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.4.0) is required but it doesn't seem to be installed on this system.]))
+	  AC_DEFINE(GEOS_TRUNK)
+  fi
+
+  #-----------------------------------------------------------------------
+  #   --enable-lwgeom
+  #
+  AC_ARG_ENABLE(lwgeom, [AS_HELP_STRING(
+	  [--enable-lwgeom], [enables LWGEOM support [default=no]])],
+	  [], [enable_lwgeom=no])
+  if test x"$enable_lwgeom" != "xno"; then
+	  AC_CHECK_HEADERS(liblwgeom.h,, [AC_MSG_ERROR([cannot find liblwgeom.h, bailing out])])
+	  _save_libs="$LIBS"
+	  LIBS=$LIBS' -llwgeom -lgeos_c'
+	  AC_LINK_IFELSE([AC_LANG_SOURCE([int main() { return lwgeom_make_valid(); return 0; }
+	    void lwgeom_init_allocators(void) { return; } ])],
+	    [AC_DEFINE(ENABLE_LWGEOM)],
+            [AC_MSG_ERROR(['liblwgeom' doesn't seem to be installed on this system; unsupported lwgeom_make_valid().])])
+	  LIBS="$_save_libs"
+	  LIBS=$LIBS' -llwgeom -lgeos_c'
+  fi
+else
+  AC_DEFINE(OMIT_GEOS)
+fi
 
 #-----------------------------------------------------------------------
 #    --enable-gcov
@@ -268,5 +301,7 @@ fi
 AM_CONDITIONAL([MINGW], [test "$target_alias" = "mingw32"])
 # Checking for Mac OsX
 AM_CONDITIONAL([MACOSX], [test "$target_alias" = "macosx"])
+# Checking for Android
+AM_CONDITIONAL([ANDROID], [test "$target_alias" = "android"])
 
 AC_OUTPUT
