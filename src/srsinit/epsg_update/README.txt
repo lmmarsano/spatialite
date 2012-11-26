@@ -11,8 +11,10 @@ STEP #1: getting the basic EPSG files
 
 # cd {gdal-sources}/data 
 # rm epsg
-# epsg_tr.py -proj4 -skip -list gcs.csv > epsg
-# epsg_tr.py -proj4 -skip -list pcs.csv >> epsg
+# epsg_tr.py --config OVERRIDE_PROJ_DATUM_WITH_TOWGS84 FALSE \
+#    -proj4 -skip -list gcs.csv > epsg
+# epsg_tr.py --config OVERRIDE_PROJ_DATUM_WITH_TOWGS84 FALSE \
+#    -proj4 -skip -list pcs.csv >> epsg
 # rm wkt
 # epsg_tr.py -wkt -skip -list gcs.csv > wkt
 # epsg_tr.py -wkt -skip -list pcs.csv >> wkt
@@ -26,7 +28,7 @@ next step:
 
 STEP #2: compiling the C generator tool
 --------
-# cd {libspatialite-source}/src/srcinit/epsg_update
+# cd {libspatialite-source}/src/srsinit/epsg_update
 
 Linux:
 # gcc auto_epsg.c -o auto_epsg
@@ -38,15 +40,18 @@ Windows [MinGW]:
 
 STEP #3: generating the C code [inlined EPSG dataset]
 --------
-# rm epsg_inlined.h
+# rm epsg_inlined_*.c
 # ./auto_epsg
 
-at the end of this step the "epsg_inlined.c" file will be generated
+at the end of this step several "epsg_inlined_*.c" files will be generated
 
 
 
 STEP #4: final setup
 --------
 - copy the generated file into the parent dir:
+  rm ../epsg_inlined_*.c
   cp epsg_inlined.c ..
+- be sure to update as required the repository (ADD/DEL)
+- be sure to update as required Makefile.am
 - and finally commit into the repository

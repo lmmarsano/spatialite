@@ -48,6 +48,8 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <stdio.h>
 #include <string.h>
 
+#include "config.h"
+
 #include "sqlite3.h"
 #include "spatialite.h"
 #include "spatialite/gaiageo.h"
@@ -56,9 +58,14 @@ static const double double_eps = 0.00000001;
 
 int main (int argc, char *argv[])
 {
+#ifndef OMIT_GEOS	/* only if GEOS is supported */
     int result;
     double resultDouble;
     int returnValue = 0;
+    gaiaGeomCollPtr geom;
+    gaiaGeomCollPtr g;
+    gaiaPolygonPtr pg;
+    gaiaRingPtr rng;
     
     /* Common setup */
     gaiaGeomCollPtr validGeometry = gaiaAllocGeomColl();
@@ -66,6 +73,7 @@ int main (int argc, char *argv[])
     double dummyResultArg2 = 0.0;
     
     /* Tests start here */
+    spatialite_init (0);
     
     /* null inputs for a range of geometry functions */
     result = gaiaGeomCollEquals(0, validGeometry);
@@ -257,6 +265,7 @@ int main (int argc, char *argv[])
 	goto exit;
     }
     
+#ifdef GEOS_ADVANCED	/* only if GEOS_ADVANCED is supported */
     result = gaiaHausdorffDistance(0, validGeometry, &dummyResultArg);
     if (result != 0) {
 	fprintf(stderr, "bad result at %s:%i: %i\n", __FILE__, __LINE__, result);
@@ -319,6 +328,7 @@ int main (int argc, char *argv[])
 	returnValue = -42;
 	goto exit;
     }
+#endif	/* end GEOS_ADVANCED conditional */
     
     result = gaiaGeomCollDistance(0, validGeometry, &dummyResultArg);
     if (result != 0) {
@@ -384,6 +394,7 @@ int main (int argc, char *argv[])
 	goto exit;
     }
     
+#ifdef GEOS_ADVANCED	/* only if GEOS_ADVANCED is supported */
     resultDouble = gaiaLineLocatePoint(0, validGeometry);
     if (abs (resultDouble - -1.0) > double_eps) {
 	fprintf(stderr, "bad result at %s:%i: %f\n", __FILE__, __LINE__, resultDouble);
@@ -406,7 +417,7 @@ int main (int argc, char *argv[])
     }
 
     /* geometry generating functionality */
-    gaiaGeomCollPtr geom = NULL;
+    geom = NULL;
     geom = gaiaLinesCutAtNodes(0, validGeometry);
     if (geom != NULL) {
 	gaiaFree(geom);
@@ -502,6 +513,7 @@ int main (int argc, char *argv[])
 	returnValue = -61;
 	goto exit;
     }
+#endif	/* end GEOS_ADVANCED conditional */
   
     geom = gaiaGeometryIntersection(0, validGeometry);
     if (geom != NULL) {
@@ -639,6 +651,7 @@ int main (int argc, char *argv[])
 	goto exit;
     }
 
+#ifdef GEOS_ADVANCED		/* only if GEOS_ADVANCED is supported */
     geom = gaiaOffsetCurve (0, 1.5, 10, 1);
     if (geom != NULL) {
 	gaiaFree(geom);
@@ -686,17 +699,95 @@ int main (int argc, char *argv[])
 	returnValue = -87;
 	goto exit;
     }
+#endif	/* end GEOS_ADVANCED conditional */
     
     /* Test some strange conditions */
     result = gaiaGeomCollLength(validGeometry, &dummyResultArg);
-    if (result != 2) {
+    if (result != 0) {
 	fprintf(stderr, "bad result at %s:%i: %i\n", __FILE__, __LINE__, result);
 	returnValue = -88;
 	goto exit;
     }
  
+    /* preparing a collection of Polygons */
+    geom = gaiaAllocGeomColl();
+    pg = gaiaAddPolygonToGeomColl(geom, 5, 1);
+    rng = pg->Exterior;
+    gaiaSetPoint(rng->Coords, 0, 1.5, 1.5);
+    gaiaSetPoint(rng->Coords, 1, 10.5, 1.5);
+    gaiaSetPoint(rng->Coords, 2, 10.5, 10.5);
+    gaiaSetPoint(rng->Coords, 3, 1.5, 10.5);
+    gaiaSetPoint(rng->Coords, 4, 1.5, 1.5);
+    rng = gaiaAddInteriorRing(pg, 0, 5);
+    gaiaSetPoint(rng->Coords, 0, 5.5, 5.5);
+    gaiaSetPoint(rng->Coords, 1, 6.5, 1.5);
+    gaiaSetPoint(rng->Coords, 2, 6.5, 6.5);
+    gaiaSetPoint(rng->Coords, 3, 5.5, 6.5);
+    gaiaSetPoint(rng->Coords, 4, 5.5, 5.5);
+    pg = gaiaAddPolygonToGeomColl(geom, 5, 1);
+    rng = pg->Exterior;
+    gaiaSetPoint(rng->Coords, 0, 8.5, 8.5);
+    gaiaSetPoint(rng->Coords, 1, 18.5, 8.5);
+    gaiaSetPoint(rng->Coords, 2, 18.5, 18.5);
+    gaiaSetPoint(rng->Coords, 3, 8.5, 18.5);
+    gaiaSetPoint(rng->Coords, 4, 8.5, 8.5);
+    rng = gaiaAddInteriorRing(pg, 0, 5);
+    gaiaSetPoint(rng->Coords, 0, 11.5, 11.5);
+    gaiaSetPoint(rng->Coords, 1, 12.5, 11.5);
+    gaiaSetPoint(rng->Coords, 2, 12.5, 12.5);
+    gaiaSetPoint(rng->Coords, 3, 11.5, 12.5);
+    gaiaSetPoint(rng->Coords, 4, 11.5, 11.5);
+    pg = gaiaAddPolygonToGeomColl(geom, 5, 0);
+    rng = pg->Exterior;
+    gaiaSetPoint(rng->Coords, 0, 4.5, 4.5);
+    gaiaSetPoint(rng->Coords, 1, 30.5, 4.5);
+    gaiaSetPoint(rng->Coords, 2, 30.5, 30.5);
+    gaiaSetPoint(rng->Coords, 3, 4.5, 30.5);
+    gaiaSetPoint(rng->Coords, 4, 4.5, 4.5);
+
+#ifdef GEOS_ADVANCED	/* only if GEOS_ADVANCED is supported */
+    /* Tests Polygons UnaryUnion [as in aggregate ST_Union] */
+    g = gaiaUnaryUnion(geom);
+    if (g == NULL) {
+	fprintf(stderr, "bad result at %s:%i\n", __FILE__, __LINE__);
+	returnValue = -89;
+	goto exit;
+    }
+    result = gaiaGeomCollLength(g, &dummyResultArg);
+    if (result == 1 && (dummyResultArg >= 122.84232 && dummyResultArg <= 122.84233))
+        ;
+    else {
+	fprintf(stderr, "bad result at %s:%i: %i %f\n", __FILE__, __LINE__, result, dummyResultArg);
+	returnValue = -90;
+	goto exit;
+    }
+    gaiaFreeGeomColl(g);
+#endif	/* end GEOS_ADVANCED conditional */
+ 
+    /* Tests Polygons UnionCascaded [as in aggregate ST_Union] */
+    g = gaiaUnionCascaded(geom);
+    if (g == NULL) {
+	fprintf(stderr, "bad result at %s:%i\n", __FILE__, __LINE__);
+	returnValue = -91;
+	goto exit;
+    }
+    result = gaiaGeomCollLength(g, &dummyResultArg);
+    if (result == 1 && (dummyResultArg >= 122.84232 && dummyResultArg <= 122.84233))
+        ;
+    else {
+	fprintf(stderr, "bad result at %s:%i: %i %f\n", __FILE__, __LINE__, result, dummyResultArg);
+	returnValue = -92;
+	goto exit;
+    }
+    gaiaFreeGeomColl(g);
+    gaiaFreeGeomColl(geom);
+
     /* Cleanup and exit */
 exit:
     gaiaFreeGeomColl (validGeometry);
+    spatialite_cleanup();
     return returnValue;
+
+#endif	/* end GEOS conditional */
+    return 0;
 }

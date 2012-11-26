@@ -18,6 +18,8 @@ redistribute it freely
 #include <stdio.h>
 #include <string.h>
 
+#include "config.h"
+
 /*
 these headers are required in order to support
 SQLite/SpatiaLite
@@ -535,5 +537,6 @@ we have to destroy each object using temporary storage before exit
     if (geo_coll)
 	gaiaFreeGeomColl (geo_coll);
     sqlite3_close (handle);
+    spatialite_cleanup();
     return 0;
 }

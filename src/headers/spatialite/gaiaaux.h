@@ -1,7 +1,7 @@
 /* 
  gaiaaux.h -- Gaia common utility functions
   
- version 3.0, 2011 July 20
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -23,7 +23,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -180,7 +180,7 @@ extern "C"
 
  \return the formatted string: NULL on failure
 
- \sa gaiaQuotedSql
+ \sa gaiaQuotedSql, gaiaDequotedSql
  
  \note this function simply is a convenience method corresponding to: 
  gaiaQuotedSQL(value, GAIA_SQL_SINGLE_QUOTE);
@@ -196,7 +196,7 @@ extern "C"
 
  \return the formatted string: NULL on failure
 
- \sa gaiaQuotedSql
+ \sa gaiaQuotedSql, gaiaDequotedSql
  
  \note this function simply is a convenience method corresponding to: 
  gaiaQuotedSQL(value, GAIA_SQL_DOUBLE_QUOTE);
@@ -213,7 +213,7 @@ extern "C"
 
  \return the formatted string: NULL on failure
 
- \sa gaiaSingleQuotedSql, gaiaDoubleQuotedSql
+ \sa gaiaSingleQuotedSql, gaiaDoubleQuotedSql, gaiaDequotedSql
 
  \note this function can safely handle strings of arbitrary length,
  and will return the formatted string into a dynamically allocated buffer 
@@ -221,6 +221,22 @@ extern "C"
  You are required to explicitly free() any string returned by this function.
  */
     GAIAAUX_DECLARE char *gaiaQuotedSql (const char *value, int quote);
+
+/**
+ Properly formats an SQL generic string (dequoting)
+
+ \param value the string to be dequoted
+
+ \return the formatted string: NULL on failure
+
+ \sa gaiaSingleQuotedSql, gaiaDoubleQuotedSql, gaiaQuotedSql
+
+ \note this function can safely handle strings of arbitrary length,
+ and will return the formatted string into a dynamically allocated buffer 
+ created by malloc(). 
+ You are required to explicitly free() any string returned by this function.
+ */
+    GAIAAUX_DECLARE char *gaiaDequotedSql (const char *value);
 
 /*
 / DEPRECATED FUNCTION: gaiaCleanSqlString()
@@ -242,6 +258,40 @@ extern "C"
  as a safest replacement.
  */
     GAIAAUX_DECLARE void gaiaCleanSqlString (char *value);
+
+/**
+ SQL log: statement start
+
+ \param sqlite handle of the current DB connection
+ \param user_agent name of the invoking application, e.g. "spatialite_gui" or "spatialite CLI"
+ \param utf8Sql the SQL statement bein executed
+ \param sqllog_pk after completion this variable will contain the value
+  of the Primary Key identifying the corresponding Log event
+
+ \sa gaiaUpdateSqlLog
+
+ \note this function inserts an \i event into the SQL Log, and
+  is expected to be invoked immediately \b before executing the SQL
+  statement itself.
+ */
+    GAIAAUX_DECLARE void gaiaInsertIntoSqlLog(sqlite3 *sqlite, const char *user_agent, const char *utf8Sql, sqlite3_int64 *sqllog_pk);
+
+/**
+ SQL log: statement start
+
+ \param sqlite handle of the current DB connection
+ \param sqllog_pk the Primary Key identifying the corresponding Log event.
+ \n expected to be exactely the same returned by the most recent call to gaiaInsertIntoSqlLog()
+ \param success expected to be TRUE if the SQL statement was succesfully executed.
+ \param errMsg expected to be the error message returned by SQLite on failure, NULL on success.
+
+ \sa gaiaInsertIntoSqlLog
+
+ \note this function completes an \i event inserted into the SQL Log, and
+  is expected to be invoked immediately \b after executing the SQL
+  statement itself.
+ */
+    GAIAAUX_DECLARE void gaiaUpdateSqlLog(sqlite3 *sqlite, sqlite3_int64 sqllog_pk, int success, const char *errMsg);
 
 #ifdef __cplusplus
 }

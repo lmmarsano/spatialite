@@ -1,7 +1,7 @@
 /*
  gg_const.h -- Gaia common support for geometries: constants
   
- version 3.0, 2011 July 20
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -23,7 +23,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -59,6 +59,56 @@ the terms of any one of the MPL, the GPL or the LGPL.
 extern "C"
 {
 #endif
+
+/* constant values for getVectorLayersList modes */
+
+/** mode: FAST */
+#define GAIA_VECTORS_LIST_FAST		0
+
+/** mode: OPTIMISTIC */
+#define GAIA_VECTORS_LIST_OPTIMISTIC	1
+
+/** mode: PESSIMISTIC */
+#define GAIA_VECTORS_LIST_PESSIMISTIC	2
+
+/* constant values for Vector Layer Types */
+
+/** Vector Layer: unknown type */
+#define GAIA_VECTOR_UNKNOWN	-1
+/** Vector Layer: Spatial Table */
+#define GAIA_VECTOR_TABLE	1
+/** Vector Layer: Spatial View */
+#define GAIA_VECTOR_VIEW	2
+/** Vector Layer: Virtual Shape */
+#define GAIA_VECTOR_VIRTUAL	3
+
+/* constant values for Vector Layer Geometry Types */
+
+/** Vector Layer Geometry: Geometry */
+#define GAIA_VECTOR_GEOMETRY		0
+/** Vector Layer Geometry: Point */
+#define GAIA_VECTOR_POINT		1
+/** Vector Layer Geometry: Linestring */
+#define GAIA_VECTOR_LINESTRING		2
+/** Vector Layer Geometry: Polygon */
+#define GAIA_VECTOR_POLYGON		3
+/** Vector Layer Geometry: MultiPoint */
+#define GAIA_VECTOR_MULTIPOINT		4
+/** Vector Layer Geometry: MultiLinestring */
+#define GAIA_VECTOR_MULTILINESTRING	5
+/** Vector Layer Geometry: MultiPolygon */
+#define GAIA_VECTOR_MULTIPOLYGON	6
+/** Vector Layer Geometry: GeometryCollection */
+#define GAIA_VECTOR_GEOMETRYCOLLECTION	7
+
+/* constant values for Spatial Index */
+
+/** Vector Layer: no Spatial Index */
+#define GAIA_SPATIAL_INDEX_NONE		0
+/** Vector Layer: Spatial Index RTree */
+#define GAIA_SPATIAL_INDEX_RTREE	1
+/** Vector Layer: Spatial Index MbrCache */
+#define GAIA_SPATIAL_INDEX_MBRCACHE	2
 
 /* constant values for generic geometry classes */
 

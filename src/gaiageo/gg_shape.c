@@ -2,7 +2,7 @@
 
  gg_shape.c -- Gaia shapefile handling
   
- version 3.0, 2011 July 20
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -24,7 +24,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -51,7 +51,11 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <float.h>
 #include <errno.h>
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+#include "config-msvc.h"
+#else
 #include "config.h"
+#endif
 
 #if OMIT_ICONV == 0		/* if ICONV is disabled no SHP support is available */
 
@@ -67,10 +71,10 @@ extern const char *locale_charset (void);
 #include <localcharset.h>
 #endif /* end localcharset */
 #else /* not MINGW32 */
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(__ANDROID__)
 #include <iconv.h>
 #include <localcharset.h>
-#else /* not Mac OsX */
+#else /* neither Mac OsX nor Android */
 #include <iconv.h>
 #include <langinfo.h>
 #endif
@@ -1197,6 +1201,7 @@ shp_add_ring (struct shp_ring_collection *ringsColl, gaiaRingPtr ring)
 /* inserting a ring into the rings collection */
     struct shp_ring_item *p = malloc (sizeof (struct shp_ring_item));
     p->Ring = ring;
+    gaiaMbrRing (ring);
     gaiaClockwise (ring);
 /* accordingly to SHP rules interior/exterior depends on direction */
     p->IsExterior = ring->Clockwise;
@@ -1264,8 +1269,28 @@ shp_check_rings (gaiaRingPtr exterior, gaiaRingPtr candidate)
     ret0 = gaiaIsPointOnRingSurface (exterior, x0, y0);
 /* testing if the second point falls on the exterior ring surface */
     ret1 = gaiaIsPointOnRingSurface (exterior, x1, y1);
+    if (ret0 || ret1)
+	return 1;
+    return 0;
+}
 
-    if (ret0 && ret1)
+static int
+shp_mbr_contains (gaiaRingPtr r1, gaiaRingPtr r2)
+{
+/* checks if the first Ring contains the second one - MBR based */
+    int ok_1 = 0;
+    int ok_2 = 0;
+    int ok_3 = 0;
+    int ok_4 = 0;
+    if (r2->MinX >= r1->MinX && r2->MinX <= r1->MaxX)
+	ok_1 = 1;
+    if (r2->MaxX >= r1->MinX && r2->MaxX <= r1->MaxX)
+	ok_2 = 1;
+    if (r2->MinY >= r1->MinY && r2->MinY <= r1->MaxY)
+	ok_3 = 1;
+    if (r2->MaxY >= r1->MinY && r2->MaxY <= r1->MaxY)
+	ok_4 = 1;
+    if (ok_1 && ok_2 && ok_3 && ok_4)
 	return 1;
     return 0;
 }
@@ -1289,7 +1314,8 @@ shp_arrange_rings (struct shp_ring_collection *ringsColl)
 		while (pInt != NULL)
 		  {
 		      /* looping on Interior Rings */
-		      if (pInt->IsExterior == 0 && pInt->Mother == NULL)
+		      if (pInt->IsExterior == 0 && pInt->Mother == NULL
+			  && shp_mbr_contains (pExt->Ring, pInt->Ring))
 			{
 			    /* ok, matches */
 			    if (shp_check_rings (pExt->Ring, pInt->Ring))
@@ -4153,6 +4179,7 @@ gaiaShpAnalyze (gaiaShapefilePtr shp)
     int multi = 0;
     int hasM = 0;
     int current_row = 0;
+
     gaiaRingPtr ring = NULL;
     while (1)
       {
@@ -4211,7 +4238,12 @@ gaiaShpAnalyze (gaiaShapefilePtr shp)
 	      || shape == GAIA_SHP_POLYGONM)
 	    {
 		/* shape polygon */
-		polygons = 0;
+		struct shp_ring_item *pExt;
+		struct shp_ring_collection ringsColl;
+		/* initializing the RING collection */
+		ringsColl.First = NULL;
+		ringsColl.Last = NULL;
+
 		rd = fread (shp->BufShp, sizeof (unsigned char), 32,
 			    shp->flShp);
 		if (rd != 32)
@@ -4252,23 +4284,20 @@ gaiaShpAnalyze (gaiaShapefilePtr shp)
 			    start++;
 			    points++;
 			}
-		      if (!polygons)
-			{
-			    /* this one is the first POLYGON */
-			    polygons = 1;
-			}
-		      else
-			{
-			    gaiaClockwise (ring);
-			    if (ring->Clockwise)
-			      {
-				  /* this one is a different POLYGON exterior ring - we need to allocate e new POLYGON */
-				  polygons++;
-			      }
-			}
-		      gaiaFreeRing (ring);
+		      shp_add_ring (&ringsColl, ring);
 		      ring = NULL;
 		  }
+		shp_arrange_rings (&ringsColl);
+		pExt = ringsColl.First;
+		polygons = 0;
+		while (pExt != NULL)
+		  {
+		      if (pExt->IsExterior)
+			  polygons++;
+		      pExt = pExt->Next;
+		  }
+		shp_free_rings (&ringsColl);
+
 		if (polygons > 1)
 		    multi++;
 		if (shape == GAIA_SHP_POLYGONZ)

@@ -2,7 +2,7 @@
 
  gaia_exif.c -- Gaia EXIF support
   
- version 3.0, 2011 July 20
+ version 4.0, 2012 August 6
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -24,7 +24,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008
+Portions created by the Initial Developer are Copyright (C) 2008-2012
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -51,7 +51,11 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <float.h>
 #include <string.h>
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+#include "config-msvc.h"
+#else
 #include "config.h"
+#endif
 
 #include <spatialite/sqlite.h>
 
@@ -2172,15 +2176,15 @@ gaiaExifTagGetHumanReadable (const gaiaExifTagPtr tag, char *str, int len,
 		  case 11:
 		      human = "Shade";
 		  case 12:
-		      human = "Daylight fluorescent (D 5700 – 7100K)";
+		      human = "Daylight fluorescent (D 5700 - 7100K)";
 		      break;
 		  case 13:
-		      human = "Day white fluorescent (N 4600 – 5400K)";
+		      human = "Day white fluorescent (N 4600 - 5400K)";
 		      break;
 		  case 14:
-		      human = "Cool white fluorescent (W 3900 – 4500K)";
+		      human = "Cool white fluorescent (W 3900 - 4500K)";
 		  case 15:
-		      human = "White fluorescent (WW 3200 – 3700K)";
+		      human = "White fluorescent (WW 3200 - 3700K)";
 		      break;
 		  case 17:
 		      human = "Standard light A";
@@ -2378,6 +2382,8 @@ gaiaGuessBlobType (const unsigned char *blob, int size)
     unsigned char zip_signature[4];
     unsigned char tiff_signature_little[4];
     unsigned char tiff_signature_big[4];
+    unsigned char riff_signature[4];
+    unsigned char webp_signature[8];
     jpeg1_signature[0] = 0xff;
     jpeg1_signature[1] = 0xd8;
     jpeg2_signature[0] = 0xff;
@@ -2414,6 +2420,18 @@ gaiaGuessBlobType (const unsigned char *blob, int size)
     tiff_signature_big[1] = 'M';
     tiff_signature_big[2] = 0x00;
     tiff_signature_big[3] = 0x2a;
+    riff_signature[0] = 'R';
+    riff_signature[1] = 'I';
+    riff_signature[2] = 'F';
+    riff_signature[3] = 'F';
+    webp_signature[0] = 'W';
+    webp_signature[1] = 'E';
+    webp_signature[2] = 'B';
+    webp_signature[3] = 'P';
+    webp_signature[4] = 'V';
+    webp_signature[5] = 'P';
+    webp_signature[6] = '8';
+    webp_signature[7] = ' ';
     if (size < 1 || !blob)
 	return GAIA_HEX_BLOB;
     if (size > 4)
@@ -2484,6 +2502,12 @@ gaiaGuessBlobType (const unsigned char *blob, int size)
 	return GAIA_EXIF_BLOB;
     if (jpeg)
 	return GAIA_JPEG_BLOB;
+    if (size > 16)
+      {
+	  if ((memcmp (blob, riff_signature, 4) == 0) &&
+	      (memcmp (blob + 8, webp_signature, 8) == 0))
+	      return GAIA_WEBP_BLOB;
+      }
 /* testing for GEOMETRY */
     if (size < 45)
 	geom = 0;

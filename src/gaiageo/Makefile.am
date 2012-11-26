@@ -1,7 +1,7 @@
 
 SUBDIRS = flex lemon
 
-INCLUDES = @CFLAGS@
+INCLUDES = @CFLAGS@ @GEOS_CFLAGS@
 INCLUDES += -I$(top_srcdir)/src/headers
 
 noinst_LTLIBRARIES = libgaiageo.la
@@ -12,6 +12,8 @@ libgaiageo_la_SOURCES = gg_advanced.c \
 	gg_geometries.c \
 	gg_geoscvt.c \
 	gg_relations.c \
+	gg_lwgeom.c \
+	gg_extras.c \
 	gg_shape.c \
 	gg_transform.c \
 	gg_wkb.c \
@@ -20,7 +22,8 @@ libgaiageo_la_SOURCES = gg_advanced.c \
 	gg_ewkt.c \
 	gg_geoJSON.c \
 	gg_kml.c \
-	gg_gml.c
+	gg_gml.c \
+	gg_voronoj.c
 
 MOSTLYCLEANFILES = *.gcna *.gcno *.gcda
 

@@ -41,6 +41,7 @@ the provisions above, a recipient may use your version of this file under
 the terms of any one of the MPL, the GPL or the LGPL.
  
 */
+#define _GNU_SOURCE
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -60,7 +61,6 @@ int main (int argc, char *argv[])
     char *sql_statement;
     int ret;
     char *err_msg = NULL;
-    int i;
     char **results;
     int rows;
     int columns;
@@ -118,6 +118,8 @@ int main (int argc, char *argv[])
       sqlite3_free (err_msg);
       return -13;
     }
+
+#ifndef OMIT_GEOS	/* only if GEOS is supported */
     if ((rows != 1) || (columns != 1)) {
 	fprintf (stderr, "Unexpected error: geos_version() bad result: %i/%i.\n", rows, columns);
 	return  -14;
@@ -128,6 +130,13 @@ int main (int argc, char *argv[])
 	return  -15;
     }
     sqlite3_free_table (results);
+#else	/* GEOS is not supported */
+    /* in this case we expect a NULL */
+    if (results[1] != NULL) {
+	fprintf (stderr, "Unexpected error: geos_version() bad result.\n");
+	return  -15;
+    }
+#endif	/* end GEOS conditional */
 
     
     asprintf(&sql_statement, "SELECT proj4_version()");
@@ -142,13 +151,22 @@ int main (int argc, char *argv[])
 	fprintf (stderr, "Unexpected error: proj4_version() bad result: %i/%i.\n", rows, columns);
 	return  -14;
     }
+
+#ifndef OMIT_PROJ	/* only if PROJ is supported */
     /* we tolerate any string here, because versions always change */
     if (strlen(results[1]) == 0) {
 	fprintf (stderr, "Unexpected error: proj4_version() bad result.\n");
 	return  -15;
     }
-    sqlite3_free_table (results);
- 
+#else	/* PROJ is not supported */
+    /* in this case we expect a NULL */
+    if (results[1] != NULL) {
+	fprintf (stderr, "Unexpected error: proj4_version() bad result.\n");
+	return  -15;
+    }
+#endif	/* end PROJ conditional */
+
+    sqlite3_free_table (results); 
     sqlite3_close (db_handle);
     spatialite_cleanup();
     
