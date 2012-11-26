@@ -17,15 +17,15 @@ Forwarded: no
 +AUTOMAKE_OPTIONS = dist-zip foreign
  
  EXTRA_DIST = makefile.vc nmake.opt Android.mk mainpage.doxy README.coverage \
- 	spatialite-sql-latest.html
+ 	spatialite-sql-latest.html config-msvc.h
 --- spatialite.orig/Makefile.in
 +++ spatialite/Makefile.in
-@@ -263,7 +263,7 @@ top_build_prefix = @top_build_prefix@
+@@ -285,7 +285,7 @@ top_build_prefix = @top_build_prefix@
  top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
  ACLOCAL_AMFLAGS = -I m4
 -AUTOMAKE_OPTIONS = dist-zip
 +AUTOMAKE_OPTIONS = dist-zip foreign
  EXTRA_DIST = makefile.vc nmake.opt Android.mk mainpage.doxy README.coverage \
- 	spatialite-sql-latest.html
+ 	spatialite-sql-latest.html config-msvc.h
  
