@@ -6,8 +6,9 @@ spatialite (4.0.0-1) UNRELEASED; urgency=low
   * Debhelper compatibility bumped to 9.
   * Standards-Version bump to 3.9.4, no changes needed.
   * Also build a debugging symbols package: libspatialite3-dbg.
+  * SONAME bump: from libspatialite3 to libspatialite5.
 
- -- David Paleino <dapal@debian.org>  Thu, 04 Oct 2012 11:40:53 +0200
+ -- David Paleino <dapal@debian.org>  Thu, 29 Nov 2012 21:43:17 +0100
 
 spatialite (3.1.0~rc2-1) unstable; urgency=low
 

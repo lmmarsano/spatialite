@@ -20,7 +20,7 @@ Homepage: http://www.gaia-gis.it/spatialite/
 Vcs-Browser: http://git.debian.org/?p=pkg-grass/spatialite.git
 Vcs-Git: git://git.debian.org/pkg-grass/spatialite.git
 
-Package: libspatialite3
+Package: libspatialite5
 Architecture: any
 Section: libs
 Breaks: spatialite-bin (<< 3.0.0-1~)
@@ -40,7 +40,7 @@ Package: libspatialite-dev
 Architecture: any
 Section: libdevel
 Depends:
- libspatialite3 (= ${binary:Version})
+ libspatialite5 (= ${binary:Version})
  , ${shlibs:Depends}
  , ${misc:Depends}
  , libsqlite3-dev (>= 3.3.6)
@@ -54,11 +54,11 @@ Description: Geospatial extension for SQLite - development files
  .
  This package contains development (static libraries and header files).
 
-Package: libspatialite3-dbg
+Package: libspatialite5-dbg
 Architecture: any
 Section: debug
 Depends:
- libspatialite3 (= ${binary:Version})
+ libspatialite5 (= ${binary:Version})
  , ${shlibs:Depends}
  , ${misc:Depends}
 Description: Geospatial extension for SQLite - debugging symbols
