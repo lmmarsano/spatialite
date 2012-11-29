@@ -7,8 +7,9 @@ spatialite (4.0.0-1) UNRELEASED; urgency=low
   * Standards-Version bump to 3.9.4, no changes needed.
   * Also build a debugging symbols package: libspatialite3-dbg.
   * SONAME bump: from libspatialite3 to libspatialite5.
+  * Updated symbols file.
 
- -- David Paleino <dapal@debian.org>  Thu, 29 Nov 2012 21:43:17 +0100
+ -- David Paleino <dapal@debian.org>  Thu, 29 Nov 2012 21:46:44 +0100
 
 spatialite (3.1.0~rc2-1) unstable; urgency=low
 
