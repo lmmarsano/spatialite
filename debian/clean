@@ -1,0 +1,2 @@
+test/*.sqlite
+test/sql_stmt_tests/*.sqlite
