@@ -1,6 +1,6 @@
-usr/lib/libspatialite.a
-usr/lib/libspatialite.so
+usr/lib/*/libspatialite.a
+usr/lib/*/libspatialite.so
 usr/include
-usr/lib/pkgconfig/spatialite.pc
+usr/lib/*/pkgconfig/spatialite.pc
 
 debian/EPSG.powerpc	usr/share/doc/libspatialite-dev/
