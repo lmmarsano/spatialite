@@ -8,8 +8,10 @@ spatialite (4.0.0-1) UNRELEASED; urgency=low
   * Also build a debugging symbols package: libspatialite3-dbg.
   * SONAME bump: from libspatialite3 to libspatialite5.
   * Updated symbols file.
+  * Backup and restore test databases, they get modified during
+    build-time tests.
 
- -- David Paleino <dapal@debian.org>  Thu, 29 Nov 2012 21:46:44 +0100
+ -- David Paleino <dapal@debian.org>  Sat, 01 Dec 2012 12:18:49 +0100
 
 spatialite (3.1.0~rc2-1) unstable; urgency=low
 

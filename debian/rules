@@ -33,6 +33,15 @@ override_dh_auto_configure:
 		$(EPSG) \
 		--enable-proj
 
+override_dh_auto_test:
+	mkdir -p debian/backup/stmt
+	cp test/*.sqlite debian/backup/
+	cp test/sql_stmt_tests/*.sqlite debian/backup/stmt/
+	dh_auto_test
+	cp debian/backup/stmt/*.sqlite test/sql_stmt_tests/
+	cp debian/backup/*.sqlite test/
+	rm -rf debian/backup
+
 override_dh_shlibdeps:
 	dh_shlibdeps -l/usr/lib:$(CURDIR)/debian/tmp/usr/lib
 
