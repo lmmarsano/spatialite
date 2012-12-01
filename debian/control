@@ -24,6 +24,8 @@ Package: libspatialite5
 Architecture: any
 Section: libs
 Breaks: spatialite-bin (<< 3.0.0-1~)
+Multi-Arch: same
+Pre-Depends: multiarch-support
 Depends:
  ${shlibs:Depends}
  , ${misc:Depends}
@@ -39,6 +41,7 @@ Description: Geospatial extension for SQLite - libraries
 Package: libspatialite-dev
 Architecture: any
 Section: libdevel
+Multi-Arch: same
 Depends:
  libspatialite5 (= ${binary:Version})
  , ${shlibs:Depends}
@@ -57,6 +60,7 @@ Description: Geospatial extension for SQLite - development files
 Package: libspatialite5-dbg
 Architecture: any
 Section: debug
+Multi-Arch: same
 Depends:
  libspatialite5 (= ${binary:Version})
  , ${shlibs:Depends}

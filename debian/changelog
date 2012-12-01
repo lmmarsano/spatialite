@@ -10,8 +10,9 @@ spatialite (4.0.0-1) UNRELEASED; urgency=low
   * Updated symbols file.
   * Backup and restore test databases, they get modified during
     build-time tests.
+  * Multi-archified package.
 
- -- David Paleino <dapal@debian.org>  Sat, 01 Dec 2012 12:18:49 +0100
+ -- David Paleino <dapal@debian.org>  Sat, 01 Dec 2012 12:55:35 +0100
 
 spatialite (3.1.0~rc2-1) unstable; urgency=low
 
