@@ -1,3 +1,10 @@
+spatialite (3.1.0~rc2-2) UNRELEASED; urgency=low
+
+  * Added 08-split_code.patch: split Spatial Reference System initialization
+    code to multiple files, to avoid a GCC bug on some arches (Closes: #664547)
+
+ -- David Paleino <dapal@debian.org>  Sat, 19 Jan 2013 18:59:37 +0100
+
 spatialite (3.1.0~rc2-1) unstable; urgency=low
 
   * New upstream release candidate.

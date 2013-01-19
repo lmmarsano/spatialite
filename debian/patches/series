@@ -3,3 +3,4 @@
 #05-dont_relink.patch
 #06-fix_soname.patch
 07-fix_spatialite_pc.patch
+08-split_code.patch
