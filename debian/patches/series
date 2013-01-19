@@ -5,3 +5,4 @@
 04-fix_missing_define.patch
 05-fix_libgeos_search.patch
 06-freexl_compat.patch
+07-split_source.patch

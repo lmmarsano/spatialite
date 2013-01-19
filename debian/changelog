@@ -5,7 +5,12 @@ spatialite (3.0.0~beta20110817-3+deb7u1) UNRELEASED; urgency=low
     - Add 05-fix_libgeos_search.patch from Evgeni Golov to fix configure checks.
     - Add 06-freexl_compat.patch to restore compatibility with freexl in wheezy.
 
- -- David Paleino <dapal@debian.org>  Sat, 19 Jan 2013 08:51:49 +0100
+  [ David Paleino ]
+  * Added 07-split_source.patch: split Spatial Reference System initialization
+    code into multiple smaller files, to let GCC not die on some arches
+    (Closes: #664547).
+
+ -- David Paleino <dapal@debian.org>  Sat, 19 Jan 2013 19:32:30 +0100
 
 spatialite (3.0.0~beta20110817-3) unstable; urgency=medium
 
