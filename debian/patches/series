@@ -3,3 +3,5 @@
 02-fix_version-info.patch
 03-fix_typos.patch
 04-fix_missing_define.patch
+05-fix_libgeos_search.patch
+06-freexl_compat.patch

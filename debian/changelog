@@ -1,3 +1,12 @@
+spatialite (3.0.0~beta20110817-3+deb7u1) UNRELEASED; urgency=low
+
+  [ Felix Geyer ]
+  * Fix FTBFS in wheezy. (Closes: #683075)
+    - Add 05-fix_libgeos_search.patch from Evgeni Golov to fix configure checks.
+    - Add 06-freexl_compat.patch to restore compatibility with freexl in wheezy.
+
+ -- David Paleino <dapal@debian.org>  Sat, 19 Jan 2013 08:51:49 +0100
+
 spatialite (3.0.0~beta20110817-3) unstable; urgency=medium
 
   [ Francesco Paolo Lovergine ]

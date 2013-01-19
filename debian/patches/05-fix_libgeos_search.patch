@@ -1,0 +1,74 @@
+From: Evgeni Golov <evgeni@debian.org>
+Subject: fix linking with libgeos
+Origin: vendor, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=683075#39
+Bug-Debian: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=683075
+
+---
+ libspatialite/configure       |    4 ++--
+ libspatialite/configure.ac    |    4 ++--
+ spatialite-tools/configure    |    2 +-
+ spatialite-tools/configure.ac |    2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+--- spatialite.orig/libspatialite/configure
++++ spatialite/libspatialite/configure
+@@ -16593,7 +16593,7 @@ for ac_lib in '' geos_c; do
+     ac_res="none required"
+   else
+     ac_res=-l$ac_lib
+-    LIBS="-l$ac_lib -lm -lgeos $ac_func_search_save_LIBS"
++    LIBS="-l$ac_lib $ac_func_search_save_LIBS"
+   fi
+   if ac_fn_c_try_link "$LINENO"; then :
+   ac_cv_search_GEOSTopologyPreserveSimplify=$ac_res
+@@ -16663,7 +16663,7 @@ for ac_lib in '' geos_c; do
+     ac_res="none required"
+   else
+     ac_res=-l$ac_lib
+-    LIBS="-l$ac_lib -lm -lgeos $ac_func_search_save_LIBS"
++    LIBS="-l$ac_lib $ac_func_search_save_LIBS"
+   fi
+   if ac_fn_c_try_link "$LINENO"; then :
+   ac_cv_search_GEOSCoveredBy=$ac_res
+--- spatialite.orig/libspatialite/configure.ac
++++ spatialite/libspatialite/configure.ac
+@@ -120,7 +120,7 @@ AC_ARG_ENABLE(geos, [AS_HELP_STRING(
+ if test x"$enable_geos" != "xno"; then
+   OMIT_GEOS_FLAGS=
+   AC_CHECK_HEADERS(geos_c.h,, [AC_MSG_ERROR([cannot find geos_c.h, bailing out])])
+-  AC_SEARCH_LIBS(GEOSTopologyPreserveSimplify,geos_c,,AC_MSG_ERROR(['libgeos_c' is required but it doesn't seems to be installed on this system.]),-lm -lgeos)
++  AC_SEARCH_LIBS(GEOSTopologyPreserveSimplify,geos_c,,AC_MSG_ERROR(['libgeos_c' is required but it doesn't seems to be installed on this system.]),)
+   #-----------------------------------------------------------------------
+   #   --enable-geosadvanced
+   #
+@@ -129,7 +129,7 @@ if test x"$enable_geos" != "xno"; then
+ 	  [], [geosadvanced=yes])
+   if test x"$enable_geosadvanced" != "xno"; then
+ 	  GEOSADVANCED_FLAGS=-DGEOS_ADVANCED
+-	  AC_SEARCH_LIBS(GEOSCoveredBy,geos_c,,AC_MSG_ERROR([obsolete 'libgeos_c' (< v.3.3.0). please retry specifying: --disable-geosadvanced.]),-lm -lgeos)
++	  AC_SEARCH_LIBS(GEOSCoveredBy,geos_c,,AC_MSG_ERROR([obsolete 'libgeos_c' (< v.3.3.0). please retry specifying: --disable-geosadvanced.]),)
+   else
+ 	  GEOSADVANCED_FLAGS=
+   fi
+--- spatialite.orig/spatialite-tools/configure
++++ spatialite/spatialite-tools/configure
+@@ -16547,7 +16547,7 @@ if test "${ac_cv_lib_geos_c_GEOSTopology
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lgeos_c -lm -lgeos $LIBS"
++LIBS="-lgeos_c $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+--- spatialite.orig/spatialite-tools/configure.ac
++++ spatialite/spatialite-tools/configure.ac
+@@ -72,7 +72,7 @@ AC_SUBST(READLINE_LIBS)
+ 
+ AC_CHECK_LIB(expat,XML_ParserCreate,,AC_MSG_ERROR(['expat' is required but it doesn't seems to be installed on this system.]))
+ AC_CHECK_LIB(proj,pj_init_plus,,AC_MSG_ERROR(['libproj' is required but it doesn't seems to be installed on this system.]),-lm)
+-AC_CHECK_LIB(geos_c,GEOSTopologyPreserveSimplify,,AC_MSG_ERROR(['libgeos_c' is required but it doesn't seems to be installed on this system.]),-lm -lgeos)
++AC_CHECK_LIB(geos_c,GEOSTopologyPreserveSimplify,,AC_MSG_ERROR(['libgeos_c' is required but it doesn't seems to be installed on this system.]),)
+ 
+ PKG_CHECK_MODULES([LIBFREEXL], [freexl], , AC_MSG_ERROR(['libfreexl' is required but it doesn't seems to be installed on this system.]))
+ LIBSPATIALITE_CFLAGS=
