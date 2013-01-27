@@ -241,16 +241,22 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaCloneGeomCollLinestrings@Base 3.0.0~beta20110817
  gaiaCloneGeomCollPoints@Base 3.0.0~beta20110817
  gaiaCloneGeomCollPolygons@Base 3.0.0~beta20110817
+ gaiaCloneGeomCollSpecial@Base 3.1.0~rc2
  gaiaCloneLinestring@Base 2.4.0~rc2
+ gaiaCloneLinestringSpecial@Base 3.1.0~rc2
  gaiaClonePolygon@Base 2.4.0~rc2
+ gaiaClonePolygonSpecial@Base 3.1.0~rc2
  gaiaCloneRing@Base 2.4.0~rc2
+ gaiaCloneRingSpecial@Base 3.1.0~rc2
  gaiaCloneValue@Base 2.4.0~rc2
  gaiaConvertCharset@Base 2.4.0~rc2
  gaiaConvertLength@Base 2.4.0~rc2
  gaiaConvertToUTF8@Base 2.4.0~rc2
  gaiaConvexHull@Base 2.4.0~rc2
  gaiaCopyLinestringCoords@Base 2.4.0~rc2
+ gaiaCopyLinestringCoordsReverse@Base 3.1.0~rc2
  gaiaCopyRingCoords@Base 2.4.0~rc2
+ gaiaCopyRingCoordsReverse@Base 3.1.0~rc2
  gaiaCreateDynamicLine@Base 2.4.0~rc2
  gaiaCreatePolygon@Base 2.4.0~rc2
  gaiaCreateUTF8Converter@Base 2.4.0~rc2
@@ -399,6 +405,7 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaLinearize@Base 3.0.0~beta20110817
  gaiaLinesCutAtNodes@Base 3.0.2~20120302
  gaiaLinestringEquals@Base 2.4.0~rc2
+ gaiaLocateBetweenMeasures@Base 3.1.0~rc2
  gaiaMRangeGeometry@Base 2.4.0~rc2
  gaiaMRangeLinestring@Base 2.4.0~rc2
  gaiaMRangePolygon@Base 2.4.0~rc2
@@ -423,6 +430,7 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaMeasureLength@Base 2.4.0~rc2
  gaiaMergeGeometries@Base 3.0.0~beta20110817
  gaiaMinDistance@Base 2.4.0~rc2
+ gaiaNormalizeLonLat@Base 3.1.0~rc2
  gaiaOffsetCurve@Base 3.0.2~20120302
  gaiaOpenDbfRead@Base 2.4.0~rc2
  gaiaOpenDbfWrite@Base 3.0.0~beta20110817
@@ -476,7 +484,9 @@ libspatialite.so.3 libspatialite3 #MINVER#
  gaiaSetNullValue@Base 2.4.0~rc2
  gaiaSetStrValue@Base 2.4.0~rc2
  gaiaSharedPaths@Base 3.0.2~20120302
+ gaiaShiftCoords3D@Base 3.1.0~rc2
  gaiaShiftCoords@Base 2.4.0~rc2
+ gaiaShiftLongitude@Base 3.1.0~rc2
  gaiaShortestLine@Base 3.0.2~20120302
  gaiaShpAnalyze@Base 2.4.0~rc2
  gaiaSingleQuotedSql@Base 3.0.2~20120302

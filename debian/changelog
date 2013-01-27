@@ -4,8 +4,9 @@ spatialite (3.1.0~rc2-2) UNRELEASED; urgency=low
     code to multiple files, to avoid a GCC bug on some arches (Closes: #664547)
   * Use canonical Vcs-* urls
   * Standards-Version bump to 3.9.4, no changes needed
+  * Updated symbols-file
 
- -- David Paleino <dapal@debian.org>  Sun, 27 Jan 2013 19:40:39 +0100
+ -- David Paleino <dapal@debian.org>  Sun, 27 Jan 2013 19:57:49 +0100
 
 spatialite (3.1.0~rc2-1) unstable; urgency=low
 
