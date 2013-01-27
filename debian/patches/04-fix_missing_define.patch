@@ -1,8 +1,15 @@
-Index: spatialite/src/headers/spatialite/gaiaexif.h
-===================================================================
---- spatialite.orig/src/headers/spatialite/gaiaexif.h	2012-03-02 11:56:59.000000000 +0100
-+++ spatialite/src/headers/spatialite/gaiaexif.h	2012-03-02 11:57:11.000000000 +0100
-@@ -87,6 +87,7 @@
+From: David Paleino <dapal@debian.org>
+Subject: fix missing #define in header
+Origin: vendor
+Forwarded: no
+
+---
+ src/headers/spatialite/gaiaexif.h |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- spatialite.orig/src/headers/spatialite/gaiaexif.h
++++ spatialite/src/headers/spatialite/gaiaexif.h
+@@ -87,6 +87,7 @@ extern "C"
  #define GAIA_GEOMETRY_BLOB	8
  /** this BLOB does actually contain a TIFF image */
  #define GAIA_TIFF_BLOB		9
