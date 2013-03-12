@@ -1,4 +1,4 @@
-spatialite (3.0.0~beta20110817-3+deb7u1) UNRELEASED; urgency=low
+spatialite (3.0.0~beta20110817-3+deb7u1) testing; urgency=low
 
   [ Felix Geyer ]
   * Fix FTBFS in wheezy. (Closes: #683075)
@@ -10,7 +10,7 @@ spatialite (3.0.0~beta20110817-3+deb7u1) UNRELEASED; urgency=low
     code into multiple smaller files, to let GCC not die on some arches
     (Closes: #664547).
 
- -- David Paleino <dapal@debian.org>  Sat, 19 Jan 2013 19:32:30 +0100
+ -- David Paleino <dapal@debian.org>  Tue, 12 Mar 2013 17:43:33 +0100
 
 spatialite (3.0.0~beta20110817-3) unstable; urgency=medium
 
