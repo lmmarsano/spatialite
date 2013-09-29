@@ -1,37 +1,34 @@
 Source: spatialite
+Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
+Uploaders: Francesco Paolo Lovergine <frankie@debian.org>,
+           David Paleino <dapal@debian.org>,
+           Bas Couwenberg <sebastic@xs4all.nl>
 Section: science
 Priority: extra
-Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
-Uploaders:
- Francesco Paolo Lovergine <frankie@debian.org>
- , David Paleino <dapal@debian.org>
- , Bas Couwenberg <sebastic@xs4all.nl>
-Build-Depends:
- debhelper (>= 9)
- , autotools-dev
- , dh-autoreconf
- , libsqlite3-dev (>= 3.6.11)
- , libgeos-dev (>= 3.3.0)
- , libproj-dev
- , libreadline-dev
- , libexpat1-dev
- , libfreexl-dev (>= 1.0.0)
- , pkg-config
- , zlib1g-dev
-Standards-Version: 3.9.4
-Homepage: http://www.gaia-gis.it/spatialite/
+Build-Depends: debhelper (>= 9),
+               autotools-dev,
+               dh-autoreconf,
+               libsqlite3-dev,
+               libgeos-dev (>= 3.3.0),
+               libproj-dev,
+               libreadline-dev,
+               libexpat1-dev,
+               libfreexl-dev,
+               pkg-config,
+               zlib1g-dev
+Standards-Version: 3.9.3
 Vcs-Browser: http://git.debian.org/?p=pkg-grass/spatialite.git
 Vcs-Git: git://git.debian.org/pkg-grass/spatialite.git
+Homepage: http://www.gaia-gis.it/spatialite/
 
 Package: libspatialite5
 Architecture: any
-Section: libs
-Breaks: spatialite-bin (<< 3.0.0-1~)
 Multi-Arch: same
+Section: libs
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
 Pre-Depends: multiarch-support
-Depends:
- ${shlibs:Depends}
- , ${misc:Depends}
+Breaks: spatialite-bin (<< 3.0.0-1~)
 Description: Geospatial extension for SQLite - libraries
  The SpatiaLite extension enables SQLite to support spatial (geometry) data
  in a way conformant to OpenGis specifications, with both WKT and WKB formats.
@@ -43,13 +40,12 @@ Description: Geospatial extension for SQLite - libraries
 
 Package: libspatialite-dev
 Architecture: any
-Section: libdevel
 Multi-Arch: same
-Depends:
- libspatialite5 (= ${binary:Version})
- , ${shlibs:Depends}
- , ${misc:Depends}
- , libsqlite3-dev (>= 3.3.6)
+Section: libdevel
+Depends: libspatialite5 (= ${binary:Version}),
+         ${shlibs:Depends},
+         ${misc:Depends},
+         libsqlite3-dev
 Recommends: pkg-config
 Description: Geospatial extension for SQLite - development files
  The SpatiaLite extension enables SQLite to support spatial (geometry) data
@@ -62,12 +58,11 @@ Description: Geospatial extension for SQLite - development files
 
 Package: libspatialite5-dbg
 Architecture: any
-Section: debug
 Multi-Arch: same
-Depends:
- libspatialite5 (= ${binary:Version})
- , ${shlibs:Depends}
- , ${misc:Depends}
+Section: debug
+Depends: libspatialite5 (= ${binary:Version}),
+         ${shlibs:Depends},
+         ${misc:Depends}
 Description: Geospatial extension for SQLite - debugging symbols
  The SpatiaLite extension enables SQLite to support spatial (geometry) data
  in a way conformant to OpenGis specifications, with both WKT and WKB formats.
@@ -76,3 +71,4 @@ Description: Geospatial extension for SQLite - debugging symbols
  shapefiles and csv/text files as virtual tables.
  .
  This package contains debugging symbols for the libraries.
+
