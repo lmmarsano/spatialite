@@ -6,6 +6,15 @@ spatialite (4.1.1-1) UNRELEASED; urgency=low
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 29 Sep 2013 22:00:45 +0200
 
+spatialite (4.1.0-1~ubuntu1) experimental; urgency=low
+
+  * New upstream release.
+  * Updated symbols file.
+  * Updated 07-fix_spatialite_pc.patch.
+  * Added zlib1g-dev to build-deps.
+
+ -- Jerome Villeneuve Larouche <jlarouche@mapgears.com>  Tue, 18 Jun 2013 10:56:13 -0400
+
 spatialite (4.0.0-1) experimental; urgency=low
 
   * New upstream version.

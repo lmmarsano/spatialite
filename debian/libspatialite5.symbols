@@ -1,5 +1,5 @@
 libspatialite.so.5 libspatialite5 #MINVER#
- EwktLval@Base 3.0.0~beta20110817
+#MISSING: 4.1.0-1# EwktLval@Base 3.0.0~beta20110817
  Ewkt_create_buffer@Base 3.0.0~beta20110817
  Ewkt_delete_buffer@Base 3.0.0~beta20110817
  Ewkt_flush_buffer@Base 3.0.0~beta20110817
@@ -31,7 +31,7 @@ libspatialite.so.5 libspatialite5 #MINVER#
  Ewktset_lineno@Base 3.0.0~beta20110817
  Ewktset_out@Base 3.0.0~beta20110817
  Ewktwrap@Base 3.0.0~beta20110817
- GeoJsonLval@Base 3.0.0~beta20110817
+#MISSING: 4.1.0-1# GeoJsonLval@Base 3.0.0~beta20110817
  GeoJson_create_buffer@Base 3.0.0~beta20110817
  GeoJson_delete_buffer@Base 3.0.0~beta20110817
  GeoJson_flush_buffer@Base 3.0.0~beta20110817
@@ -63,7 +63,7 @@ libspatialite.so.5 libspatialite5 #MINVER#
  GeoJsonset_lineno@Base 3.0.0~beta20110817
  GeoJsonset_out@Base 3.0.0~beta20110817
  GeoJsonwrap@Base 3.0.0~beta20110817
- GmlLval@Base 3.0.0~beta20110817
+#MISSING: 4.1.0-1# GmlLval@Base 3.0.0~beta20110817
  Gml_create_buffer@Base 3.0.0~beta20110817
  Gml_delete_buffer@Base 3.0.0~beta20110817
  Gml_flush_buffer@Base 3.0.0~beta20110817
@@ -95,7 +95,7 @@ libspatialite.so.5 libspatialite5 #MINVER#
  Gmlset_lineno@Base 3.0.0~beta20110817
  Gmlset_out@Base 3.0.0~beta20110817
  Gmlwrap@Base 3.0.0~beta20110817
- KmlLval@Base 3.0.0~beta20110817
+#MISSING: 4.1.0-1# KmlLval@Base 3.0.0~beta20110817
  Kml_create_buffer@Base 3.0.0~beta20110817
  Kml_delete_buffer@Base 3.0.0~beta20110817
  Kml_flush_buffer@Base 3.0.0~beta20110817
@@ -147,7 +147,7 @@ libspatialite.so.5 libspatialite5 #MINVER#
  VanuatuWktlex_destroy@Base 3.0.0~beta20110817
  VanuatuWktlex_init@Base 4.0.0
  VanuatuWktlex_init_extra@Base 4.0.0
- VanuatuWktlval@Base 3.0.0~beta20110817
+#MISSING: 4.1.0-1# VanuatuWktlval@Base 3.0.0~beta20110817
  VanuatuWktpop_buffer_state@Base 3.0.0~beta20110817
  VanuatuWktpush_buffer_state@Base 3.0.0~beta20110817
  VanuatuWktrealloc@Base 3.0.0~beta20110817
@@ -159,7 +159,13 @@ libspatialite.so.5 libspatialite5 #MINVER#
  VanuatuWktset_lineno@Base 3.0.0~beta20110817
  VanuatuWktset_out@Base 3.0.0~beta20110817
  VanuatuWktwrap@Base 3.0.0~beta20110817
+ check_all_geometry_columns@Base 4.1.0-1
  check_duplicated_rows@Base 3.0.2~20120302
+ check_geometry_column@Base 4.1.0-1
+ create_wfs_catalog@Base 4.1.0-1
+ create_wfs_schema@Base 4.1.0-1
+ destroy_wfs_catalog@Base 4.1.0-1
+ destroy_wfs_schema@Base 4.1.0-1
  dump_dbf@Base 3.0.2~20120302
  dump_geojson@Base 3.0.2~20120302
  dump_kml@Base 3.0.2~20120302
@@ -242,16 +248,31 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaCopyLinestringCoordsReverse@Base 4.0.0
  gaiaCopyRingCoords@Base 2.4.0~rc2
  gaiaCopyRingCoordsReverse@Base 4.0.0
+ gaiaCreateDxfParser@Base 4.1.0-1
  gaiaCreateDynamicLine@Base 2.4.0~rc2
+ gaiaCreateMD5Checksum@Base 4.1.0-1
  gaiaCreatePolygon@Base 2.4.0~rc2
  gaiaCreateUTF8Converter@Base 2.4.0~rc2
  gaiaDegsToRads@Base 2.4.0~rc2
  gaiaDequotedSql@Base 4.0.0
+ gaiaDestroyDxfParser@Base 4.1.0-1
  gaiaDimension@Base 2.4.0~rc2
  gaiaDissolvePoints@Base 3.0.0~beta20110817
  gaiaDissolveSegments@Base 3.0.0~beta20110817
  gaiaDoubleQuotedSql@Base 3.0.2~20120302
  gaiaDropTable@Base 4.0.0
+ gaiaDxfWriteEndSection@Base 4.1.0-1
+ gaiaDxfWriteEntities@Base 4.1.0-1
+ gaiaDxfWriteFooter@Base 4.1.0-1
+ gaiaDxfWriteGeometry@Base 4.1.0-1
+ gaiaDxfWriteHeader@Base 4.1.0-1
+ gaiaDxfWriteLayer@Base 4.1.0-1
+ gaiaDxfWriteLine@Base 4.1.0-1
+ gaiaDxfWritePoint@Base 4.1.0-1
+ gaiaDxfWriteRing@Base 4.1.0-1
+ gaiaDxfWriteTables@Base 4.1.0-1
+ gaiaDxfWriteText@Base 4.1.0-1
+ gaiaDxfWriterInit@Base 4.1.0-1
  gaiaDynamicLineDeletePoint@Base 2.4.0~rc2
  gaiaDynamicLineFindByCoords@Base 2.4.0~rc2
  gaiaDynamicLineFindByPos@Base 2.4.0~rc2
@@ -290,11 +311,14 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaExport16@Base 2.4.0~rc2
  gaiaExport32@Base 2.4.0~rc2
  gaiaExport64@Base 2.4.0~rc2
+ gaiaExportDxf@Base 4.1.0-1
  gaiaExportF32@Base 2.4.0~rc2
  gaiaExportI64@Base 2.4.0~rc2
+ gaiaExportU32@Base 4.1.0-1
  gaiaExtractLinestringsFromGeomColl@Base 3.0.0~beta20110817
  gaiaExtractPointsFromGeomColl@Base 3.0.0~beta20110817
  gaiaExtractPolygonsFromGeomColl@Base 3.0.0~beta20110817
+ gaiaFinalizeMD5Checksum@Base 4.1.0-1
  gaiaFlushDbfHeader@Base 3.0.0~beta20110817
  gaiaFlushShpHeaders@Base 2.4.0~rc2
  gaiaFree@Base 2.4.0~rc2
@@ -304,6 +328,7 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaFreeDynamicLine@Base 2.4.0~rc2
  gaiaFreeGeomColl@Base 2.4.0~rc2
  gaiaFreeLinestring@Base 2.4.0~rc2
+ gaiaFreeMD5Checksum@Base 4.1.0-1
  gaiaFreePoint@Base 2.4.0~rc2
  gaiaFreePolygon@Base 2.4.0~rc2
  gaiaFreeRing@Base 2.4.0~rc2
@@ -336,6 +361,15 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaGeomCollLength@Base 2.4.0~rc2
  gaiaGeomCollLengthOrPerimeter@Base 4.0.0
  gaiaGeomCollOverlaps@Base 2.4.0~rc2
+ gaiaGeomCollPreparedContains@Base 4.1.0-1
+ gaiaGeomCollPreparedCoveredBy@Base 4.1.0-1
+ gaiaGeomCollPreparedCovers@Base 4.1.0-1
+ gaiaGeomCollPreparedCrosses@Base 4.1.0-1
+ gaiaGeomCollPreparedDisjoint@Base 4.1.0-1
+ gaiaGeomCollPreparedIntersects@Base 4.1.0-1
+ gaiaGeomCollPreparedOverlaps@Base 4.1.0-1
+ gaiaGeomCollPreparedTouches@Base 4.1.0-1
+ gaiaGeomCollPreparedWithin@Base 4.1.0-1
  gaiaGeomCollRelate@Base 2.4.0~rc2
  gaiaGeomCollSimplify@Base 2.4.0~rc2
  gaiaGeomCollSimplifyPreserveTopology@Base 2.4.0~rc2
@@ -353,10 +387,12 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaGetExifTagByPos@Base 2.4.0~rc2
  gaiaGetExifTags@Base 2.4.0~rc2
  gaiaGetExifTagsCount@Base 2.4.0~rc2
+ gaiaGetGeosAuxErrorMsg@Base 4.1.0-1
  gaiaGetGeosErrorMsg@Base 2.4.0~rc2
  gaiaGetGeosWarningMsg@Base 2.4.0~rc2
  gaiaGetGpsCoords@Base 2.4.0~rc2
  gaiaGetGpsLatLong@Base 2.4.0~rc2
+ gaiaGetLayerExtent@Base 4.1.0-1
  gaiaGetLocaleCharset@Base 2.4.0~rc2
  gaiaGetMbrMaxX@Base 2.4.0~rc2
  gaiaGetMbrMaxY@Base 2.4.0~rc2
@@ -375,6 +411,7 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaImport64@Base 2.4.0~rc2
  gaiaImportF32@Base 2.4.0~rc2
  gaiaImportI64@Base 2.4.0~rc2
+ gaiaImportU32@Base 4.1.0-1
  gaiaInsertInteriorRing@Base 2.4.0~rc2
  gaiaInsertIntoSqlLog@Base 4.0.0
  gaiaInsertLinestringInGeomColl@Base 2.4.0~rc2
@@ -405,11 +442,16 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaLinearize@Base 3.0.0~beta20110817
  gaiaLinesCutAtNodes@Base 3.0.2~20120302
  gaiaLinestringEquals@Base 2.4.0~rc2
+ gaiaLoadFromDxfParser@Base 4.1.0-1
  gaiaLocateBetweenMeasures@Base 4.0.0
  gaiaMRangeGeometry@Base 2.4.0~rc2
  gaiaMRangeLinestring@Base 2.4.0~rc2
  gaiaMRangePolygon@Base 2.4.0~rc2
  gaiaMRangeRing@Base 2.4.0~rc2
+ gaiaMakeArc@Base 4.1.0-1
+ gaiaMakeCircle@Base 4.1.0-1
+ gaiaMakeEllipse@Base 4.1.0-1
+ gaiaMakeEllipticArc@Base 4.1.0-1
  gaiaMakeLine@Base 3.0.0~beta20110817
  gaiaMakePoint@Base 2.4.0~rc2
  gaiaMakePointM@Base 3.0.2~20120302
@@ -451,6 +493,7 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaOutSvg@Base 2.4.0~rc2
  gaiaOutWkt@Base 2.4.0~rc2
  gaiaOutWktStrict@Base 3.0.0~beta20110817
+ gaiaParseDxfFile@Base 4.1.0-1
  gaiaParseEWKT@Base 3.0.0~beta20110817
  gaiaParseFilterMbr@Base 2.4.0~rc2
  gaiaParseGeoJSON@Base 3.0.0~beta20110817
@@ -479,6 +522,7 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaSanitize@Base 2.4.0~rc2
  gaiaScaleCoords@Base 2.4.0~rc2
  gaiaSetDoubleValue@Base 2.4.0~rc2
+ gaiaSetGeosAuxErrorMsg@Base 4.1.0-1
  gaiaSetGeosErrorMsg@Base 2.4.0~rc2
  gaiaSetGeosWarningMsg@Base 2.4.0~rc2
  gaiaSetIntValue@Base 2.4.0~rc2
@@ -514,6 +558,7 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaTriangularGrid@Base 4.0.0
  gaiaUnaryUnion@Base 3.0.2~20120302
  gaiaUnionCascaded@Base 4.0.0
+ gaiaUpdateMD5Checksum@Base 4.1.0-1
  gaiaUpdateSqlLog@Base 4.0.0
  gaiaWriteDbfEntity@Base 3.0.0~beta20110817
  gaiaWriteShpEntity@Base 2.4.0~rc2
@@ -523,10 +568,28 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaZRangeRing@Base 2.4.0~rc2
  gaia_geos_error_msg@Base 2.4.0~rc2
  gaia_geos_warning_msg@Base 2.4.0~rc2
+ gaia_geosaux_error_msg@Base 4.1.0-1
  geoJSONParse@Base 3.0.0~beta20110817
  geoJSONParseAlloc@Base 3.0.0~beta20110817
  geoJSONParseFree@Base 3.0.0~beta20110817
  geoJSON_yylex@Base 4.0.0
+ get_wfs_base_describe_url@Base 4.1.0-1
+ get_wfs_base_request_url@Base 4.1.0-1
+ get_wfs_catalog_count@Base 4.1.0-1
+ get_wfs_catalog_item@Base 4.1.0-1
+ get_wfs_describe_url@Base 4.1.0-1
+ get_wfs_item_abstract@Base 4.1.0-1
+ get_wfs_item_name@Base 4.1.0-1
+ get_wfs_item_title@Base 4.1.0-1
+ get_wfs_keyword@Base 4.1.0-1
+ get_wfs_keyword_count@Base 4.1.0-1
+ get_wfs_layer_srid@Base 4.1.0-1
+ get_wfs_layer_srid_count@Base 4.1.0-1
+ get_wfs_request_url@Base 4.1.0-1
+ get_wfs_schema_column@Base 4.1.0-1
+ get_wfs_schema_column_count@Base 4.1.0-1
+ get_wfs_schema_column_info@Base 4.1.0-1
+ get_wfs_schema_geometry_info@Base 4.1.0-1
  gmlParse@Base 3.0.0~beta20110817
  gmlParseAlloc@Base 3.0.0~beta20110817
  gmlParseFree@Base 3.0.0~beta20110817
@@ -540,15 +603,22 @@ libspatialite.so.5 libspatialite5 #MINVER#
  load_XL@Base 3.0.2~20120302
  load_dbf@Base 3.0.2~20120302
  load_dbf_ex@Base 4.0.0
+ load_from_wfs@Base 4.1.0-1
+ load_from_wfs_paged@Base 4.1.0-1
  load_shapefile@Base 3.0.2~20120302
  load_shapefile_ex@Base 4.0.0
  math_llabs@Base 2.4.0~rc2
  math_round@Base 2.4.0~rc2
  remove_duplicated_rows@Base 3.0.2~20120302
+ sanitize_all_geometry_columns@Base 4.1.0-1
+ sanitize_geometry_column@Base 4.1.0-1
  spatial_ref_sys_init2@Base 3.0.2~20120302
  spatial_ref_sys_init@Base 3.0.0~beta20110817
+ spatialite_alloc_connection@Base 4.1.0-1
  spatialite_cleanup@Base 3.0.2~20120302
+ spatialite_cleanup_ex@Base 4.1.0-1
  spatialite_init@Base 2.4.0~rc2
+ spatialite_init_ex@Base 4.1.0-1
  spatialite_init_geos@Base 4.0.0
  spatialite_version@Base 2.4.0~rc2
  spatialiteversion@Base 2.4.0~rc2

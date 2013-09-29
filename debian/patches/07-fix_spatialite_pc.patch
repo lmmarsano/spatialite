@@ -10,5 +10,5 @@ Forwarded: no
  Description: Spatial SQL database engine based on SQLite
  Version: @VERSION@
 -Libs: -L${libdir} -lspatialite -lsqlite3 -lm -lz 
-+Libs: -L${libdir} -lspatialite -lz 
++Libs: -L${libdir} -lspatialite
  Cflags: -I${includedir}
