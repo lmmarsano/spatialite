@@ -8,8 +8,8 @@ Forwarded: no
  Makefile.in |    2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
---- spatialite.orig/Makefile.am
-+++ spatialite/Makefile.am
+--- a/Makefile.am
++++ b/Makefile.am
 @@ -1,6 +1,6 @@
  ACLOCAL_AMFLAGS = -I m4
  
@@ -18,9 +18,9 @@ Forwarded: no
  
  EXTRA_DIST = makefile.vc nmake.opt Android.mk mainpage.doxy README.coverage \
  	spatialite-sql-latest.html config-msvc.h
---- spatialite.orig/Makefile.in
-+++ spatialite/Makefile.in
-@@ -285,7 +285,7 @@ top_build_prefix = @top_build_prefix@
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -292,7 +292,7 @@ top_build_prefix = @top_build_prefix@
  top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
  ACLOCAL_AMFLAGS = -I m4

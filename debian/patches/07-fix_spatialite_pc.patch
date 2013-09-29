@@ -3,14 +3,12 @@ Subject: avoid relinking sqlite3 and math libraries
 Origin: vendor
 Forwarded: no
 
-Index: spatialite/spatialite.pc.in
-===================================================================
---- spatialite.orig/spatialite.pc.in	2012-02-23 13:42:29.000000000 +0100
-+++ spatialite/spatialite.pc.in	2012-02-29 14:07:47.000000000 +0100
-@@ -8,5 +8,5 @@
+--- a/spatialite.pc.in
++++ b/spatialite.pc.in
+@@ -8,5 +8,5 @@ includedir=@includedir@
  Name: spatialite
  Description: Spatial SQL database engine based on SQLite
  Version: @VERSION@
--Libs: -L${libdir} -lspatialite -lsqlite3 -lm
-+Libs: -L${libdir} -lspatialite
+-Libs: -L${libdir} -lspatialite -lsqlite3 -lm -lz 
++Libs: -L${libdir} -lspatialite -lz 
  Cflags: -I${includedir}
