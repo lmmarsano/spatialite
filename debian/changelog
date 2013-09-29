@@ -4,6 +4,7 @@ spatialite (4.1.1-1) UNRELEASED; urgency=low
   * Update debian/watch, use sepwatch improvements and address common mistakes.
   * Use dh-autoreconf to run autoreconf during build.
   * Update copyright file, use copyright-format 1.0 (dep5).
+  * Use canonical URLs for Vcs-* fields.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 29 Sep 2013 22:00:45 +0200
 
