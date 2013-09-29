@@ -5,6 +5,7 @@ spatialite (4.1.1-1) UNRELEASED; urgency=low
   * Use dh-autoreconf to run autoreconf during build.
   * Update copyright file, use copyright-format 1.0 (dep5).
   * Use canonical URLs for Vcs-* fields.
+  * Add lintian overrides for no upstream changelog, link to online timeline.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 29 Sep 2013 22:00:45 +0200
 
