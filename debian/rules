@@ -21,7 +21,7 @@ EPSG :=
 endif
 
 %:
-	dh $@
+	dh $@ --with autoreconf
 
 versions:
 	@echo "Spatialite full version: $(FULL_VERSION)"

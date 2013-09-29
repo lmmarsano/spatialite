@@ -9,6 +9,7 @@ Uploaders:
 Build-Depends:
  debhelper (>= 9)
  , autotools-dev
+ , dh-autoreconf
  , libsqlite3-dev (>= 3.6.11)
  , libgeos-dev (>= 3.3.0)
  , libproj-dev
