@@ -1,634 +1,634 @@
 libspatialite.so.5 libspatialite5 #MINVER#
-#MISSING: 4.1.0-1# EwktLval@Base 3.0.0~beta20110817
- Ewkt_create_buffer@Base 3.0.0~beta20110817
- Ewkt_delete_buffer@Base 3.0.0~beta20110817
- Ewkt_flush_buffer@Base 3.0.0~beta20110817
- Ewkt_scan_buffer@Base 3.0.0~beta20110817
- Ewkt_scan_bytes@Base 3.0.0~beta20110817
- Ewkt_scan_string@Base 3.0.0~beta20110817
- Ewkt_switch_to_buffer@Base 3.0.0~beta20110817
- Ewktalloc@Base 3.0.0~beta20110817
- Ewktfree@Base 3.0.0~beta20110817
+#MISSING: 4.1.0# EwktLval@Base 3.0.0
+ Ewkt_create_buffer@Base 3.0.0
+ Ewkt_delete_buffer@Base 3.0.0
+ Ewkt_flush_buffer@Base 3.0.0
+ Ewkt_scan_buffer@Base 3.0.0
+ Ewkt_scan_bytes@Base 3.0.0
+ Ewkt_scan_string@Base 3.0.0
+ Ewkt_switch_to_buffer@Base 3.0.0
+ Ewktalloc@Base 3.0.0
+ Ewktfree@Base 3.0.0
  Ewktget_column@Base 4.0.0
- Ewktget_debug@Base 3.0.0~beta20110817
+ Ewktget_debug@Base 3.0.0
  Ewktget_extra@Base 4.0.0
- Ewktget_in@Base 3.0.0~beta20110817
- Ewktget_leng@Base 3.0.0~beta20110817
- Ewktget_lineno@Base 3.0.0~beta20110817
- Ewktget_out@Base 3.0.0~beta20110817
- Ewktget_text@Base 3.0.0~beta20110817
- Ewktlex_destroy@Base 3.0.0~beta20110817
+ Ewktget_in@Base 3.0.0
+ Ewktget_leng@Base 3.0.0
+ Ewktget_lineno@Base 3.0.0
+ Ewktget_out@Base 3.0.0
+ Ewktget_text@Base 3.0.0
+ Ewktlex_destroy@Base 3.0.0
  Ewktlex_init@Base 4.0.0
  Ewktlex_init_extra@Base 4.0.0
- Ewktpop_buffer_state@Base 3.0.0~beta20110817
- Ewktpush_buffer_state@Base 3.0.0~beta20110817
- Ewktrealloc@Base 3.0.0~beta20110817
- Ewktrestart@Base 3.0.0~beta20110817
+ Ewktpop_buffer_state@Base 3.0.0
+ Ewktpush_buffer_state@Base 3.0.0
+ Ewktrealloc@Base 3.0.0
+ Ewktrestart@Base 3.0.0
  Ewktset_column@Base 4.0.0
- Ewktset_debug@Base 3.0.0~beta20110817
+ Ewktset_debug@Base 3.0.0
  Ewktset_extra@Base 4.0.0
- Ewktset_in@Base 3.0.0~beta20110817
- Ewktset_lineno@Base 3.0.0~beta20110817
- Ewktset_out@Base 3.0.0~beta20110817
- Ewktwrap@Base 3.0.0~beta20110817
-#MISSING: 4.1.0-1# GeoJsonLval@Base 3.0.0~beta20110817
- GeoJson_create_buffer@Base 3.0.0~beta20110817
- GeoJson_delete_buffer@Base 3.0.0~beta20110817
- GeoJson_flush_buffer@Base 3.0.0~beta20110817
- GeoJson_scan_buffer@Base 3.0.0~beta20110817
- GeoJson_scan_bytes@Base 3.0.0~beta20110817
- GeoJson_scan_string@Base 3.0.0~beta20110817
- GeoJson_switch_to_buffer@Base 3.0.0~beta20110817
- GeoJsonalloc@Base 3.0.0~beta20110817
- GeoJsonfree@Base 3.0.0~beta20110817
+ Ewktset_in@Base 3.0.0
+ Ewktset_lineno@Base 3.0.0
+ Ewktset_out@Base 3.0.0
+ Ewktwrap@Base 3.0.0
+#MISSING: 4.1.0# GeoJsonLval@Base 3.0.0
+ GeoJson_create_buffer@Base 3.0.0
+ GeoJson_delete_buffer@Base 3.0.0
+ GeoJson_flush_buffer@Base 3.0.0
+ GeoJson_scan_buffer@Base 3.0.0
+ GeoJson_scan_bytes@Base 3.0.0
+ GeoJson_scan_string@Base 3.0.0
+ GeoJson_switch_to_buffer@Base 3.0.0
+ GeoJsonalloc@Base 3.0.0
+ GeoJsonfree@Base 3.0.0
  GeoJsonget_column@Base 4.0.0
- GeoJsonget_debug@Base 3.0.0~beta20110817
+ GeoJsonget_debug@Base 3.0.0
  GeoJsonget_extra@Base 4.0.0
- GeoJsonget_in@Base 3.0.0~beta20110817
- GeoJsonget_leng@Base 3.0.0~beta20110817
- GeoJsonget_lineno@Base 3.0.0~beta20110817
- GeoJsonget_out@Base 3.0.0~beta20110817
- GeoJsonget_text@Base 3.0.0~beta20110817
- GeoJsonlex_destroy@Base 3.0.0~beta20110817
+ GeoJsonget_in@Base 3.0.0
+ GeoJsonget_leng@Base 3.0.0
+ GeoJsonget_lineno@Base 3.0.0
+ GeoJsonget_out@Base 3.0.0
+ GeoJsonget_text@Base 3.0.0
+ GeoJsonlex_destroy@Base 3.0.0
  GeoJsonlex_init@Base 4.0.0
  GeoJsonlex_init_extra@Base 4.0.0
- GeoJsonpop_buffer_state@Base 3.0.0~beta20110817
- GeoJsonpush_buffer_state@Base 3.0.0~beta20110817
- GeoJsonrealloc@Base 3.0.0~beta20110817
- GeoJsonrestart@Base 3.0.0~beta20110817
+ GeoJsonpop_buffer_state@Base 3.0.0
+ GeoJsonpush_buffer_state@Base 3.0.0
+ GeoJsonrealloc@Base 3.0.0
+ GeoJsonrestart@Base 3.0.0
  GeoJsonset_column@Base 4.0.0
- GeoJsonset_debug@Base 3.0.0~beta20110817
+ GeoJsonset_debug@Base 3.0.0
  GeoJsonset_extra@Base 4.0.0
- GeoJsonset_in@Base 3.0.0~beta20110817
- GeoJsonset_lineno@Base 3.0.0~beta20110817
- GeoJsonset_out@Base 3.0.0~beta20110817
- GeoJsonwrap@Base 3.0.0~beta20110817
-#MISSING: 4.1.0-1# GmlLval@Base 3.0.0~beta20110817
- Gml_create_buffer@Base 3.0.0~beta20110817
- Gml_delete_buffer@Base 3.0.0~beta20110817
- Gml_flush_buffer@Base 3.0.0~beta20110817
- Gml_scan_buffer@Base 3.0.0~beta20110817
- Gml_scan_bytes@Base 3.0.0~beta20110817
- Gml_scan_string@Base 3.0.0~beta20110817
- Gml_switch_to_buffer@Base 3.0.0~beta20110817
- Gmlalloc@Base 3.0.0~beta20110817
- Gmlfree@Base 3.0.0~beta20110817
+ GeoJsonset_in@Base 3.0.0
+ GeoJsonset_lineno@Base 3.0.0
+ GeoJsonset_out@Base 3.0.0
+ GeoJsonwrap@Base 3.0.0
+#MISSING: 4.1.0# GmlLval@Base 3.0.0
+ Gml_create_buffer@Base 3.0.0
+ Gml_delete_buffer@Base 3.0.0
+ Gml_flush_buffer@Base 3.0.0
+ Gml_scan_buffer@Base 3.0.0
+ Gml_scan_bytes@Base 3.0.0
+ Gml_scan_string@Base 3.0.0
+ Gml_switch_to_buffer@Base 3.0.0
+ Gmlalloc@Base 3.0.0
+ Gmlfree@Base 3.0.0
  Gmlget_column@Base 4.0.0
- Gmlget_debug@Base 3.0.0~beta20110817
+ Gmlget_debug@Base 3.0.0
  Gmlget_extra@Base 4.0.0
- Gmlget_in@Base 3.0.0~beta20110817
- Gmlget_leng@Base 3.0.0~beta20110817
- Gmlget_lineno@Base 3.0.0~beta20110817
- Gmlget_out@Base 3.0.0~beta20110817
- Gmlget_text@Base 3.0.0~beta20110817
- Gmllex_destroy@Base 3.0.0~beta20110817
+ Gmlget_in@Base 3.0.0
+ Gmlget_leng@Base 3.0.0
+ Gmlget_lineno@Base 3.0.0
+ Gmlget_out@Base 3.0.0
+ Gmlget_text@Base 3.0.0
+ Gmllex_destroy@Base 3.0.0
  Gmllex_init@Base 4.0.0
  Gmllex_init_extra@Base 4.0.0
- Gmlpop_buffer_state@Base 3.0.0~beta20110817
- Gmlpush_buffer_state@Base 3.0.0~beta20110817
- Gmlrealloc@Base 3.0.0~beta20110817
- Gmlrestart@Base 3.0.0~beta20110817
+ Gmlpop_buffer_state@Base 3.0.0
+ Gmlpush_buffer_state@Base 3.0.0
+ Gmlrealloc@Base 3.0.0
+ Gmlrestart@Base 3.0.0
  Gmlset_column@Base 4.0.0
- Gmlset_debug@Base 3.0.0~beta20110817
+ Gmlset_debug@Base 3.0.0
  Gmlset_extra@Base 4.0.0
- Gmlset_in@Base 3.0.0~beta20110817
- Gmlset_lineno@Base 3.0.0~beta20110817
- Gmlset_out@Base 3.0.0~beta20110817
- Gmlwrap@Base 3.0.0~beta20110817
-#MISSING: 4.1.0-1# KmlLval@Base 3.0.0~beta20110817
- Kml_create_buffer@Base 3.0.0~beta20110817
- Kml_delete_buffer@Base 3.0.0~beta20110817
- Kml_flush_buffer@Base 3.0.0~beta20110817
- Kml_scan_buffer@Base 3.0.0~beta20110817
- Kml_scan_bytes@Base 3.0.0~beta20110817
- Kml_scan_string@Base 3.0.0~beta20110817
- Kml_switch_to_buffer@Base 3.0.0~beta20110817
- Kmlalloc@Base 3.0.0~beta20110817
- Kmlfree@Base 3.0.0~beta20110817
+ Gmlset_in@Base 3.0.0
+ Gmlset_lineno@Base 3.0.0
+ Gmlset_out@Base 3.0.0
+ Gmlwrap@Base 3.0.0
+#MISSING: 4.1.0# KmlLval@Base 3.0.0
+ Kml_create_buffer@Base 3.0.0
+ Kml_delete_buffer@Base 3.0.0
+ Kml_flush_buffer@Base 3.0.0
+ Kml_scan_buffer@Base 3.0.0
+ Kml_scan_bytes@Base 3.0.0
+ Kml_scan_string@Base 3.0.0
+ Kml_switch_to_buffer@Base 3.0.0
+ Kmlalloc@Base 3.0.0
+ Kmlfree@Base 3.0.0
  Kmlget_column@Base 4.0.0
- Kmlget_debug@Base 3.0.0~beta20110817
+ Kmlget_debug@Base 3.0.0
  Kmlget_extra@Base 4.0.0
- Kmlget_in@Base 3.0.0~beta20110817
- Kmlget_leng@Base 3.0.0~beta20110817
- Kmlget_lineno@Base 3.0.0~beta20110817
- Kmlget_out@Base 3.0.0~beta20110817
- Kmlget_text@Base 3.0.0~beta20110817
- Kmllex_destroy@Base 3.0.0~beta20110817
+ Kmlget_in@Base 3.0.0
+ Kmlget_leng@Base 3.0.0
+ Kmlget_lineno@Base 3.0.0
+ Kmlget_out@Base 3.0.0
+ Kmlget_text@Base 3.0.0
+ Kmllex_destroy@Base 3.0.0
  Kmllex_init@Base 4.0.0
  Kmllex_init_extra@Base 4.0.0
- Kmlpop_buffer_state@Base 3.0.0~beta20110817
- Kmlpush_buffer_state@Base 3.0.0~beta20110817
- Kmlrealloc@Base 3.0.0~beta20110817
- Kmlrestart@Base 3.0.0~beta20110817
+ Kmlpop_buffer_state@Base 3.0.0
+ Kmlpush_buffer_state@Base 3.0.0
+ Kmlrealloc@Base 3.0.0
+ Kmlrestart@Base 3.0.0
  Kmlset_column@Base 4.0.0
- Kmlset_debug@Base 3.0.0~beta20110817
+ Kmlset_debug@Base 3.0.0
  Kmlset_extra@Base 4.0.0
- Kmlset_in@Base 3.0.0~beta20110817
- Kmlset_lineno@Base 3.0.0~beta20110817
- Kmlset_out@Base 3.0.0~beta20110817
- Kmlwrap@Base 3.0.0~beta20110817
- VanuatuWkt_create_buffer@Base 3.0.0~beta20110817
- VanuatuWkt_delete_buffer@Base 3.0.0~beta20110817
- VanuatuWkt_flush_buffer@Base 3.0.0~beta20110817
- VanuatuWkt_scan_buffer@Base 3.0.0~beta20110817
- VanuatuWkt_scan_bytes@Base 3.0.0~beta20110817
- VanuatuWkt_scan_string@Base 3.0.0~beta20110817
- VanuatuWkt_switch_to_buffer@Base 3.0.0~beta20110817
- VanuatuWktalloc@Base 3.0.0~beta20110817
- VanuatuWktfree@Base 3.0.0~beta20110817
+ Kmlset_in@Base 3.0.0
+ Kmlset_lineno@Base 3.0.0
+ Kmlset_out@Base 3.0.0
+ Kmlwrap@Base 3.0.0
+ VanuatuWkt_create_buffer@Base 3.0.0
+ VanuatuWkt_delete_buffer@Base 3.0.0
+ VanuatuWkt_flush_buffer@Base 3.0.0
+ VanuatuWkt_scan_buffer@Base 3.0.0
+ VanuatuWkt_scan_bytes@Base 3.0.0
+ VanuatuWkt_scan_string@Base 3.0.0
+ VanuatuWkt_switch_to_buffer@Base 3.0.0
+ VanuatuWktalloc@Base 3.0.0
+ VanuatuWktfree@Base 3.0.0
  VanuatuWktget_column@Base 4.0.0
- VanuatuWktget_debug@Base 3.0.0~beta20110817
+ VanuatuWktget_debug@Base 3.0.0
  VanuatuWktget_extra@Base 4.0.0
- VanuatuWktget_in@Base 3.0.0~beta20110817
- VanuatuWktget_leng@Base 3.0.0~beta20110817
- VanuatuWktget_lineno@Base 3.0.0~beta20110817
- VanuatuWktget_out@Base 3.0.0~beta20110817
- VanuatuWktget_text@Base 3.0.0~beta20110817
- VanuatuWktlex_destroy@Base 3.0.0~beta20110817
+ VanuatuWktget_in@Base 3.0.0
+ VanuatuWktget_leng@Base 3.0.0
+ VanuatuWktget_lineno@Base 3.0.0
+ VanuatuWktget_out@Base 3.0.0
+ VanuatuWktget_text@Base 3.0.0
+ VanuatuWktlex_destroy@Base 3.0.0
  VanuatuWktlex_init@Base 4.0.0
  VanuatuWktlex_init_extra@Base 4.0.0
-#MISSING: 4.1.0-1# VanuatuWktlval@Base 3.0.0~beta20110817
- VanuatuWktpop_buffer_state@Base 3.0.0~beta20110817
- VanuatuWktpush_buffer_state@Base 3.0.0~beta20110817
- VanuatuWktrealloc@Base 3.0.0~beta20110817
- VanuatuWktrestart@Base 3.0.0~beta20110817
+#MISSING: 4.1.0# VanuatuWktlval@Base 3.0.0
+ VanuatuWktpop_buffer_state@Base 3.0.0
+ VanuatuWktpush_buffer_state@Base 3.0.0
+ VanuatuWktrealloc@Base 3.0.0
+ VanuatuWktrestart@Base 3.0.0
  VanuatuWktset_column@Base 4.0.0
- VanuatuWktset_debug@Base 3.0.0~beta20110817
+ VanuatuWktset_debug@Base 3.0.0
  VanuatuWktset_extra@Base 4.0.0
- VanuatuWktset_in@Base 3.0.0~beta20110817
- VanuatuWktset_lineno@Base 3.0.0~beta20110817
- VanuatuWktset_out@Base 3.0.0~beta20110817
- VanuatuWktwrap@Base 3.0.0~beta20110817
- check_all_geometry_columns@Base 4.1.0-1
+ VanuatuWktset_in@Base 3.0.0
+ VanuatuWktset_lineno@Base 3.0.0
+ VanuatuWktset_out@Base 3.0.0
+ VanuatuWktwrap@Base 3.0.0
+ check_all_geometry_columns@Base 4.1.0
  check_duplicated_rows@Base 3.0.2~20120302
- check_geometry_column@Base 4.1.0-1
- create_wfs_catalog@Base 4.1.0-1
- create_wfs_schema@Base 4.1.0-1
- destroy_wfs_catalog@Base 4.1.0-1
- destroy_wfs_schema@Base 4.1.0-1
+ check_geometry_column@Base 4.1.0
+ create_wfs_catalog@Base 4.1.0
+ create_wfs_schema@Base 4.1.0
+ destroy_wfs_catalog@Base 4.1.0
+ destroy_wfs_schema@Base 4.1.0
  dump_dbf@Base 3.0.2~20120302
  dump_geojson@Base 3.0.2~20120302
  dump_kml@Base 3.0.2~20120302
  dump_shapefile@Base 3.0.2~20120302
  elementary_geometries@Base 3.0.2~20120302
- ewktParse@Base 3.0.0~beta20110817
- ewktParseAlloc@Base 3.0.0~beta20110817
- ewktParseFree@Base 3.0.0~beta20110817
- ewkt_point_xyzm@Base 3.0.0~beta20110817
+ ewktParse@Base 3.0.0
+ ewktParseAlloc@Base 3.0.0
+ ewktParseFree@Base 3.0.0
+ ewkt_point_xyzm@Base 3.0.0
  ewky_yylex@Base 4.0.0
- gaiaAddDbfField@Base 2.4.0~rc2
- gaiaAddInteriorRing@Base 2.4.0~rc2
- gaiaAddLinestringToGeomColl@Base 2.4.0~rc2
- gaiaAddPointToGeomColl@Base 2.4.0~rc2
- gaiaAddPointToGeomCollXYM@Base 2.4.0~rc2
- gaiaAddPointToGeomCollXYZ@Base 2.4.0~rc2
- gaiaAddPointToGeomCollXYZM@Base 2.4.0~rc2
- gaiaAddPolygonToGeomColl@Base 2.4.0~rc2
- gaiaAddRingToPolyg@Base 2.4.0~rc2
- gaiaAllocDbf@Base 2.4.0~rc2
- gaiaAllocDbfField@Base 2.4.0~rc2
- gaiaAllocDbfList@Base 2.4.0~rc2
- gaiaAllocDynamicLine@Base 2.4.0~rc2
- gaiaAllocGeomColl@Base 2.4.0~rc2
- gaiaAllocGeomCollXYM@Base 2.4.0~rc2
- gaiaAllocGeomCollXYZ@Base 2.4.0~rc2
- gaiaAllocGeomCollXYZM@Base 2.4.0~rc2
- gaiaAllocLinestring@Base 2.4.0~rc2
- gaiaAllocLinestringXYM@Base 2.4.0~rc2
- gaiaAllocLinestringXYZ@Base 2.4.0~rc2
- gaiaAllocLinestringXYZM@Base 2.4.0~rc2
- gaiaAllocPoint@Base 2.4.0~rc2
- gaiaAllocPointXYM@Base 2.4.0~rc2
- gaiaAllocPointXYZ@Base 2.4.0~rc2
- gaiaAllocPointXYZM@Base 2.4.0~rc2
- gaiaAllocPolygon@Base 2.4.0~rc2
- gaiaAllocPolygonXYM@Base 2.4.0~rc2
- gaiaAllocPolygonXYZ@Base 2.4.0~rc2
- gaiaAllocPolygonXYZM@Base 2.4.0~rc2
- gaiaAllocRing@Base 2.4.0~rc2
- gaiaAllocRingXYM@Base 2.4.0~rc2
- gaiaAllocRingXYZ@Base 2.4.0~rc2
- gaiaAllocRingXYZM@Base 2.4.0~rc2
- gaiaAllocShapefile@Base 2.4.0~rc2
- gaiaAppendPointMToDynamicLine@Base 3.0.0~beta20110817
- gaiaAppendPointToDynamicLine@Base 2.4.0~rc2
- gaiaAppendPointZMToDynamicLine@Base 3.0.0~beta20110817
- gaiaAppendPointZToDynamicLine@Base 3.0.0~beta20110817
- gaiaAppendToOutBuffer@Base 3.0.0~beta20110817
- gaiaBoundary@Base 2.4.0~rc2
- gaiaBuildCircleMbr@Base 2.4.0~rc2
- gaiaBuildFilterMbr@Base 2.4.0~rc2
- gaiaBuildMbr@Base 2.4.0~rc2
- gaiaCastGeomCollToXY@Base 2.4.0~rc2
- gaiaCastGeomCollToXYM@Base 2.4.0~rc2
- gaiaCastGeomCollToXYZ@Base 2.4.0~rc2
- gaiaCastGeomCollToXYZM@Base 2.4.0~rc2
- gaiaCleanSqlString@Base 2.4.0~rc2
- gaiaClockwise@Base 2.4.0~rc2
- gaiaCloneDbfEntity@Base 2.4.0~rc2
- gaiaCloneDbfField@Base 2.4.0~rc2
- gaiaCloneDynamicLine@Base 2.4.0~rc2
- gaiaCloneGeomColl@Base 2.4.0~rc2
- gaiaCloneGeomCollLinestrings@Base 3.0.0~beta20110817
- gaiaCloneGeomCollPoints@Base 3.0.0~beta20110817
- gaiaCloneGeomCollPolygons@Base 3.0.0~beta20110817
+ gaiaAddDbfField@Base 2.4.0
+ gaiaAddInteriorRing@Base 2.4.0
+ gaiaAddLinestringToGeomColl@Base 2.4.0
+ gaiaAddPointToGeomColl@Base 2.4.0
+ gaiaAddPointToGeomCollXYM@Base 2.4.0
+ gaiaAddPointToGeomCollXYZ@Base 2.4.0
+ gaiaAddPointToGeomCollXYZM@Base 2.4.0
+ gaiaAddPolygonToGeomColl@Base 2.4.0
+ gaiaAddRingToPolyg@Base 2.4.0
+ gaiaAllocDbf@Base 2.4.0
+ gaiaAllocDbfField@Base 2.4.0
+ gaiaAllocDbfList@Base 2.4.0
+ gaiaAllocDynamicLine@Base 2.4.0
+ gaiaAllocGeomColl@Base 2.4.0
+ gaiaAllocGeomCollXYM@Base 2.4.0
+ gaiaAllocGeomCollXYZ@Base 2.4.0
+ gaiaAllocGeomCollXYZM@Base 2.4.0
+ gaiaAllocLinestring@Base 2.4.0
+ gaiaAllocLinestringXYM@Base 2.4.0
+ gaiaAllocLinestringXYZ@Base 2.4.0
+ gaiaAllocLinestringXYZM@Base 2.4.0
+ gaiaAllocPoint@Base 2.4.0
+ gaiaAllocPointXYM@Base 2.4.0
+ gaiaAllocPointXYZ@Base 2.4.0
+ gaiaAllocPointXYZM@Base 2.4.0
+ gaiaAllocPolygon@Base 2.4.0
+ gaiaAllocPolygonXYM@Base 2.4.0
+ gaiaAllocPolygonXYZ@Base 2.4.0
+ gaiaAllocPolygonXYZM@Base 2.4.0
+ gaiaAllocRing@Base 2.4.0
+ gaiaAllocRingXYM@Base 2.4.0
+ gaiaAllocRingXYZ@Base 2.4.0
+ gaiaAllocRingXYZM@Base 2.4.0
+ gaiaAllocShapefile@Base 2.4.0
+ gaiaAppendPointMToDynamicLine@Base 3.0.0
+ gaiaAppendPointToDynamicLine@Base 2.4.0
+ gaiaAppendPointZMToDynamicLine@Base 3.0.0
+ gaiaAppendPointZToDynamicLine@Base 3.0.0
+ gaiaAppendToOutBuffer@Base 3.0.0
+ gaiaBoundary@Base 2.4.0
+ gaiaBuildCircleMbr@Base 2.4.0
+ gaiaBuildFilterMbr@Base 2.4.0
+ gaiaBuildMbr@Base 2.4.0
+ gaiaCastGeomCollToXY@Base 2.4.0
+ gaiaCastGeomCollToXYM@Base 2.4.0
+ gaiaCastGeomCollToXYZ@Base 2.4.0
+ gaiaCastGeomCollToXYZM@Base 2.4.0
+ gaiaCleanSqlString@Base 2.4.0
+ gaiaClockwise@Base 2.4.0
+ gaiaCloneDbfEntity@Base 2.4.0
+ gaiaCloneDbfField@Base 2.4.0
+ gaiaCloneDynamicLine@Base 2.4.0
+ gaiaCloneGeomColl@Base 2.4.0
+ gaiaCloneGeomCollLinestrings@Base 3.0.0
+ gaiaCloneGeomCollPoints@Base 3.0.0
+ gaiaCloneGeomCollPolygons@Base 3.0.0
  gaiaCloneGeomCollSpecial@Base 4.0.0
- gaiaCloneLinestring@Base 2.4.0~rc2
+ gaiaCloneLinestring@Base 2.4.0
  gaiaCloneLinestringSpecial@Base 4.0.0
- gaiaClonePolygon@Base 2.4.0~rc2
+ gaiaClonePolygon@Base 2.4.0
  gaiaClonePolygonSpecial@Base 4.0.0
- gaiaCloneRing@Base 2.4.0~rc2
+ gaiaCloneRing@Base 2.4.0
  gaiaCloneRingSpecial@Base 4.0.0
- gaiaCloneValue@Base 2.4.0~rc2
- gaiaConvertCharset@Base 2.4.0~rc2
- gaiaConvertLength@Base 2.4.0~rc2
- gaiaConvertToUTF8@Base 2.4.0~rc2
- gaiaConvexHull@Base 2.4.0~rc2
- gaiaCopyLinestringCoords@Base 2.4.0~rc2
+ gaiaCloneValue@Base 2.4.0
+ gaiaConvertCharset@Base 2.4.0
+ gaiaConvertLength@Base 2.4.0
+ gaiaConvertToUTF8@Base 2.4.0
+ gaiaConvexHull@Base 2.4.0
+ gaiaCopyLinestringCoords@Base 2.4.0
  gaiaCopyLinestringCoordsReverse@Base 4.0.0
- gaiaCopyRingCoords@Base 2.4.0~rc2
+ gaiaCopyRingCoords@Base 2.4.0
  gaiaCopyRingCoordsReverse@Base 4.0.0
- gaiaCreateDxfParser@Base 4.1.0-1
- gaiaCreateDynamicLine@Base 2.4.0~rc2
- gaiaCreateMD5Checksum@Base 4.1.0-1
- gaiaCreatePolygon@Base 2.4.0~rc2
- gaiaCreateUTF8Converter@Base 2.4.0~rc2
- gaiaDegsToRads@Base 2.4.0~rc2
+ gaiaCreateDxfParser@Base 4.1.0
+ gaiaCreateDynamicLine@Base 2.4.0
+ gaiaCreateMD5Checksum@Base 4.1.0
+ gaiaCreatePolygon@Base 2.4.0
+ gaiaCreateUTF8Converter@Base 2.4.0
+ gaiaDegsToRads@Base 2.4.0
  gaiaDequotedSql@Base 4.0.0
- gaiaDestroyDxfParser@Base 4.1.0-1
- gaiaDimension@Base 2.4.0~rc2
- gaiaDissolvePoints@Base 3.0.0~beta20110817
- gaiaDissolveSegments@Base 3.0.0~beta20110817
+ gaiaDestroyDxfParser@Base 4.1.0
+ gaiaDimension@Base 2.4.0
+ gaiaDissolvePoints@Base 3.0.0
+ gaiaDissolveSegments@Base 3.0.0
  gaiaDoubleQuotedSql@Base 3.0.2~20120302
  gaiaDropTable@Base 4.0.0
- gaiaDxfWriteEndSection@Base 4.1.0-1
- gaiaDxfWriteEntities@Base 4.1.0-1
- gaiaDxfWriteFooter@Base 4.1.0-1
- gaiaDxfWriteGeometry@Base 4.1.0-1
- gaiaDxfWriteHeader@Base 4.1.0-1
- gaiaDxfWriteLayer@Base 4.1.0-1
- gaiaDxfWriteLine@Base 4.1.0-1
- gaiaDxfWritePoint@Base 4.1.0-1
- gaiaDxfWriteRing@Base 4.1.0-1
- gaiaDxfWriteTables@Base 4.1.0-1
- gaiaDxfWriteText@Base 4.1.0-1
- gaiaDxfWriterInit@Base 4.1.0-1
- gaiaDynamicLineDeletePoint@Base 2.4.0~rc2
- gaiaDynamicLineFindByCoords@Base 2.4.0~rc2
- gaiaDynamicLineFindByPos@Base 2.4.0~rc2
- gaiaDynamicLineInsertAfter@Base 2.4.0~rc2
- gaiaDynamicLineInsertBefore@Base 2.4.0~rc2
- gaiaDynamicLineJoinAfter@Base 2.4.0~rc2
- gaiaDynamicLineJoinBefore@Base 2.4.0~rc2
- gaiaDynamicLineSplitAfter@Base 2.4.0~rc2
- gaiaDynamicLineSplitBefore@Base 2.4.0~rc2
- gaiaEllipseParams@Base 2.4.0~rc2
- gaiaEndianArch@Base 2.4.0~rc2
+ gaiaDxfWriteEndSection@Base 4.1.0
+ gaiaDxfWriteEntities@Base 4.1.0
+ gaiaDxfWriteFooter@Base 4.1.0
+ gaiaDxfWriteGeometry@Base 4.1.0
+ gaiaDxfWriteHeader@Base 4.1.0
+ gaiaDxfWriteLayer@Base 4.1.0
+ gaiaDxfWriteLine@Base 4.1.0
+ gaiaDxfWritePoint@Base 4.1.0
+ gaiaDxfWriteRing@Base 4.1.0
+ gaiaDxfWriteTables@Base 4.1.0
+ gaiaDxfWriteText@Base 4.1.0
+ gaiaDxfWriterInit@Base 4.1.0
+ gaiaDynamicLineDeletePoint@Base 2.4.0
+ gaiaDynamicLineFindByCoords@Base 2.4.0
+ gaiaDynamicLineFindByPos@Base 2.4.0
+ gaiaDynamicLineInsertAfter@Base 2.4.0
+ gaiaDynamicLineInsertBefore@Base 2.4.0
+ gaiaDynamicLineJoinAfter@Base 2.4.0
+ gaiaDynamicLineJoinBefore@Base 2.4.0
+ gaiaDynamicLineSplitAfter@Base 2.4.0
+ gaiaDynamicLineSplitBefore@Base 2.4.0
+ gaiaEllipseParams@Base 2.4.0
+ gaiaEndianArch@Base 2.4.0
  gaiaEwkbGetLinestring@Base 4.0.0
  gaiaEwkbGetMultiGeometry@Base 4.0.0
  gaiaEwkbGetPoint@Base 4.0.0
  gaiaEwkbGetPolygon@Base 4.0.0
- gaiaExifTagGetByteValue@Base 2.4.0~rc2
- gaiaExifTagGetDoubleValue@Base 2.4.0~rc2
- gaiaExifTagGetFloatValue@Base 2.4.0~rc2
- gaiaExifTagGetHumanReadable@Base 2.4.0~rc2
- gaiaExifTagGetId@Base 2.4.0~rc2
- gaiaExifTagGetLongValue@Base 2.4.0~rc2
- gaiaExifTagGetName@Base 2.4.0~rc2
- gaiaExifTagGetNumValues@Base 2.4.0~rc2
- gaiaExifTagGetRational1Value@Base 2.4.0~rc2
- gaiaExifTagGetRational2Value@Base 2.4.0~rc2
- gaiaExifTagGetRationalValue@Base 2.4.0~rc2
- gaiaExifTagGetShortValue@Base 2.4.0~rc2
- gaiaExifTagGetSignedLongValue@Base 2.4.0~rc2
- gaiaExifTagGetSignedRational1Value@Base 2.4.0~rc2
- gaiaExifTagGetSignedRational2Value@Base 2.4.0~rc2
- gaiaExifTagGetSignedRationalValue@Base 2.4.0~rc2
- gaiaExifTagGetSignedShortValue@Base 2.4.0~rc2
- gaiaExifTagGetStringValue@Base 2.4.0~rc2
- gaiaExifTagGetValueType@Base 2.4.0~rc2
- gaiaExifTagsFree@Base 2.4.0~rc2
- gaiaExport16@Base 2.4.0~rc2
- gaiaExport32@Base 2.4.0~rc2
- gaiaExport64@Base 2.4.0~rc2
- gaiaExportDxf@Base 4.1.0-1
- gaiaExportF32@Base 2.4.0~rc2
- gaiaExportI64@Base 2.4.0~rc2
- gaiaExportU32@Base 4.1.0-1
- gaiaExtractLinestringsFromGeomColl@Base 3.0.0~beta20110817
- gaiaExtractPointsFromGeomColl@Base 3.0.0~beta20110817
- gaiaExtractPolygonsFromGeomColl@Base 3.0.0~beta20110817
- gaiaFinalizeMD5Checksum@Base 4.1.0-1
- gaiaFlushDbfHeader@Base 3.0.0~beta20110817
- gaiaFlushShpHeaders@Base 2.4.0~rc2
- gaiaFree@Base 2.4.0~rc2
- gaiaFreeDbf@Base 2.4.0~rc2
- gaiaFreeDbfField@Base 2.4.0~rc2
- gaiaFreeDbfList@Base 2.4.0~rc2
- gaiaFreeDynamicLine@Base 2.4.0~rc2
- gaiaFreeGeomColl@Base 2.4.0~rc2
- gaiaFreeLinestring@Base 2.4.0~rc2
- gaiaFreeMD5Checksum@Base 4.1.0-1
- gaiaFreePoint@Base 2.4.0~rc2
- gaiaFreePolygon@Base 2.4.0~rc2
- gaiaFreeRing@Base 2.4.0~rc2
- gaiaFreeShapefile@Base 2.4.0~rc2
- gaiaFreeUTF8Converter@Base 2.4.0~rc2
- gaiaFreeValue@Base 2.4.0~rc2
+ gaiaExifTagGetByteValue@Base 2.4.0
+ gaiaExifTagGetDoubleValue@Base 2.4.0
+ gaiaExifTagGetFloatValue@Base 2.4.0
+ gaiaExifTagGetHumanReadable@Base 2.4.0
+ gaiaExifTagGetId@Base 2.4.0
+ gaiaExifTagGetLongValue@Base 2.4.0
+ gaiaExifTagGetName@Base 2.4.0
+ gaiaExifTagGetNumValues@Base 2.4.0
+ gaiaExifTagGetRational1Value@Base 2.4.0
+ gaiaExifTagGetRational2Value@Base 2.4.0
+ gaiaExifTagGetRationalValue@Base 2.4.0
+ gaiaExifTagGetShortValue@Base 2.4.0
+ gaiaExifTagGetSignedLongValue@Base 2.4.0
+ gaiaExifTagGetSignedRational1Value@Base 2.4.0
+ gaiaExifTagGetSignedRational2Value@Base 2.4.0
+ gaiaExifTagGetSignedRationalValue@Base 2.4.0
+ gaiaExifTagGetSignedShortValue@Base 2.4.0
+ gaiaExifTagGetStringValue@Base 2.4.0
+ gaiaExifTagGetValueType@Base 2.4.0
+ gaiaExifTagsFree@Base 2.4.0
+ gaiaExport16@Base 2.4.0
+ gaiaExport32@Base 2.4.0
+ gaiaExport64@Base 2.4.0
+ gaiaExportDxf@Base 4.1.0
+ gaiaExportF32@Base 2.4.0
+ gaiaExportI64@Base 2.4.0
+ gaiaExportU32@Base 4.1.0
+ gaiaExtractLinestringsFromGeomColl@Base 3.0.0
+ gaiaExtractPointsFromGeomColl@Base 3.0.0
+ gaiaExtractPolygonsFromGeomColl@Base 3.0.0
+ gaiaFinalizeMD5Checksum@Base 4.1.0
+ gaiaFlushDbfHeader@Base 3.0.0
+ gaiaFlushShpHeaders@Base 2.4.0
+ gaiaFree@Base 2.4.0
+ gaiaFreeDbf@Base 2.4.0
+ gaiaFreeDbfField@Base 2.4.0
+ gaiaFreeDbfList@Base 2.4.0
+ gaiaFreeDynamicLine@Base 2.4.0
+ gaiaFreeGeomColl@Base 2.4.0
+ gaiaFreeLinestring@Base 2.4.0
+ gaiaFreeMD5Checksum@Base 4.1.0
+ gaiaFreePoint@Base 2.4.0
+ gaiaFreePolygon@Base 2.4.0
+ gaiaFreeRing@Base 2.4.0
+ gaiaFreeShapefile@Base 2.4.0
+ gaiaFreeUTF8Converter@Base 2.4.0
+ gaiaFreeValue@Base 2.4.0
  gaiaFreeVectorLayersList@Base 4.0.0
- gaiaFromEWKB@Base 3.0.0~beta20110817
- gaiaFromFgf@Base 2.4.0~rc2
- gaiaFromGeos_XY@Base 2.4.0~rc2
- gaiaFromGeos_XYM@Base 2.4.0~rc2
- gaiaFromGeos_XYZ@Base 2.4.0~rc2
- gaiaFromGeos_XYZM@Base 2.4.0~rc2
- gaiaFromSpatiaLiteBlobMbr@Base 2.4.0~rc2
- gaiaFromSpatiaLiteBlobWkb@Base 2.4.0~rc2
- gaiaFromWkb@Base 2.4.0~rc2
- gaiaGeodesicDistance@Base 2.4.0~rc2
- gaiaGeodesicTotalLength@Base 2.4.0~rc2
- gaiaGeomCollArea@Base 2.4.0~rc2
- gaiaGeomCollBuffer@Base 2.4.0~rc2
- gaiaGeomCollCentroid@Base 2.4.0~rc2
- gaiaGeomCollContains@Base 2.4.0~rc2
+ gaiaFromEWKB@Base 3.0.0
+ gaiaFromFgf@Base 2.4.0
+ gaiaFromGeos_XY@Base 2.4.0
+ gaiaFromGeos_XYM@Base 2.4.0
+ gaiaFromGeos_XYZ@Base 2.4.0
+ gaiaFromGeos_XYZM@Base 2.4.0
+ gaiaFromSpatiaLiteBlobMbr@Base 2.4.0
+ gaiaFromSpatiaLiteBlobWkb@Base 2.4.0
+ gaiaFromWkb@Base 2.4.0
+ gaiaGeodesicDistance@Base 2.4.0
+ gaiaGeodesicTotalLength@Base 2.4.0
+ gaiaGeomCollArea@Base 2.4.0
+ gaiaGeomCollBuffer@Base 2.4.0
+ gaiaGeomCollCentroid@Base 2.4.0
+ gaiaGeomCollContains@Base 2.4.0
  gaiaGeomCollCoveredBy@Base 3.0.2~20120302
  gaiaGeomCollCovers@Base 3.0.2~20120302
- gaiaGeomCollCrosses@Base 2.4.0~rc2
- gaiaGeomCollDisjoint@Base 2.4.0~rc2
- gaiaGeomCollDistance@Base 2.4.0~rc2
- gaiaGeomCollEquals@Base 2.4.0~rc2
- gaiaGeomCollIntersects@Base 2.4.0~rc2
- gaiaGeomCollLength@Base 2.4.0~rc2
+ gaiaGeomCollCrosses@Base 2.4.0
+ gaiaGeomCollDisjoint@Base 2.4.0
+ gaiaGeomCollDistance@Base 2.4.0
+ gaiaGeomCollEquals@Base 2.4.0
+ gaiaGeomCollIntersects@Base 2.4.0
+ gaiaGeomCollLength@Base 2.4.0
  gaiaGeomCollLengthOrPerimeter@Base 4.0.0
- gaiaGeomCollOverlaps@Base 2.4.0~rc2
- gaiaGeomCollPreparedContains@Base 4.1.0-1
- gaiaGeomCollPreparedCoveredBy@Base 4.1.0-1
- gaiaGeomCollPreparedCovers@Base 4.1.0-1
- gaiaGeomCollPreparedCrosses@Base 4.1.0-1
- gaiaGeomCollPreparedDisjoint@Base 4.1.0-1
- gaiaGeomCollPreparedIntersects@Base 4.1.0-1
- gaiaGeomCollPreparedOverlaps@Base 4.1.0-1
- gaiaGeomCollPreparedTouches@Base 4.1.0-1
- gaiaGeomCollPreparedWithin@Base 4.1.0-1
- gaiaGeomCollRelate@Base 2.4.0~rc2
- gaiaGeomCollSimplify@Base 2.4.0~rc2
- gaiaGeomCollSimplifyPreserveTopology@Base 2.4.0~rc2
- gaiaGeomCollTouches@Base 2.4.0~rc2
- gaiaGeomCollWithin@Base 2.4.0~rc2
- gaiaGeometryAliasType@Base 2.4.0~rc2
- gaiaGeometryDifference@Base 2.4.0~rc2
- gaiaGeometryIntersection@Base 2.4.0~rc2
- gaiaGeometrySymDifference@Base 2.4.0~rc2
- gaiaGeometryType@Base 2.4.0~rc2
- gaiaGeometryUnion@Base 2.4.0~rc2
- gaiaGetExifGpsTagById@Base 2.4.0~rc2
- gaiaGetExifTagById@Base 2.4.0~rc2
- gaiaGetExifTagByName@Base 2.4.0~rc2
- gaiaGetExifTagByPos@Base 2.4.0~rc2
- gaiaGetExifTags@Base 2.4.0~rc2
- gaiaGetExifTagsCount@Base 2.4.0~rc2
- gaiaGetGeosAuxErrorMsg@Base 4.1.0-1
- gaiaGetGeosErrorMsg@Base 2.4.0~rc2
- gaiaGetGeosWarningMsg@Base 2.4.0~rc2
- gaiaGetGpsCoords@Base 2.4.0~rc2
- gaiaGetGpsLatLong@Base 2.4.0~rc2
- gaiaGetLayerExtent@Base 4.1.0-1
- gaiaGetLocaleCharset@Base 2.4.0~rc2
- gaiaGetMbrMaxX@Base 2.4.0~rc2
- gaiaGetMbrMaxY@Base 2.4.0~rc2
- gaiaGetMbrMinX@Base 2.4.0~rc2
- gaiaGetMbrMinY@Base 2.4.0~rc2
- gaiaGetPointOnSurface@Base 2.4.0~rc2
+ gaiaGeomCollOverlaps@Base 2.4.0
+ gaiaGeomCollPreparedContains@Base 4.1.0
+ gaiaGeomCollPreparedCoveredBy@Base 4.1.0
+ gaiaGeomCollPreparedCovers@Base 4.1.0
+ gaiaGeomCollPreparedCrosses@Base 4.1.0
+ gaiaGeomCollPreparedDisjoint@Base 4.1.0
+ gaiaGeomCollPreparedIntersects@Base 4.1.0
+ gaiaGeomCollPreparedOverlaps@Base 4.1.0
+ gaiaGeomCollPreparedTouches@Base 4.1.0
+ gaiaGeomCollPreparedWithin@Base 4.1.0
+ gaiaGeomCollRelate@Base 2.4.0
+ gaiaGeomCollSimplify@Base 2.4.0
+ gaiaGeomCollSimplifyPreserveTopology@Base 2.4.0
+ gaiaGeomCollTouches@Base 2.4.0
+ gaiaGeomCollWithin@Base 2.4.0
+ gaiaGeometryAliasType@Base 2.4.0
+ gaiaGeometryDifference@Base 2.4.0
+ gaiaGeometryIntersection@Base 2.4.0
+ gaiaGeometrySymDifference@Base 2.4.0
+ gaiaGeometryType@Base 2.4.0
+ gaiaGeometryUnion@Base 2.4.0
+ gaiaGetExifGpsTagById@Base 2.4.0
+ gaiaGetExifTagById@Base 2.4.0
+ gaiaGetExifTagByName@Base 2.4.0
+ gaiaGetExifTagByPos@Base 2.4.0
+ gaiaGetExifTags@Base 2.4.0
+ gaiaGetExifTagsCount@Base 2.4.0
+ gaiaGetGeosAuxErrorMsg@Base 4.1.0
+ gaiaGetGeosErrorMsg@Base 2.4.0
+ gaiaGetGeosWarningMsg@Base 2.4.0
+ gaiaGetGpsCoords@Base 2.4.0
+ gaiaGetGpsLatLong@Base 2.4.0
+ gaiaGetLayerExtent@Base 4.1.0
+ gaiaGetLocaleCharset@Base 2.4.0
+ gaiaGetMbrMaxX@Base 2.4.0
+ gaiaGetMbrMaxY@Base 2.4.0
+ gaiaGetMbrMinX@Base 2.4.0
+ gaiaGetMbrMinY@Base 2.4.0
+ gaiaGetPointOnSurface@Base 2.4.0
  gaiaGetVectorLayersList@Base 4.0.0
- gaiaGreatCircleDistance@Base 2.4.0~rc2
- gaiaGreatCircleTotalLength@Base 2.4.0~rc2
- gaiaGuessBlobType@Base 2.4.0~rc2
+ gaiaGreatCircleDistance@Base 2.4.0
+ gaiaGreatCircleTotalLength@Base 2.4.0
+ gaiaGuessBlobType@Base 2.4.0
  gaiaHausdorffDistance@Base 3.0.2~20120302
  gaiaHexagonalGrid@Base 4.0.0
- gaiaIllegalSqlName@Base 2.4.0~rc2
- gaiaImport16@Base 2.4.0~rc2
- gaiaImport32@Base 2.4.0~rc2
- gaiaImport64@Base 2.4.0~rc2
- gaiaImportF32@Base 2.4.0~rc2
- gaiaImportI64@Base 2.4.0~rc2
- gaiaImportU32@Base 4.1.0-1
- gaiaInsertInteriorRing@Base 2.4.0~rc2
+ gaiaIllegalSqlName@Base 2.4.0
+ gaiaImport16@Base 2.4.0
+ gaiaImport32@Base 2.4.0
+ gaiaImport64@Base 2.4.0
+ gaiaImportF32@Base 2.4.0
+ gaiaImportI64@Base 2.4.0
+ gaiaImportU32@Base 4.1.0
+ gaiaInsertInteriorRing@Base 2.4.0
  gaiaInsertIntoSqlLog@Base 4.0.0
- gaiaInsertLinestringInGeomColl@Base 2.4.0~rc2
- gaiaInsertPolygonInGeomColl@Base 2.4.0~rc2
- gaiaIntersect@Base 2.4.0~rc2
- gaiaIsClosed@Base 2.4.0~rc2
+ gaiaInsertLinestringInGeomColl@Base 2.4.0
+ gaiaInsertPolygonInGeomColl@Base 2.4.0
+ gaiaIntersect@Base 2.4.0
+ gaiaIsClosed@Base 2.4.0
  gaiaIsClosedGeom@Base 4.0.0
- gaiaIsEmpty@Base 2.4.0~rc2
- gaiaIsExifGpsTag@Base 2.4.0~rc2
+ gaiaIsEmpty@Base 2.4.0
+ gaiaIsExifGpsTag@Base 2.4.0
  gaiaIsNotClosedGeomColl@Base 4.0.0
  gaiaIsNotClosedRing@Base 4.0.0
- gaiaIsPointOnPolygonSurface@Base 2.4.0~rc2
- gaiaIsPointOnRingSurface@Base 2.4.0~rc2
- gaiaIsReservedSqlName@Base 2.4.0~rc2
- gaiaIsReservedSqliteName@Base 2.4.0~rc2
- gaiaIsRing@Base 2.4.0~rc2
- gaiaIsSimple@Base 2.4.0~rc2
- gaiaIsToxic@Base 2.4.0~rc2
- gaiaIsValid@Base 2.4.0~rc2
- gaiaIsValidDbfList@Base 2.4.0~rc2
- gaiaLineGetPoint@Base 2.4.0~rc2
+ gaiaIsPointOnPolygonSurface@Base 2.4.0
+ gaiaIsPointOnRingSurface@Base 2.4.0
+ gaiaIsReservedSqlName@Base 2.4.0
+ gaiaIsReservedSqliteName@Base 2.4.0
+ gaiaIsRing@Base 2.4.0
+ gaiaIsSimple@Base 2.4.0
+ gaiaIsToxic@Base 2.4.0
+ gaiaIsValid@Base 2.4.0
+ gaiaIsValidDbfList@Base 2.4.0
+ gaiaLineGetPoint@Base 2.4.0
  gaiaLineInterpolateEquidistantPoints@Base 4.0.0
  gaiaLineInterpolatePoint@Base 3.0.2~20120302
  gaiaLineLocatePoint@Base 3.0.2~20120302
  gaiaLineMerge@Base 3.0.2~20120302
- gaiaLineSetPoint@Base 2.4.0~rc2
+ gaiaLineSetPoint@Base 2.4.0
  gaiaLineSubstring@Base 3.0.2~20120302
- gaiaLinearize@Base 3.0.0~beta20110817
+ gaiaLinearize@Base 3.0.0
  gaiaLinesCutAtNodes@Base 3.0.2~20120302
- gaiaLinestringEquals@Base 2.4.0~rc2
- gaiaLoadFromDxfParser@Base 4.1.0-1
+ gaiaLinestringEquals@Base 2.4.0
+ gaiaLoadFromDxfParser@Base 4.1.0
  gaiaLocateBetweenMeasures@Base 4.0.0
- gaiaMRangeGeometry@Base 2.4.0~rc2
- gaiaMRangeLinestring@Base 2.4.0~rc2
- gaiaMRangePolygon@Base 2.4.0~rc2
- gaiaMRangeRing@Base 2.4.0~rc2
- gaiaMakeArc@Base 4.1.0-1
- gaiaMakeCircle@Base 4.1.0-1
- gaiaMakeEllipse@Base 4.1.0-1
- gaiaMakeEllipticArc@Base 4.1.0-1
- gaiaMakeLine@Base 3.0.0~beta20110817
- gaiaMakePoint@Base 2.4.0~rc2
+ gaiaMRangeGeometry@Base 2.4.0
+ gaiaMRangeLinestring@Base 2.4.0
+ gaiaMRangePolygon@Base 2.4.0
+ gaiaMRangeRing@Base 2.4.0
+ gaiaMakeArc@Base 4.1.0
+ gaiaMakeCircle@Base 4.1.0
+ gaiaMakeEllipse@Base 4.1.0
+ gaiaMakeEllipticArc@Base 4.1.0
+ gaiaMakeLine@Base 3.0.0
+ gaiaMakePoint@Base 2.4.0
  gaiaMakePointM@Base 3.0.2~20120302
  gaiaMakePointZ@Base 3.0.2~20120302
  gaiaMakePointZM@Base 3.0.2~20120302
- gaiaMbrGeometry@Base 2.4.0~rc2
- gaiaMbrLinestring@Base 2.4.0~rc2
- gaiaMbrPolygon@Base 2.4.0~rc2
- gaiaMbrRing@Base 2.4.0~rc2
- gaiaMbrsContains@Base 2.4.0~rc2
- gaiaMbrsDisjoint@Base 2.4.0~rc2
- gaiaMbrsEqual@Base 2.4.0~rc2
- gaiaMbrsIntersects@Base 2.4.0~rc2
- gaiaMbrsOverlaps@Base 2.4.0~rc2
- gaiaMbrsTouches@Base 2.4.0~rc2
- gaiaMbrsWithin@Base 2.4.0~rc2
- gaiaMeasureArea@Base 2.4.0~rc2
- gaiaMeasureLength@Base 2.4.0~rc2
- gaiaMergeGeometries@Base 3.0.0~beta20110817
- gaiaMinDistance@Base 2.4.0~rc2
+ gaiaMbrGeometry@Base 2.4.0
+ gaiaMbrLinestring@Base 2.4.0
+ gaiaMbrPolygon@Base 2.4.0
+ gaiaMbrRing@Base 2.4.0
+ gaiaMbrsContains@Base 2.4.0
+ gaiaMbrsDisjoint@Base 2.4.0
+ gaiaMbrsEqual@Base 2.4.0
+ gaiaMbrsIntersects@Base 2.4.0
+ gaiaMbrsOverlaps@Base 2.4.0
+ gaiaMbrsTouches@Base 2.4.0
+ gaiaMbrsWithin@Base 2.4.0
+ gaiaMeasureArea@Base 2.4.0
+ gaiaMeasureLength@Base 2.4.0
+ gaiaMergeGeometries@Base 3.0.0
+ gaiaMinDistance@Base 2.4.0
  gaiaNormalizeLonLat@Base 4.0.0
  gaiaOffsetCurve@Base 3.0.2~20120302
- gaiaOpenDbfRead@Base 2.4.0~rc2
- gaiaOpenDbfWrite@Base 3.0.0~beta20110817
- gaiaOpenShpRead@Base 2.4.0~rc2
- gaiaOpenShpWrite@Base 2.4.0~rc2
- gaiaOutBareKml@Base 3.0.0~beta20110817
- gaiaOutBufferInitialize@Base 3.0.0~beta20110817
- gaiaOutBufferReset@Base 3.0.0~beta20110817
- gaiaOutEwktLinestringZ@Base 3.0.0~beta20110817
- gaiaOutEwktPointZ@Base 3.0.0~beta20110817
- gaiaOutEwktPolygonZ@Base 3.0.0~beta20110817
- gaiaOutFullKml@Base 3.0.0~beta20110817
- gaiaOutGeoJSON@Base 3.0.0~beta20110817
- gaiaOutGml@Base 3.0.0~beta20110817
- gaiaOutLinestringZ@Base 3.0.0~beta20110817
- gaiaOutPointZ@Base 3.0.0~beta20110817
- gaiaOutPolygonZ@Base 3.0.0~beta20110817
- gaiaOutSvg@Base 2.4.0~rc2
- gaiaOutWkt@Base 2.4.0~rc2
- gaiaOutWktStrict@Base 3.0.0~beta20110817
- gaiaParseDxfFile@Base 4.1.0-1
- gaiaParseEWKT@Base 3.0.0~beta20110817
- gaiaParseFilterMbr@Base 2.4.0~rc2
- gaiaParseGeoJSON@Base 3.0.0~beta20110817
- gaiaParseGml@Base 3.0.0~beta20110817
+ gaiaOpenDbfRead@Base 2.4.0
+ gaiaOpenDbfWrite@Base 3.0.0
+ gaiaOpenShpRead@Base 2.4.0
+ gaiaOpenShpWrite@Base 2.4.0
+ gaiaOutBareKml@Base 3.0.0
+ gaiaOutBufferInitialize@Base 3.0.0
+ gaiaOutBufferReset@Base 3.0.0
+ gaiaOutEwktLinestringZ@Base 3.0.0
+ gaiaOutEwktPointZ@Base 3.0.0
+ gaiaOutEwktPolygonZ@Base 3.0.0
+ gaiaOutFullKml@Base 3.0.0
+ gaiaOutGeoJSON@Base 3.0.0
+ gaiaOutGml@Base 3.0.0
+ gaiaOutLinestringZ@Base 3.0.0
+ gaiaOutPointZ@Base 3.0.0
+ gaiaOutPolygonZ@Base 3.0.0
+ gaiaOutSvg@Base 2.4.0
+ gaiaOutWkt@Base 2.4.0
+ gaiaOutWktStrict@Base 3.0.0
+ gaiaParseDxfFile@Base 4.1.0
+ gaiaParseEWKT@Base 3.0.0
+ gaiaParseFilterMbr@Base 2.4.0
+ gaiaParseGeoJSON@Base 3.0.0
+ gaiaParseGml@Base 3.0.0
  gaiaParseHexEWKB@Base 4.0.0
- gaiaParseKml@Base 3.0.0~beta20110817
- gaiaParseWkt@Base 2.4.0~rc2
- gaiaPolygonEquals@Base 2.4.0~rc2
- gaiaPolygonize@Base 2.4.0~rc2
- gaiaPrependPointMToDynamicLine@Base 3.0.0~beta20110817
- gaiaPrependPointToDynamicLine@Base 2.4.0~rc2
- gaiaPrependPointZMToDynamicLine@Base 3.0.0~beta20110817
- gaiaPrependPointZToDynamicLine@Base 3.0.0~beta20110817
+ gaiaParseKml@Base 3.0.0
+ gaiaParseWkt@Base 2.4.0
+ gaiaPolygonEquals@Base 2.4.0
+ gaiaPolygonize@Base 2.4.0
+ gaiaPrependPointMToDynamicLine@Base 3.0.0
+ gaiaPrependPointToDynamicLine@Base 2.4.0
+ gaiaPrependPointZMToDynamicLine@Base 3.0.0
+ gaiaPrependPointZToDynamicLine@Base 3.0.0
  gaiaQuotedSql@Base 3.0.2~20120302
- gaiaRadsToDegs@Base 2.4.0~rc2
- gaiaReadDbfEntity@Base 2.4.0~rc2
- gaiaReadShpEntity@Base 2.4.0~rc2
- gaiaReflectCoords@Base 2.4.0~rc2
- gaiaResetDbfEntity@Base 2.4.0~rc2
- gaiaResetGeosMsg@Base 2.4.0~rc2
- gaiaReverseDynamicLine@Base 2.4.0~rc2
- gaiaRingCentroid@Base 2.4.0~rc2
- gaiaRingGetPoint@Base 2.4.0~rc2
- gaiaRingSetPoint@Base 2.4.0~rc2
- gaiaRotateCoords@Base 2.4.0~rc2
- gaiaSanitize@Base 2.4.0~rc2
- gaiaScaleCoords@Base 2.4.0~rc2
- gaiaSetDoubleValue@Base 2.4.0~rc2
- gaiaSetGeosAuxErrorMsg@Base 4.1.0-1
- gaiaSetGeosErrorMsg@Base 2.4.0~rc2
- gaiaSetGeosWarningMsg@Base 2.4.0~rc2
- gaiaSetIntValue@Base 2.4.0~rc2
- gaiaSetNullValue@Base 2.4.0~rc2
- gaiaSetStrValue@Base 2.4.0~rc2
+ gaiaRadsToDegs@Base 2.4.0
+ gaiaReadDbfEntity@Base 2.4.0
+ gaiaReadShpEntity@Base 2.4.0
+ gaiaReflectCoords@Base 2.4.0
+ gaiaResetDbfEntity@Base 2.4.0
+ gaiaResetGeosMsg@Base 2.4.0
+ gaiaReverseDynamicLine@Base 2.4.0
+ gaiaRingCentroid@Base 2.4.0
+ gaiaRingGetPoint@Base 2.4.0
+ gaiaRingSetPoint@Base 2.4.0
+ gaiaRotateCoords@Base 2.4.0
+ gaiaSanitize@Base 2.4.0
+ gaiaScaleCoords@Base 2.4.0
+ gaiaSetDoubleValue@Base 2.4.0
+ gaiaSetGeosAuxErrorMsg@Base 4.1.0
+ gaiaSetGeosErrorMsg@Base 2.4.0
+ gaiaSetGeosWarningMsg@Base 2.4.0
+ gaiaSetIntValue@Base 2.4.0
+ gaiaSetNullValue@Base 2.4.0
+ gaiaSetStrValue@Base 2.4.0
  gaiaSharedPaths@Base 3.0.2~20120302
  gaiaShiftCoords3D@Base 4.0.0
- gaiaShiftCoords@Base 2.4.0~rc2
+ gaiaShiftCoords@Base 2.4.0
  gaiaShiftLongitude@Base 4.0.0
  gaiaShortestLine@Base 3.0.2~20120302
- gaiaShpAnalyze@Base 2.4.0~rc2
+ gaiaShpAnalyze@Base 2.4.0
  gaiaSingleQuotedSql@Base 3.0.2~20120302
  gaiaSingleSidedBuffer@Base 3.0.2~20120302
  gaiaSnap@Base 3.0.2~20120302
  gaiaSnapToGrid@Base 4.0.0
  gaiaSquareGrid@Base 4.0.0
- gaiaSwapCoords@Base 2.4.0~rc2
- gaiaTextReaderAlloc@Base 3.0.0~beta20110817
- gaiaTextReaderDestroy@Base 3.0.0~beta20110817
- gaiaTextReaderFetchField@Base 3.0.0~beta20110817
- gaiaTextReaderGetRow@Base 3.0.0~beta20110817
- gaiaTextReaderParse@Base 3.0.0~beta20110817
- gaiaToCompressedBlobWkb@Base 2.4.0~rc2
- gaiaToEWKB@Base 3.0.0~beta20110817
- gaiaToEWKT@Base 3.0.0~beta20110817
- gaiaToFgf@Base 2.4.0~rc2
- gaiaToGeos@Base 2.4.0~rc2
+ gaiaSwapCoords@Base 2.4.0
+ gaiaTextReaderAlloc@Base 3.0.0
+ gaiaTextReaderDestroy@Base 3.0.0
+ gaiaTextReaderFetchField@Base 3.0.0
+ gaiaTextReaderGetRow@Base 3.0.0
+ gaiaTextReaderParse@Base 3.0.0
+ gaiaToCompressedBlobWkb@Base 2.4.0
+ gaiaToEWKB@Base 3.0.0
+ gaiaToEWKT@Base 3.0.0
+ gaiaToFgf@Base 2.4.0
+ gaiaToGeos@Base 2.4.0
  gaiaToGeosSelective@Base 4.0.0
- gaiaToHexWkb@Base 2.4.0~rc2
- gaiaToSpatiaLiteBlobWkb@Base 2.4.0~rc2
- gaiaToWkb@Base 2.4.0~rc2
- gaiaTransform@Base 2.4.0~rc2
+ gaiaToHexWkb@Base 2.4.0
+ gaiaToSpatiaLiteBlobWkb@Base 2.4.0
+ gaiaToWkb@Base 2.4.0
+ gaiaTransform@Base 2.4.0
  gaiaTriangularGrid@Base 4.0.0
  gaiaUnaryUnion@Base 3.0.2~20120302
  gaiaUnionCascaded@Base 4.0.0
- gaiaUpdateMD5Checksum@Base 4.1.0-1
+ gaiaUpdateMD5Checksum@Base 4.1.0
  gaiaUpdateSqlLog@Base 4.0.0
- gaiaWriteDbfEntity@Base 3.0.0~beta20110817
- gaiaWriteShpEntity@Base 2.4.0~rc2
- gaiaZRangeGeometry@Base 2.4.0~rc2
- gaiaZRangeLinestring@Base 2.4.0~rc2
- gaiaZRangePolygon@Base 2.4.0~rc2
- gaiaZRangeRing@Base 2.4.0~rc2
- gaia_geos_error_msg@Base 2.4.0~rc2
- gaia_geos_warning_msg@Base 2.4.0~rc2
- gaia_geosaux_error_msg@Base 4.1.0-1
- geoJSONParse@Base 3.0.0~beta20110817
- geoJSONParseAlloc@Base 3.0.0~beta20110817
- geoJSONParseFree@Base 3.0.0~beta20110817
+ gaiaWriteDbfEntity@Base 3.0.0
+ gaiaWriteShpEntity@Base 2.4.0
+ gaiaZRangeGeometry@Base 2.4.0
+ gaiaZRangeLinestring@Base 2.4.0
+ gaiaZRangePolygon@Base 2.4.0
+ gaiaZRangeRing@Base 2.4.0
+ gaia_geos_error_msg@Base 2.4.0
+ gaia_geos_warning_msg@Base 2.4.0
+ gaia_geosaux_error_msg@Base 4.1.0
+ geoJSONParse@Base 3.0.0
+ geoJSONParseAlloc@Base 3.0.0
+ geoJSONParseFree@Base 3.0.0
  geoJSON_yylex@Base 4.0.0
- get_wfs_base_describe_url@Base 4.1.0-1
- get_wfs_base_request_url@Base 4.1.0-1
- get_wfs_catalog_count@Base 4.1.0-1
- get_wfs_catalog_item@Base 4.1.0-1
- get_wfs_describe_url@Base 4.1.0-1
- get_wfs_item_abstract@Base 4.1.0-1
- get_wfs_item_name@Base 4.1.0-1
- get_wfs_item_title@Base 4.1.0-1
- get_wfs_keyword@Base 4.1.0-1
- get_wfs_keyword_count@Base 4.1.0-1
- get_wfs_layer_srid@Base 4.1.0-1
- get_wfs_layer_srid_count@Base 4.1.0-1
- get_wfs_request_url@Base 4.1.0-1
- get_wfs_schema_column@Base 4.1.0-1
- get_wfs_schema_column_count@Base 4.1.0-1
- get_wfs_schema_column_info@Base 4.1.0-1
- get_wfs_schema_geometry_info@Base 4.1.0-1
- gmlParse@Base 3.0.0~beta20110817
- gmlParseAlloc@Base 3.0.0~beta20110817
- gmlParseFree@Base 3.0.0~beta20110817
+ get_wfs_base_describe_url@Base 4.1.0
+ get_wfs_base_request_url@Base 4.1.0
+ get_wfs_catalog_count@Base 4.1.0
+ get_wfs_catalog_item@Base 4.1.0
+ get_wfs_describe_url@Base 4.1.0
+ get_wfs_item_abstract@Base 4.1.0
+ get_wfs_item_name@Base 4.1.0
+ get_wfs_item_title@Base 4.1.0
+ get_wfs_keyword@Base 4.1.0
+ get_wfs_keyword_count@Base 4.1.0
+ get_wfs_layer_srid@Base 4.1.0
+ get_wfs_layer_srid_count@Base 4.1.0
+ get_wfs_request_url@Base 4.1.0
+ get_wfs_schema_column@Base 4.1.0
+ get_wfs_schema_column_count@Base 4.1.0
+ get_wfs_schema_column_info@Base 4.1.0
+ get_wfs_schema_geometry_info@Base 4.1.0
+ gmlParse@Base 3.0.0
+ gmlParseAlloc@Base 3.0.0
+ gmlParseFree@Base 3.0.0
  gml_yylex@Base 4.0.0
  insert_epsg_srid@Base 3.0.2~20120302
  is_kml_constant@Base 3.0.2~20120302
- kmlParse@Base 3.0.0~beta20110817
- kmlParseAlloc@Base 3.0.0~beta20110817
- kmlParseFree@Base 3.0.0~beta20110817
+ kmlParse@Base 3.0.0
+ kmlParseAlloc@Base 3.0.0
+ kmlParseFree@Base 3.0.0
  kml_yylex@Base 4.0.0
  load_XL@Base 3.0.2~20120302
  load_dbf@Base 3.0.2~20120302
  load_dbf_ex@Base 4.0.0
- load_from_wfs@Base 4.1.0-1
- load_from_wfs_paged@Base 4.1.0-1
+ load_from_wfs@Base 4.1.0
+ load_from_wfs_paged@Base 4.1.0
  load_shapefile@Base 3.0.2~20120302
  load_shapefile_ex@Base 4.0.0
- math_llabs@Base 2.4.0~rc2
- math_round@Base 2.4.0~rc2
+ math_llabs@Base 2.4.0
+ math_round@Base 2.4.0
  remove_duplicated_rows@Base 3.0.2~20120302
- sanitize_all_geometry_columns@Base 4.1.0-1
- sanitize_geometry_column@Base 4.1.0-1
+ sanitize_all_geometry_columns@Base 4.1.0
+ sanitize_geometry_column@Base 4.1.0
  spatial_ref_sys_init2@Base 3.0.2~20120302
- spatial_ref_sys_init@Base 3.0.0~beta20110817
- spatialite_alloc_connection@Base 4.1.0-1
+ spatial_ref_sys_init@Base 3.0.0
+ spatialite_alloc_connection@Base 4.1.0
  spatialite_cleanup@Base 3.0.2~20120302
- spatialite_cleanup_ex@Base 4.1.0-1
- spatialite_init@Base 2.4.0~rc2
- spatialite_init_ex@Base 4.1.0-1
+ spatialite_cleanup_ex@Base 4.1.0
+ spatialite_init@Base 2.4.0
+ spatialite_init_ex@Base 4.1.0
  spatialite_init_geos@Base 4.0.0
- spatialite_version@Base 2.4.0~rc2
- spatialiteversion@Base 2.4.0~rc2
- sqlite3VirtualTextInit@Base 2.4.0~rc2
- sqlite3_extension_init@Base 2.4.0~rc2
+ spatialite_version@Base 2.4.0
+ spatialiteversion@Base 2.4.0
+ sqlite3VirtualTextInit@Base 2.4.0
+ sqlite3_extension_init@Base 2.4.0
  update_layer_statistics@Base 3.0.2~20120302
- vanuatuParse@Base 3.0.0~beta20110817
- vanuatuParseAlloc@Base 3.0.0~beta20110817
- vanuatuParseFree@Base 3.0.0~beta20110817
- vanuatu_point_xyzm@Base 3.0.0~beta20110817
+ vanuatuParse@Base 3.0.0
+ vanuatuParseAlloc@Base 3.0.0
+ vanuatuParseFree@Base 3.0.0
+ vanuatu_point_xyzm@Base 3.0.0
  vanuatu_yylex@Base 4.0.0
- virtualtext_extension_init@Base 2.4.0~rc2
- virtualtext_module@Base 2.4.0~rc2
+ virtualtext_extension_init@Base 2.4.0
+ virtualtext_module@Base 2.4.0

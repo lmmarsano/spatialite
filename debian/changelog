@@ -6,6 +6,8 @@ spatialite (4.1.1-1) UNRELEASED; urgency=low
   * Update copyright file, use copyright-format 1.0 (dep5).
   * Use canonical URLs for Vcs-* fields.
   * Add lintian overrides for no upstream changelog, link to online timeline.
+  * Strip debian revision in symbols file.
+  * Use upstream version without debian revision when generating symbols.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 29 Sep 2013 22:00:45 +0200
 

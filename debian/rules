@@ -10,6 +10,7 @@ export DH_OPTIONS
 FULL_VERSION := $(shell dpkg-parsechangelog | grep ^Version | cut -d' ' -f2 | cut -d- -f1)
 VERSION := $(shell echo $(FULL_VERSION) | sed -e "s/~beta[[:digit:]]\+/-BETA/")
 LC_VERSION := $(shell echo $(VERSION) | tr A-Z a-z)
+SPATIALITE_VERSION := $(shell echo $(FULL_VERSION) | sed -e 's/^~.*//')
 
 BASE_URL := http://www.gaia-gis.it/gaia-sins
 DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
@@ -26,6 +27,7 @@ endif
 versions:
 	@echo "Spatialite full version: $(FULL_VERSION)"
 	@echo "Spatialite version: $(LC_VERSION)"
+	@echo "Spatialite symbols: $(SPATIALITE_VERSION)"
 
 override_dh_auto_configure:
 	dh_auto_configure -- \
@@ -41,6 +43,9 @@ override_dh_auto_test:
 	cp debian/backup/stmt/*.sqlite test/sql_stmt_tests/
 	cp debian/backup/*.sqlite test/
 	rm -rf debian/backup
+
+override_dh_makeshlibs:
+	dh_makeshlibs -- -v$(SPATIALITE_VERSION)
 
 override_dh_shlibdeps:
 	dh_shlibdeps -l/usr/lib:$(CURDIR)/debian/tmp/usr/lib
