@@ -1,7 +1,7 @@
 /* 
  spatialite.h -- Gaia spatial support for SQLite 
   
- version 4.0, 2012 August 6
+ version 4.1, 2013 May 8
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -23,7 +23,7 @@ The Original Code is the SpatiaLite library
 
 The Initial Developer of the Original Code is Alessandro Furieri
  
-Portions created by the Initial Developer are Copyright (C) 2008-2012
+Portions created by the Initial Developer are Copyright (C) 2008-2013
 the Initial Developer. All Rights Reserved.
 
 Contributor(s):
@@ -64,6 +64,7 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #define _SPATIALITE_H
 #endif
 
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -77,15 +78,44 @@ extern "C"
     SPATIALITE_DECLARE const char *spatialite_version (void);
 
 /**
+ Initializes the internal memory block supporting each connection
+
+ \sa spatialite_init_ex, spatialite_cleanup_ex
+
+ */
+    SPATIALITE_DECLARE void *spatialite_alloc_connection (void);
+
+/**
  Initializes the library. 
 
+ This function is now \b DEPRECATED because is not reentrant (not thread safe);
+ use spatialite_init_ex() for all new development.
+
  \param verbose if TRUE a short start-up message is shown on stderr
+
+ \sa spatialite_cleanup, spatialite_init_ex
 
  \note You absolutely must invoke this function before attempting to perform
  any other SpatiaLite's call.
 
  */
     SPATIALITE_DECLARE void spatialite_init (int verbose);
+
+/**
+ Initializes the library. 
+
+ \param db_handle handle to the current SQLite connection
+ \param ptr a memory pointer returned by spatialite_alloc_connection()
+ \param verbose if TRUE a short start-up message is shown on stderr
+
+ \sa spatialite_alloc_connection, spatialite_cleanup_ex, spatialite_init
+
+ \note You absolutely must invoke this function before attempting to perform
+ any other SpatiaLite's call.
+
+ */
+    SPATIALITE_DECLARE void spatialite_init_ex (sqlite3 * db_handle, void *ptr,
+						int verbose);
 
 /**
  Initializes the GEOS library. 
@@ -98,12 +128,27 @@ extern "C"
 /**
  Cleanup spatialite 
 
+ This function is now \b DEPRECATED; use spatialite_cleanup_ex() for all new development.
+
  This function performs general cleanup, essentially undoing the effect
  of spatialite_init().
 
  \sa spatialite_init
 */
     SPATIALITE_DECLARE void spatialite_cleanup (void);
+
+/**
+ Cleanup spatialite
+
+ This function performs general cleanup, essentially undoing the effect
+ of spatialite_init_ex().
+
+ \param ptr the same memory pointer passed to the corresponding call to
+ spatialite_init_ex() and returned by spatialite_alloc_connection()
+
+ \sa spatialite_init_ex, spatialite_alloc_connection
+*/
+    SPATIALITE_DECLARE void spatialite_cleanup_ex (void *ptr);
 
 /**
  Dumps a full geometry-table into an external Shapefile
@@ -474,6 +519,33 @@ extern "C"
 						    const char *column);
 
 /**
+ Queries the Metadata tables returning the Layer Full Extent
+
+ \param handle SQLite handle to current DB connection.
+ \param table VectorLayer Table (or View, or VirtualShape).
+ \param geometry Geometry Column name.
+ \param mode if TRUE a PESSIMISTIC statistics update will be implied,
+  otherwise OPTIMISTIC.
+ 
+ \return the pointer to the newly created Geometry (Envelope): NULL on failure
+
+ \note you are responsible to destroy (before or after) any allocated
+ Geometry returned by gaiaGetLayerExtent().
+ \n The geometry arg is optional when the table simply has a single Geometry Column,
+  and can be NULL in this case.
+ \n When the mode arg is set to FALSE (default) then the returned infos
+  will be simply retrieved from the staticized statistic tables (faster, but could be inaccurate).
+ \n If the mode arg is set to TRUE a preliminary attempt to update the
+  statistic tables will be always performed (probably slower, but surely accurate).
+ \n If the named Layer doesn't exist, or if it's completely empty (not containing
+ any valid Geometry) NULL will be returned.
+ */
+    SPATIALITE_DECLARE gaiaGeomCollPtr gaiaGetLayerExtent (sqlite3 * handle,
+							   const char *table,
+							   const char *geometry,
+							   int mode);
+
+/**
  Queries the Metadata tables supporting Vector Layers
 
  \param handle SQLite handle to current DB connection.
@@ -495,8 +567,17 @@ extern "C"
  \n If the mode arg is set to GAIA_VECTORS_LIST_PRECISE a preliminary attempt to update the
   statistic tables will be always performed (probably slower, but surely accurate).
  */
-    SPATIALITE_DECLARE gaiaVectorLayersListPtr gaiaGetVectorLayersList (sqlite3 *
-								    handle, const char *table, const char *geometry, int mode);
+    SPATIALITE_DECLARE gaiaVectorLayersListPtr gaiaGetVectorLayersList (sqlite3
+									*
+									handle,
+									const
+									char
+									*table,
+									const
+									char
+									*geometry,
+									int
+									mode);
 
 /**
  Destroys a VectorLayersList object
@@ -505,7 +586,8 @@ extern "C"
 
  \sa gaiaGetVectorLayersList
  */
-    SPATIALITE_DECLARE void gaiaFreeVectorLayersList (gaiaVectorLayersListPtr ptr);
+    SPATIALITE_DECLARE void gaiaFreeVectorLayersList (gaiaVectorLayersListPtr
+						      ptr);
 
 /**
  Drops a layer-table, removing any related dependency
@@ -521,6 +603,126 @@ extern "C"
  \return 0 on failure, any other value on success
  */
     SPATIALITE_DECLARE int gaiaDropTable (sqlite3 * sqlite, const char *table);
+
+/**
+ Checks a Geometry Column for validity
+
+ \param sqlite handle to current DB connection
+ \param table name of the table 
+ \param geometry name of the column to be checked
+ \param report_path pathname of the report-file
+ \param n_rows if this variable is not NULL on successful completion will
+ contain the total number of rows found into the checkeck table
+ \param n_invalids if this variable is not NULL on successful completion will
+ contain the total number of invalid Geometries found into the checkeck table
+ \param err_msg if this variable is not NULL and the return status is ZERO
+ (failure), an appropriate error message will be returned
+
+ \note this function will check a Geometry Column (layer) for validity;
+ a HTML report will be produced.
+ \n an eventual error message returned via err_msg requires to be deallocated
+ by invoking free()
+
+ \return 0 on failure, any other value on success
+ */
+    SPATIALITE_DECLARE int check_geometry_column (sqlite3 * sqlite,
+						  const char *table,
+						  const char *geom,
+						  const char *report_path,
+						  int *n_rows, int *n_invalids,
+						  char **err_msg);
+
+/**
+ Checks all Geometry Columns for validity
+
+ \param sqlite handle to current DB connection
+ \param output_dir pathname of the directory to be created for report-files
+ \param n_invalids if this variable is not NULL on successful completion will
+ contain the total number of invalid Geometries found
+ \param err_msg if this variable is not NULL and the return status is ZERO
+ (failure), an appropriate error message will be returned
+
+ \note this function will check all Geometry Columns (vector layers) for validity;
+ a HTML report will be produced.
+ \n an eventual error message returned via err_msg requires to be deallocated
+ by invoking free()
+
+ \return 0 on failure, any other value on success
+ */
+    SPATIALITE_DECLARE int check_all_geometry_columns (sqlite3 * sqlite,
+						       const char *output_dir,
+						       int *n_invalids,
+						       char **err_msg);
+
+/**
+ Sanitizes a Geometry Column making all invalid geometries to be valid
+
+ \param sqlite handle to current DB connection
+ \param table name of the table 
+ \param geometry name of the column to be checked
+ \param tmp_table name of the temporary table
+ \param report_path pathname of the report-file
+ \param n_invalids if this variable is not NULL on successful completion will
+ contain the total number of invalid Geometries found into the sanitize table
+ \param n_repaired if this variable is not NULL on successful completion will
+ contain the total number of repaired Geometries
+ \param n_discarded if this variable is not NULL on successful completion will
+ contain the total number of repaired Geometries (by discarding fragments)
+ \param n_failures if this variable is not NULL on successful completion will
+ contain the total number of repair failures (i.e. Geometries beyond possible repair)
+ \param err_msg if this variable is not NULL and the return status is ZERO
+ (failure), an appropriate error message will be returned
+
+ \note this function will attempt to make valid all invalid geometries
+ found within a Geometry Column (layer); a temporary table is required.
+ \n if the process has full success the temprary table will be deleted;
+ otherwise it will be preserved for further inspection.
+ a HTML report will be produced as well.
+ \n an eventual error message returned via err_msg requires to be deallocated
+ by invoking free()
+
+ \return 0 on failure, any other value on success
+ */
+    SPATIALITE_DECLARE int sanitize_geometry_column (sqlite3 * sqlite,
+						     const char *table,
+						     const char *geom,
+						     const char *tmp_table,
+						     const char *report_path,
+						     int *n_invalids,
+						     int *n_repaired,
+						     int *n_discarded,
+						     int *n_failures,
+						     char **err_msg);
+
+/**
+ Sanitizes all Geometry Columns making all invalid geometries to be valid
+
+ \param sqlite handle to current DB connection
+ \param tmp_prefix name-prefix for temporary tables
+ \param output_dir pathname of the directory to be created for report-files
+ \param not_repaired if this variable is not NULL on successful completion will
+ contain the total count of repair failures (i.e. Geometries beyond possible repair)
+ \param err_msg if this variable is not NULL and the return status is ZERO
+ (failure), an appropriate error message will be returned
+
+ \note this function will attempt to make valid all invalid geometries
+ found within all Geometry Columns (vector layers); a temporary table is 
+ required so to support each input table.
+ \n if the process has full success the temprary table will be deleted;
+ otherwise it will be preserved for further inspection.
+ a HTML report will be produced as well.
+ \n an eventual error message returned via err_msg requires to be deallocated
+ by invoking free()
+
+ \return 0 on failure, any other value on success
+ */
+    SPATIALITE_DECLARE int sanitize_all_geometry_columns (sqlite3 * sqlite,
+							  const char
+							  *tmp_prefix,
+							  const char
+							  *output_dir,
+							  int *not_repaired,
+							  char **err_msg);
 
 #ifdef __cplusplus
 }
