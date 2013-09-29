@@ -1,3 +1,9 @@
+spatialite (4.1.1-1) UNRELEASED; urgency=low
+
+  * New upstream version.
+
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 29 Sep 2013 22:00:45 +0200
+
 spatialite (4.0.0-1) experimental; urgency=low
 
   * New upstream version.
