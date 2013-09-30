@@ -19,7 +19,7 @@ Build-Depends: debhelper (>= 9),
 Standards-Version: 3.9.4
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-grass/spatialite.git
 Vcs-Git: git://anonscm.debian.org/pkg-grass/spatialite.git
-Homepage: http://www.gaia-gis.it/spatialite/
+Homepage: https://www.gaia-gis.it/fossil/libspatialite
 
 Package: libspatialite5
 Architecture: any
