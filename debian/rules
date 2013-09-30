@@ -10,7 +10,7 @@ export DH_OPTIONS
 FULL_VERSION := $(shell dpkg-parsechangelog | grep ^Version | cut -d' ' -f2 | cut -d- -f1)
 VERSION := $(shell echo $(FULL_VERSION) | sed -e "s/~beta[[:digit:]]\+/-BETA/")
 LC_VERSION := $(shell echo $(VERSION) | tr A-Z a-z)
-SPATIALITE_VERSION := $(shell echo $(FULL_VERSION) | sed -e 's/^~.*//')
+SPATIALITE_VERSION := $(shell echo $(FULL_VERSION) | sed -e 's/~.*//')
 
 BASE_URL := http://www.gaia-gis.it/gaia-sins
 DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
