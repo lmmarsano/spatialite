@@ -1,4 +1,4 @@
-spatialite (4.1.1-1) UNRELEASED; urgency=low
+spatialite (4.1.1-1) experimental; urgency=low
 
   * New upstream version.
   * Update debian/watch, use sepwatch improvements and address common mistakes.
