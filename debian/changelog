@@ -9,6 +9,7 @@ spatialite (4.1.1-1) UNRELEASED; urgency=low
   * Strip debian revision in symbols file.
   * Use upstream version without debian revision when generating symbols.
   * Add patch to set automake option subdir-objects.
+  * Bump Standards-Version to 3.9.4, changes: copyright, Vcs-* fields, symbols.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 29 Sep 2013 22:00:45 +0200
 
