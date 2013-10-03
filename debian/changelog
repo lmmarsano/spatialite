@@ -11,6 +11,9 @@ spatialite (4.1.1-1) experimental; urgency=low
   * Add patch to set automake option subdir-objects.
   * Bump Standards-Version to 3.9.4, changes: copyright, Vcs-* fields, symbols.
   * Update Homepage URL.
+  * Disable fromgeojson22.testcase on advise from upstream, fails on armel,
+    armhf, mips & mipsel with a minor rounding difference.
+    (closes: #725267)
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 29 Sep 2013 22:00:45 +0200
 
