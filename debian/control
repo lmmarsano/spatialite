@@ -53,7 +53,7 @@ Description: Geospatial extension for SQLite - development files
  Spatialite also includes Virtualshape and Virtualtext to enable accessing
  shapefiles and csv/text files as virtual tables.
  .
- This package contains development (static libraries and header files).
+ This package contains development files (static libraries and header files).
 
 Package: libspatialite5-dbg
 Architecture: any
