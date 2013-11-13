@@ -13,12 +13,29 @@ LC_VERSION := $(shell echo $(VERSION) | tr A-Z a-z)
 SPATIALITE_VERSION := $(shell echo $(FULL_VERSION) | sed -e 's/~.*//')
 
 BASE_URL := http://www.gaia-gis.it/gaia-sins
+
 DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+DEB_BUILD_ARCH_BITS ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH_BITS)
+
 # see FTBFS #649302
 ifeq ($(DEB_HOST_ARCH),powerpc)
 EPSG := --disable-epsg
 else
 EPSG :=
+endif
+
+# Several testcases fail on armel, armhf, mips & mipsel due to a rounding mismatch. #725267
+DISABLE_ROUNDING_ARCHS=armel armhf mips mipsel
+
+DISABLE_ROUNDING=no
+ifneq (,$(findstring $(DEB_HOST_ARCH), $(DISABLE_ROUNDING_ARCHS)))
+DISABLE_ROUNDING=yes
+endif
+
+# 32bit arch specific test failure
+DISABLE_32BIT=no
+ifeq ($(DEB_BUILD_ARCH_BITS),32)
+DISABLE_32BIT=yes
 endif
 
 %:
@@ -39,15 +56,21 @@ override_dh_auto_test:
 	mkdir -p debian/backup/stmt
 	cp test/*.sqlite debian/backup/
 	cp test/sql_stmt_tests/*.sqlite debian/backup/stmt/
-	# Disable fromgeojson22.testcase: fails on armel, armhf, mips & mipsel.
+ifeq ($(DISABLE_ROUNDING),yes)
 	mv test/sql_stmt_tests/fromgeojson22.testcase test/sql_stmt_tests/fromgeojson22.disabled
-	# Disable hexgrid22.testcase: fails on 32bit archs
+endif
+ifeq ($(DISABLE_32BIT),yes)
 	mv test/sql_stmt_geosadvanced_tests/hexgrid22.testcase test/sql_stmt_geosadvanced_tests/hexgrid22.disabled
+endif
 
 	dh_auto_test
 
+ifeq ($(DISABLE_32BIT),yes)
 	mv test/sql_stmt_geosadvanced_tests/hexgrid22.disabled test/sql_stmt_geosadvanced_tests/hexgrid22.testcase
+endif
+ifeq ($(DISABLE_ROUNDING),yes)
 	mv test/sql_stmt_tests/fromgeojson22.disabled test/sql_stmt_tests/fromgeojson22.testcase
+endif
 	cp debian/backup/stmt/*.sqlite test/sql_stmt_tests/
 	cp debian/backup/*.sqlite test/
 	rm -rf debian/backup
