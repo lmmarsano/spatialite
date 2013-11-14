@@ -57,19 +57,19 @@ override_dh_auto_test:
 	cp test/*.sqlite debian/backup/
 	cp test/sql_stmt_tests/*.sqlite debian/backup/stmt/
 ifeq ($(DISABLE_ROUNDING),yes)
-	mv test/sql_stmt_tests/fromgeojson22.testcase test/sql_stmt_tests/fromgeojson22.disabled
+	mv -f test/sql_stmt_tests/fromgeojson22.testcase test/sql_stmt_tests/fromgeojson22.disabled || true
 endif
 ifeq ($(DISABLE_32BIT),yes)
-	mv test/sql_stmt_geosadvanced_tests/hexgrid22.testcase test/sql_stmt_geosadvanced_tests/hexgrid22.disabled
+	mv -f test/sql_stmt_geosadvanced_tests/hexgrid22.testcase test/sql_stmt_geosadvanced_tests/hexgrid22.disabled || true
 endif
 
 	dh_auto_test
 
 ifeq ($(DISABLE_32BIT),yes)
-	mv test/sql_stmt_geosadvanced_tests/hexgrid22.disabled test/sql_stmt_geosadvanced_tests/hexgrid22.testcase
+	mv -f test/sql_stmt_geosadvanced_tests/hexgrid22.disabled test/sql_stmt_geosadvanced_tests/hexgrid22.testcase || true
 endif
 ifeq ($(DISABLE_ROUNDING),yes)
-	mv test/sql_stmt_tests/fromgeojson22.disabled test/sql_stmt_tests/fromgeojson22.testcase
+	mv -f test/sql_stmt_tests/fromgeojson22.disabled test/sql_stmt_tests/fromgeojson22.testcase || true
 endif
 	cp debian/backup/stmt/*.sqlite test/sql_stmt_tests/
 	cp debian/backup/*.sqlite test/
