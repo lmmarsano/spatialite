@@ -58,6 +58,41 @@ override_dh_auto_test:
 	cp test/sql_stmt_tests/*.sqlite debian/backup/stmt/
 ifeq ($(DISABLE_ROUNDING),yes)
 	mv -f test/sql_stmt_tests/fromgeojson22.testcase test/sql_stmt_tests/fromgeojson22.disabled || true
+	mv -f test/sql_stmt_tests/fromgeojson23.testcase test/sql_stmt_tests/fromgeojson23.disabled || true
+	mv -f test/sql_stmt_tests/fromgeojson24.testcase test/sql_stmt_tests/fromgeojson24.disabled || true
+	mv -f test/sql_stmt_tests/fromgml11.testcase test/sql_stmt_tests/fromgml11.disabled || true
+	mv -f test/sql_stmt_tests/fromgml12.testcase test/sql_stmt_tests/fromgml12.disabled || true
+	mv -f test/sql_stmt_tests/fromgml17.testcase test/sql_stmt_tests/fromgml17.disabled || true
+	mv -f test/sql_stmt_tests/fromgml18.testcase test/sql_stmt_tests/fromgml18.disabled || true
+	mv -f test/sql_stmt_tests/fromgml23.testcase test/sql_stmt_tests/fromgml23.disabled || true
+	mv -f test/sql_stmt_tests/fromgml24.testcase test/sql_stmt_tests/fromgml24.disabled || true
+	mv -f test/sql_stmt_tests/fromgml25.testcase test/sql_stmt_tests/fromgml25.disabled || true
+	mv -f test/sql_stmt_tests/fromgml26.testcase test/sql_stmt_tests/fromgml26.disabled || true
+	mv -f test/sql_stmt_tests/fromgml44.testcase test/sql_stmt_tests/fromgml44.disabled || true
+	mv -f test/sql_stmt_tests/fromgml46.testcase test/sql_stmt_tests/fromgml46.disabled || true
+	mv -f test/sql_stmt_tests/fromgml48.testcase test/sql_stmt_tests/fromgml48.disabled || true
+	mv -f test/sql_stmt_tests/fromgml52.testcase test/sql_stmt_tests/fromgml52.disabled || true
+	mv -f test/sql_stmt_tests/fromgml53.testcase test/sql_stmt_tests/fromgml53.disabled || true
+	mv -f test/sql_stmt_tests/fromgml54.testcase test/sql_stmt_tests/fromgml54.disabled || true
+	mv -f test/sql_stmt_tests/fromgml55.testcase test/sql_stmt_tests/fromgml55.disabled || true
+	mv -f test/sql_stmt_tests/geomfromtext6.testcase test/sql_stmt_tests/geomfromtext6.disabled || true
+	mv -f test/sql_stmt_tests/lhr3.testcase test/sql_stmt_tests/lhr3.disabled || true
+	mv -f test/sql_stmt_tests/lhr4.testcase test/sql_stmt_tests/lhr4.disabled || true
+	mv -f test/sql_stmt_tests/lhr5.testcase test/sql_stmt_tests/lhr5.disabled || true
+	mv -f test/sql_stmt_tests/lhr6.testcase test/sql_stmt_tests/lhr6.disabled || true
+	mv -f test/sql_stmt_tests/mpointfromtext1.testcase test/sql_stmt_tests/mpointfromtext1.disabled || true
+	mv -f test/sql_stmt_tests/mpointfromtext2.testcase test/sql_stmt_tests/mpointfromtext2.disabled || true
+	mv -f test/sql_stmt_tests/reverse3.testcase test/sql_stmt_tests/reverse3.disabled || true
+	mv -f test/sql_stmt_tests/reverse4.testcase test/sql_stmt_tests/reverse4.disabled || true
+	mv -f test/sql_stmt_tests/reverse5.testcase test/sql_stmt_tests/reverse5.disabled || true
+	mv -f test/sql_stmt_tests/reverse6.testcase test/sql_stmt_tests/reverse6.disabled || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry6.testcase test/sql_stmt_tests/sanitizeGeometry6.disabled || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry7.testcase test/sql_stmt_tests/sanitizeGeometry7.disabled || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry8.testcase test/sql_stmt_tests/sanitizeGeometry8.disabled || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry9.testcase test/sql_stmt_tests/sanitizeGeometry9.disabled || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry10.testcase test/sql_stmt_tests/sanitizeGeometry10.disabled || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry11.testcase test/sql_stmt_tests/sanitizeGeometry11.disabled || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry12.testcase test/sql_stmt_tests/sanitizeGeometry12.disabled || true
 endif
 ifeq ($(DISABLE_32BIT),yes)
 	mv -f test/sql_stmt_geosadvanced_tests/hexgrid22.testcase test/sql_stmt_geosadvanced_tests/hexgrid22.disabled || true
@@ -69,6 +104,41 @@ ifeq ($(DISABLE_32BIT),yes)
 	mv -f test/sql_stmt_geosadvanced_tests/hexgrid22.disabled test/sql_stmt_geosadvanced_tests/hexgrid22.testcase || true
 endif
 ifeq ($(DISABLE_ROUNDING),yes)
+	mv -f test/sql_stmt_tests/sanitizeGeometry12.disabled test/sql_stmt_tests/sanitizeGeometry12.testcase || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry11.disabled test/sql_stmt_tests/sanitizeGeometry11.testcase || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry10.disabled test/sql_stmt_tests/sanitizeGeometry10.testcase || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry9.disabled test/sql_stmt_tests/sanitizeGeometry9.testcase || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry8.disabled test/sql_stmt_tests/sanitizeGeometry8.testcase || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry7.disabled test/sql_stmt_tests/sanitizeGeometry7.testcase || true
+	mv -f test/sql_stmt_tests/sanitizeGeometry6.disabled test/sql_stmt_tests/sanitizeGeometry6.testcase || true
+	mv -f test/sql_stmt_tests/reverse6.disabled test/sql_stmt_tests/reverse6.testcase || true
+	mv -f test/sql_stmt_tests/reverse5.disabled test/sql_stmt_tests/reverse5.testcase || true
+	mv -f test/sql_stmt_tests/reverse4.disabled test/sql_stmt_tests/reverse4.testcase || true
+	mv -f test/sql_stmt_tests/reverse3.disabled test/sql_stmt_tests/reverse3.testcase || true
+	mv -f test/sql_stmt_tests/mpointfromtext2.disabled test/sql_stmt_tests/mpointfromtext2.testcase || true
+	mv -f test/sql_stmt_tests/mpointfromtext1.disabled test/sql_stmt_tests/mpointfromtext1.testcase || true
+	mv -f test/sql_stmt_tests/lhr6.disabled test/sql_stmt_tests/lhr6.testcase || true
+	mv -f test/sql_stmt_tests/lhr5.disabled test/sql_stmt_tests/lhr5.testcase || true
+	mv -f test/sql_stmt_tests/lhr4.disabled test/sql_stmt_tests/lhr4.testcase || true
+	mv -f test/sql_stmt_tests/lhr3.disabled test/sql_stmt_tests/lhr3.testcase || true
+	mv -f test/sql_stmt_tests/geomfromtext6.disabled test/sql_stmt_tests/geomfromtext6.testcase || true
+	mv -f test/sql_stmt_tests/fromgml55.disabled test/sql_stmt_tests/fromgml55.testcase || true
+	mv -f test/sql_stmt_tests/fromgml54.disabled test/sql_stmt_tests/fromgml54.testcase || true
+	mv -f test/sql_stmt_tests/fromgml53.disabled test/sql_stmt_tests/fromgml53.testcase || true
+	mv -f test/sql_stmt_tests/fromgml52.disabled test/sql_stmt_tests/fromgml52.testcase || true
+	mv -f test/sql_stmt_tests/fromgml48.disabled test/sql_stmt_tests/fromgml48.testcase || true
+	mv -f test/sql_stmt_tests/fromgml46.disabled test/sql_stmt_tests/fromgml46.testcase || true
+	mv -f test/sql_stmt_tests/fromgml44.disabled test/sql_stmt_tests/fromgml44.testcase || true
+	mv -f test/sql_stmt_tests/fromgml26.disabled test/sql_stmt_tests/fromgml26.testcase || true
+	mv -f test/sql_stmt_tests/fromgml25.disabled test/sql_stmt_tests/fromgml25.testcase || true
+	mv -f test/sql_stmt_tests/fromgml24.disabled test/sql_stmt_tests/fromgml24.testcase || true
+	mv -f test/sql_stmt_tests/fromgml23.disabled test/sql_stmt_tests/fromgml23.testcase || true
+	mv -f test/sql_stmt_tests/fromgml18.disabled test/sql_stmt_tests/fromgml18.testcase || true
+	mv -f test/sql_stmt_tests/fromgml17.disabled test/sql_stmt_tests/fromgml17.testcase || true
+	mv -f test/sql_stmt_tests/fromgml12.disabled test/sql_stmt_tests/fromgml12.testcase || true
+	mv -f test/sql_stmt_tests/fromgml11.disabled test/sql_stmt_tests/fromgml11.testcase || true
+	mv -f test/sql_stmt_tests/fromgeojson24.disabled test/sql_stmt_tests/fromgeojson24.testcase || true
+	mv -f test/sql_stmt_tests/fromgeojson23.disabled test/sql_stmt_tests/fromgeojson23.testcase || true
 	mv -f test/sql_stmt_tests/fromgeojson22.disabled test/sql_stmt_tests/fromgeojson22.testcase || true
 endif
 	cp debian/backup/stmt/*.sqlite test/sql_stmt_tests/
