@@ -419,8 +419,10 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaIntersect@Base 2.4.0
  gaiaIsClosed@Base 2.4.0
  gaiaIsClosedGeom@Base 4.0.0
+ gaiaIsCompressedXmlBlob@Base 4.1.1
  gaiaIsEmpty@Base 2.4.0
  gaiaIsExifGpsTag@Base 2.4.0
+ gaiaIsIsoMetadataXmlBlob@Base 4.1.1
  gaiaIsNotClosedGeomColl@Base 4.0.0
  gaiaIsNotClosedRing@Base 4.0.0
  gaiaIsPointOnPolygonSurface@Base 2.4.0
@@ -428,10 +430,15 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaIsReservedSqlName@Base 2.4.0
  gaiaIsReservedSqliteName@Base 2.4.0
  gaiaIsRing@Base 2.4.0
+ gaiaIsSchemaValidatedXmlBlob@Base 4.1.1
  gaiaIsSimple@Base 2.4.0
+ gaiaIsSldSeRasterStyleXmlBlob@Base 4.1.1
+ gaiaIsSldSeVectorStyleXmlBlob@Base 4.1.1
+ gaiaIsSvgXmlBlob@Base 4.1.1
  gaiaIsToxic@Base 2.4.0
  gaiaIsValid@Base 2.4.0
  gaiaIsValidDbfList@Base 2.4.0
+ gaiaIsValidXmlBlob@Base 4.1.1
  gaiaLineGetPoint@Base 2.4.0
  gaiaLineInterpolateEquidistantPoints@Base 4.0.0
  gaiaLineInterpolatePoint@Base 3.0.2~20120302
@@ -562,6 +569,28 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaiaUpdateSqlLog@Base 4.0.0
  gaiaWriteDbfEntity@Base 3.0.0
  gaiaWriteShpEntity@Base 2.4.0
+ gaiaXmlBlobAddFileId@Base 4.1.1
+ gaiaXmlBlobAddParentId@Base 4.1.1
+ gaiaXmlBlobCompression@Base 4.1.1
+ gaiaXmlBlobGetAbstract@Base 4.1.1
+ gaiaXmlBlobGetDocumentSize@Base 4.1.1
+ gaiaXmlBlobGetEncoding@Base 4.1.1
+ gaiaXmlBlobGetFileId@Base 4.1.1
+ gaiaXmlBlobGetGeometry@Base 4.1.1
+ gaiaXmlBlobGetLastParseError@Base 4.1.1
+ gaiaXmlBlobGetLastValidateError@Base 4.1.1
+ gaiaXmlBlobGetLastXPathError@Base 4.1.1
+ gaiaXmlBlobGetParentId@Base 4.1.1
+ gaiaXmlBlobGetSchemaURI@Base 4.1.1
+ gaiaXmlBlobGetTitle@Base 4.1.1
+ gaiaXmlBlobSetFileId@Base 4.1.1
+ gaiaXmlBlobSetParentId@Base 4.1.1
+ gaiaXmlFromBlob@Base 4.1.1
+ gaiaXmlGetInternalSchemaURI@Base 4.1.1
+ gaiaXmlLoad@Base 4.1.1
+ gaiaXmlStore@Base 4.1.1
+ gaiaXmlTextFromBlob@Base 4.1.1
+ gaiaXmlToBlob@Base 4.1.1
  gaiaZRangeGeometry@Base 2.4.0
  gaiaZRangeLinestring@Base 2.4.0
  gaiaZRangePolygon@Base 2.4.0
@@ -569,6 +598,7 @@ libspatialite.so.5 libspatialite5 #MINVER#
  gaia_geos_error_msg@Base 2.4.0
  gaia_geos_warning_msg@Base 2.4.0
  gaia_geosaux_error_msg@Base 4.1.0
+ gaia_libxml2_version@Base 4.1.1
  geoJSONParse@Base 3.0.0
  geoJSONParseAlloc@Base 3.0.0
  geoJSONParseFree@Base 3.0.0
