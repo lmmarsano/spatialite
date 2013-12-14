@@ -17,7 +17,7 @@ Build-Depends: debhelper (>= 9),
                libxml2-dev,
                pkg-config,
                zlib1g-dev
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-grass/spatialite.git
 Vcs-Git: git://anonscm.debian.org/pkg-grass/spatialite.git
 Homepage: https://www.gaia-gis.it/fossil/libspatialite
