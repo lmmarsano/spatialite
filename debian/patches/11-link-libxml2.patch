@@ -1,0 +1,14 @@
+Description: Link libxml2 for successfull test case build.
+Author: Bas Couwenberg <sebastic@xs4all.nl>
+Last-Update: 2013-12-14
+--- a/test/Makefile.am
++++ b/test/Makefile.am
+@@ -82,7 +82,7 @@ check_PROGRAMS += \
+ endif
+ 
+ AM_CFLAGS = -I@srcdir@/../src/headers -I@srcdir@
+-AM_LDFLAGS = -L../src -lspatialite -lm $(GCOV_FLAGS)
++AM_LDFLAGS = -L../src -lspatialite -lm -lxml2 $(GCOV_FLAGS)
+ 
+ TESTS = $(check_PROGRAMS)
+ 

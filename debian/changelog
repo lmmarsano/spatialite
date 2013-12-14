@@ -1,6 +1,7 @@
 spatialite (4.1.1-5) UNRELEASED; urgency=low
 
   * Enable building with libxml2 support.
+  * Add 11-link-libxml2.patch to link libxml2 when building test cases.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sat, 14 Dec 2013 14:49:50 +0100
 
