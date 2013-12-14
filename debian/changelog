@@ -1,3 +1,9 @@
+spatialite (4.1.1-5) UNRELEASED; urgency=low
+
+  * Enable building with libxml2 support.
+
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Sat, 14 Dec 2013 14:49:50 +0100
+
 spatialite (4.1.1-4) experimental; urgency=low
 
   * Change Priority to optional, keep Priority extra for -dbg package.
