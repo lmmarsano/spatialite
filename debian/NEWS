@@ -1,3 +1,17 @@
+spatialite (4.1.1-7) unstable; urgency=medium
+
+  The upgrade from SpatiaLite 3.0 to 4.1 brings many changes, some of which
+  will break compatibility. Please refer to the online documention for
+  details.
+
+  * Switching to 4.0:
+    https://www.gaia-gis.it/fossil/libspatialite/wiki?name=switching-to-4.0
+
+  * Switching to 4.1:
+    https://www.gaia-gis.it/fossil/libspatialite/wiki?name=4.1.0-doc
+
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Thu, 03 Apr 2014 22:00:56 +0200
+
 spatialite (3.0.1-1) unstable; urgency=low
 
   Starting from this release Spatialite library and Spatialtools have been
