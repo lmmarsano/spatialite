@@ -51,7 +51,8 @@ override_dh_auto_configure:
 		--enable-geos \
 		$(EPSG) \
 		--enable-proj \
-		--enable-libxml2
+		--enable-libxml2 \
+		--disable-examples
 
 override_dh_auto_test:
 	mkdir -p debian/backup/stmt

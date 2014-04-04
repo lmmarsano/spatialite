@@ -1,3 +1,9 @@
+spatialite (4.1.1-8) unstable; urgency=medium
+
+  * Don't build (but do install) examples, causes gcc-4.8 to segfaul on armhf.
+
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 04 Apr 2014 11:56:16 +0200
+
 spatialite (4.1.1-7) unstable; urgency=medium
 
   * Add NEWS entry for switch from SpatiaLite 3.0 to 4.1.
