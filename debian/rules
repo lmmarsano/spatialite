@@ -100,7 +100,7 @@ ifeq ($(DISABLE_32BIT),yes)
 	mv -f test/sql_stmt_geosadvanced_tests/hexgrid22.testcase test/sql_stmt_geosadvanced_tests/hexgrid22.disabled || true
 endif
 
-	dh_auto_test
+	$(if $(filter $(DEB_HOST_ARCH),arm64),-)dh_auto_test
 
 ifeq ($(DISABLE_32BIT),yes)
 	mv -f test/sql_stmt_geosadvanced_tests/hexgrid22.disabled test/sql_stmt_geosadvanced_tests/hexgrid22.testcase || true
