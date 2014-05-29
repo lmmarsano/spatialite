@@ -1,6 +1,7 @@
 spatialite (4.2.0~rc1-1) UNRELEASED; urgency=low
  
   * New upstream release candidate.
+  * Refresh patches.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 01 Jun 2014 14:15:51 +0200
 
