@@ -2,3 +2,4 @@
 07-fix_spatialite_pc.patch
 10-automake-subdir-objects.patch
 11-link-libxml2.patch
+12-link-pthread.patch
