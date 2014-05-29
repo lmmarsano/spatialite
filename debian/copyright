@@ -19,6 +19,7 @@ Files: src/dxf/dxf_load_distinct.c
  src/gaiageo/gg_geometries.c
  src/gaiageo/gg_geoscvt.c
  src/gaiageo/gg_relations.c
+ src/gaiageo/gg_relations_ext.c
  src/gaiageo/gg_shape.c
  src/gaiageo/gg_transform.c
  src/gaiageo/gg_vanuatu.c
@@ -26,6 +27,7 @@ Files: src/dxf/dxf_load_distinct.c
  src/gaiageo/gg_wkb.c
  src/gaiageo/gg_wkt.c
  src/gaiageo/gg_xml.c
+ src/geopackage/gaia_cvt_gpkg.c
  src/geopackage/geopackage_internal.h
  src/headers/spatialite.h
  src/headers/spatialite_private.h
@@ -45,6 +47,7 @@ Files: src/dxf/dxf_load_distinct.c
  src/shapefiles/validator.c
  src/spatialite/extra_tables.c
  src/spatialite/mbrcache.c
+ src/spatialite/virtualbbox.c
  src/spatialite/virtualdbf.c
  src/spatialite/virtualfdo.c
  src/spatialite/virtualshape.c
@@ -131,6 +134,11 @@ Files: src/srsinit/epsg_inlined_00.c
  src/srsinit/epsg_inlined_38.c
  src/srsinit/epsg_inlined_39.c
  src/srsinit/epsg_inlined_40.c
+ src/srsinit/epsg_inlined_41.c
+ src/srsinit/epsg_inlined_42.c
+ src/srsinit/epsg_inlined_43.c
+ src/srsinit/epsg_inlined_44.c
+ src/srsinit/epsg_inlined_45.c
  src/srsinit/epsg_inlined_extra.c
  src/srsinit/epsg_inlined_prussian.c
  src/srsinit/epsg_inlined_wgs84_00.c
@@ -139,6 +147,7 @@ Copyright: 2008, Alessandro Furieri <a.furieri@lqt.it>
 License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
 
 Files: test/check_md5.c
+ test/check_metacatalog.c
 Copyright: 2011, Alessandro Furieri <a.furieri@lqt.it>
 License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
 
@@ -168,28 +177,44 @@ Comment: Contributor(s):
 License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
 
 Files: test/check_wfsin.c
+ src/connection_cache/alloc_cache.c
+ src/connection_cache/cache_aux_1.h
+ src/connection_cache/cache_aux_2.h
+ src/connection_cache/cache_aux_3.h
+ test/check_multithread.c
+ test/check_virtualbbox.c
 Copyright: 2013, Alessandro Furieri <a.furieri@lqt.it>
 License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
 
-Files: test/check_add_rt_metadata_triggers_bad_table_name.c
- test/check_add_rt_metadata_triggers.c
- test/check_add_rt_metadata_triggers_wrong_arg_type.c
- test/check_add_tile_triggers.c
+Files: src/connection_cache/generator/code_generator.c
+Copyright: 2013, Alessandro Furieri <a.furieri@lqt.it>
+License: GPL-3.0+
+
+Files: src/spatialite/virtualgpkg.c
+ test/check_gpkgConvert.c
+ test/check_gpkgVirtual.c
+Copyright: 2014, Alessandro Furieri <a.furieri@lqt.it>
+License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
+
+Files: src/geopackage/gpkg_add_geometry_triggers.c
+ src/geopackage/gpkg_add_spatial_index.c
+Copyright: 2014, Alessandro Furieri <a.furieri@lqt.it>
+Comment: Contributor(s):
+ Brad Hards <bradh@frogmouth.net>
+License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
+
+Files: test/check_add_tile_triggers.c
  test/check_add_tile_triggers_bad_table_name.c
- test/check_get_normal_row_bad_geopackage.c
- test/check_get_normal_row_bad_geopackage2.c
- test/check_get_normal_row.c
  test/check_get_normal_zoom_bad_geopackage.c
  test/check_get_normal_zoom_bad_geopackage2.c
  test/check_get_normal_zoom.c
- test/check_point_to_tile.c
- test/check_point_to_tile_bad_tablename.c
- test/check_point_to_tile_broken_geopackage.c
- test/check_point_to_tile_broken_geopackage2.c
- test/check_point_to_tile_broken_srid.c
- test/check_point_to_tile_different_srid.c
- test/check_point_to_tile_integer_coordinates.c
 Copyright: 2011, Brad Hards <bradh@frogmouth.net>
+License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
+
+Files: test/check_get_normal_row.c
+ test/check_get_normal_row_bad_geopackage.c
+ test/check_get_normal_row_bad_geopackage2.c
+Copyright: 2011, 2014, Brad Hards <bradh@frogmouth.net>
 License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
 
 Files: test/check_bufovflw.c
@@ -246,24 +271,28 @@ Comment: Contributor(s):
  Ahmadou Dicko <dicko.ahmadou@gmail.com>
 License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
 
-Files: test/check_createBaseTables.c
+Files: test/check_gpkgCreateTilesZoomLevel.c
+Copyright: 2011, 2013, Brad Hards <bradh@frogmouth.net>
+License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
+
+Files: src/geopackage/gpkgInsertEpsgSRID.c
+ src/geopackage/gpkgMakePoint.c
+ test/check_createBaseTables.c
  test/check_get_normal_zoom_extension_load.c
+ test/check_gpkgCreateTilesTable.c
+ test/check_gpkgCreateTilesTableMissingSRID.c
  test/check_gpkgGetImageFormat.c
- test/check_point_to_tile_multiresult.c
- test/check_point_to_tile_no_tile.c
- test/check_point_to_tile_wrong_arg_type.c
+ test/check_gpkgInsertEpsgSRID.c
+ test/check_gpkg_base_core_container_data_file_format_application_id.c
 Copyright: 2012, Brad Hards <bradh@frogmouth.net>
 License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
 
-Files: src/geopackage/gpkg_add_rt_metadata_triggers.c
- src/geopackage/gpkg_add_tile_triggers.c
+Files: src/geopackage/gpkg_add_tile_triggers.c
  src/geopackage/gpkgCreateBaseTables.c
  src/geopackage/gpkgCreateTilesTable.c
- src/geopackage/gpkgCreateTilesZoomLevel.c
  src/geopackage/gpkgGetImageType.c
  src/geopackage/gpkg_get_normal_row.c
  src/geopackage/gpkg_get_normal_zoom.c
- src/geopackage/gpkg_point_to_tile.c
  src/headers/spatialite/geopackage.h
  test/check_gpkgGetImageFormat_nonblob.c
  test/check_gpkgGetImageFormat_nonimage.c
@@ -271,6 +300,23 @@ Files: src/geopackage/gpkg_add_rt_metadata_triggers.c
  test/check_gpkgGetImageFormat_tiff.c
  test/check_gpkgGetImageFormat_webp.c
 Copyright: 2012, Brad Hards <bradh@frogmouth.net>
+License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
+
+Files: src/geopackage/gpkgAddGeometryColumn.c
+ src/geopackage/gpkgCreateTilesZoomLevel.c
+ test/check_gpkgCreateFeaturesTable.c
+Copyright: 2012-2013, Brad Hards <bradh@frogmouth.net>
+License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
+
+Files: test/check_gpkg_base_core_contents_data_table_def.c
+ test/check_gpkg_base_core_spatial_ref_sys_data_table_def.c
+ test/check_gpkg_base_core_spatial_ref_sys_data_values_default.c
+ test/check_gpkg_opt_extension_mechanism_extensions_data_table_def.c
+Copyright: 2013, Brad Hards <bradh@frogmouth.net>
+License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
+
+Files: src/geopackage/gpkgBinary.c
+Copyright: 2014, Brad Hards <bradh@frogmouth.net>
 License: MPL-1.1 or GPL-2.0+ or LGPL-2.1+
 
 Files: test/check_libxml2.c
