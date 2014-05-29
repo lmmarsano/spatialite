@@ -3,6 +3,9 @@ spatialite (4.1.1-10) UNRELEASED; urgency=low
   [ Matthias Klose ]
   * Ignore test results on arm64. See LP: #1284199.
 
+  [ Bas Couwenberg ]
+  * Enable verbose test output.
+
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sat, 10 May 2014 02:10:49 +0200
 
 spatialite (4.1.1-9) unstable; urgency=medium

@@ -38,6 +38,9 @@ ifeq ($(DEB_BUILD_ARCH_BITS),32)
 DISABLE_32BIT=yes
 endif
 
+# Verbose test output
+export VERBOSE=1
+
 %:
 	dh $@ --with autoreconf
 
