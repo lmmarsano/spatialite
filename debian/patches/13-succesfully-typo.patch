@@ -1,0 +1,105 @@
+Description: Fix 'succesfully' typo, replace with 'successfully'.
+Author: Bas Couwenberg <sebastic@xs4all.nl>
+
+--- a/spatialite-sql-latest.html
++++ b/spatialite-sql-latest.html
+@@ -2548,7 +2548,7 @@ the return type is Integer, with a retur
+ 				<ul>
+ 					<li><b>f_table_name</b> and <b>f_geometry_column</b> must identify an existing Vector Layer.</li>
+ 					<li><b>style</b> is expected to be an XmlBLOB containing a valid SLD/SE Style of the Vector type.<br>
+-					If <b>CreatedStylingTables()</b> was invoked without specifying the <i>relaxed</i> option this XmlBLOB is expected to have succesfully passed a formal XML Schema Validation.</li>
++					If <b>CreatedStylingTables()</b> was invoked without specifying the <i>relaxed</i> option this XmlBLOB is expected to have successfully passed a formal XML Schema Validation.</li>
+ 					<li>The same Vector Layer could eventually support more than a single Style; in this case 
+ 					the optional argument <b>style_id</b> can be explicitly set in order to identify an individual Style.<br>
+ 					If no <b>style_id</b> argument is specified then a new Styled Layer will be created, and the <b>style_id</b> value will be automatically set so to ensure univocity.</li>
+@@ -2564,7 +2564,7 @@ the return type is Integer, with a retur
+ 				<ul>
+ 					<li><b>coverage_name</b> must identify an existing Raster Layer.</li>
+ 					<li><b>style</b> is expected to be an XmlBLOB containing a valid SLD/SE Style of the Raster type.<br>
+-					If <b>CreatedStylingTables()</b> was invoked without specifying the <i>relaxed</i> option this XmlBLOB is expected to have succesfully passed a formal XML Schema Validation.</li>
++					If <b>CreatedStylingTables()</b> was invoked without specifying the <i>relaxed</i> option this XmlBLOB is expected to have successfully passed a formal XML Schema Validation.</li>
+ 					<li>The same Raster Layer could eventually support more than a single Style; in this case 
+ 					the optional argument <b>style_id</b> can be explicitly set in order to identify an individual Style.<br>
+ 					If no <b>style_id</b> argument is specified then a new Styled Layer will be created, and the <b>style_id</b> value will be automatically set so to ensure univocity.</li>
+@@ -2608,7 +2608,7 @@ the return type is Integer, with a retur
+ 				<ul>
+ 					<li><b>group_name</b> must identify an existing Styled Group.</li>
+ 					<li><b>style</b> is expected to be an XmlBLOB containing a valid SLD Style.<br>
+-					If <b>CreatedStylingTables()</b> was invoked without specifying the <i>relaxed</i> option this XmlBLOB is expected to have succesfully passed a formal XML Schema Validation.</li>
++					If <b>CreatedStylingTables()</b> was invoked without specifying the <i>relaxed</i> option this XmlBLOB is expected to have successfully passed a formal XML Schema Validation.</li>
+ 					<li>The same Styled Group could eventually support more than a single Style; in this case 
+ 					the optional argument <b>style_id</b> can be explicitly set in order to identify an individual Style.<br>
+ 					If no <b>style_id</b> argument is specified then a new Style will be created, and the <b>style_id</b> value will be automatically set so to ensure univocity.</li>
+--- a/src/gaiageo/gg_xml.c
++++ b/src/gaiageo/gg_xml.c
+@@ -2942,7 +2942,7 @@ gaiaIsCompressedXmlBlob (const unsigned
+ GAIAGEO_DECLARE int
+ gaiaIsSchemaValidatedXmlBlob (const unsigned char *blob, int blob_size)
+ {
+-/* Checks if a valid XmlBLOB buffer has succesfully passed a formal Schema validation or not */
++/* Checks if a valid XmlBLOB buffer has successfully passed a formal Schema validation or not */
+     int validated = 0;
+     unsigned char flag;
+ 
+--- a/src/headers/spatialite/gaiaaux.h
++++ b/src/headers/spatialite/gaiaaux.h
+@@ -285,7 +285,7 @@ extern "C"
+  \param sqlite handle of the current DB connection
+  \param sqllog_pk the Primary Key identifying the corresponding Log event.
+  \n expected to be exactely the same returned by the most recent call to gaiaInsertIntoSqlLog()
+- \param success expected to be TRUE if the SQL statement was succesfully executed.
++ \param success expected to be TRUE if the SQL statement was successfully executed.
+  \param errMsg expected to be the error message returned by SQLite on failure, NULL on success.
+ 
+  \sa gaiaInsertIntoSqlLog
+--- a/src/headers/spatialite/gg_xml.h
++++ b/src/headers/spatialite/gg_xml.h
+@@ -133,7 +133,7 @@ extern "C"
+  \param xml_len lenght of the XML document (in bytes).
+  \param compressed if TRUE the returned XmlBLOB will be zip-compressed.
+  \param schemaURI if not NULL the XML document will be assumed to be valid
+-  only if it succesfully passes a formal Schema valitadion.
++  only if it successfully passes a formal Schema valitadion.
+  \param result on completion will containt a pointer to XmlBLOB:
+  NULL on failure.
+  \param size on completion this variable will contain the XmlBLOB's size (in bytes)
+@@ -342,7 +342,7 @@ extern "C"
+ 						 int *out_size);
+ 
+ /**
+- Checks if a valid XmlBLOB buffer has succesfully passed a formal Schema validation or not
++ Checks if a valid XmlBLOB buffer has successfully passed a formal Schema validation or not
+ 
+  \param blob pointer to the XmlBLOB buffer.
+  \param size XmlBLOB's size (in bytes).
+--- a/src/shapefiles/validator.c
++++ b/src/shapefiles/validator.c
+@@ -2300,7 +2300,7 @@ sanitize_geometry_column_common (const v
+     else if (report->n_repaired > 0)
+       {
+ 	  fprintf (out,
+-		   "\t\t\t<tr><td colspan=\"2\" class=\"ok\">This layer has been succesfully repaired and is now completely valid;<br>");
++		   "\t\t\t<tr><td colspan=\"2\" class=\"ok\">This layer has been successfully repaired and is now completely valid;<br>");
+ 	  fprintf (out,
+ 		   "doesn't require any further corrective action.</td></tr>\n");
+       }
+@@ -2632,7 +2632,7 @@ sanitize_all_geometry_columns_common (co
+ 		else if (n_discarded == 0 && n_failures == 0)
+ 		  {
+ 		      p_msg =
+-			  "NONE: this layer has been succesfully sanitized and is now fully valid";
++			  "NONE: this layer has been successfully sanitized and is now fully valid";
+ 		      cls_msg = "ok";
+ 		  }
+ 		else if (n_discarded == 0 && n_failures > 0)
+--- a/src/spatialite/spatialite.c
++++ b/src/spatialite/spatialite.c
+@@ -26943,7 +26943,7 @@ fnct_XB_Create (sqlite3_context * contex
+ /
+ / - the XMLdocument should be "well formed"
+ / - if *compressed* is TRUE (default) the XmlBlob would be zipped
+-/ - if *SchemaURI* in not NULL then only XMLdocuments succesfully
++/ - if *SchemaURI* in not NULL then only XMLdocuments successfully
+ /   passing a formal Schema Validation will be accepted as valid
+ / - if *InternalSchamaURI* is defined (any numeric value) then an
+ /   attempt will be made in order to identify a SchemaURI defined
