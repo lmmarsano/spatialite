@@ -1,10 +1,10 @@
-spatialite (4.1.1-10) UNRELEASED; urgency=low
+spatialite (4.1.1-10) unstable; urgency=medium
 
   * Enable verbose test output.
   * Ignore test failures instead of disabling many tests.
     (closes: #746912)
 
- -- Bas Couwenberg <sebastic@xs4all.nl>  Sat, 10 May 2014 02:10:49 +0200
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 01 Jun 2014 13:39:11 +0200
 
 spatialite (4.1.1-9) unstable; urgency=medium
 
