@@ -22,7 +22,7 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-grass/spatialite.git
 Vcs-Git: git://anonscm.debian.org/pkg-grass/spatialite.git
 Homepage: https://www.gaia-gis.it/fossil/libspatialite
 
-Package: libspatialite5
+Package: libspatialite7
 Architecture: any
 Multi-Arch: same
 Section: libs
@@ -43,7 +43,7 @@ Package: libspatialite-dev
 Architecture: any
 Multi-Arch: same
 Section: libdevel
-Depends: libspatialite5 (= ${binary:Version}),
+Depends: libspatialite7 (= ${binary:Version}),
          libsqlite3-dev,
          ${misc:Depends}
 Recommends: pkg-config
@@ -56,12 +56,12 @@ Description: Geospatial extension for SQLite - development files
  .
  This package contains development files (static libraries and header files).
 
-Package: libspatialite5-dbg
+Package: libspatialite7-dbg
 Architecture: any
 Multi-Arch: same
 Section: debug
 Priority: extra
-Depends: libspatialite5 (= ${binary:Version}),
+Depends: libspatialite7 (= ${binary:Version}),
          ${misc:Depends}
 Description: Geospatial extension for SQLite - debugging symbols
  The SpatiaLite extension enables SQLite to support spatial (geometry) data
@@ -72,7 +72,7 @@ Description: Geospatial extension for SQLite - debugging symbols
  .
  This package contains debugging symbols for the libraries.
 
-Package: mod-spatialite5
+Package: mod-spatialite7
 Architecture: any
 Multi-Arch: same
 Section: libs

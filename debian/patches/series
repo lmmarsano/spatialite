@@ -1,4 +1,5 @@
 00-add_automake_foreign.patch
+02-fix_version-info.patch
 07-fix_spatialite_pc.patch
 10-automake-subdir-objects.patch
 11-link-libxml2.patch

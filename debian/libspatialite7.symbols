@@ -1,4 +1,4 @@
-libspatialite.so.5 libspatialite5 #MINVER#
+libspatialite.so.7 libspatialite7 #MINVER#
 #MISSING: 4.1.0# EwktLval@Base 3.0.0
  Ewkt_create_buffer@Base 3.0.0
  Ewkt_delete_buffer@Base 3.0.0
