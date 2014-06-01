@@ -72,3 +72,19 @@ Description: Geospatial extension for SQLite - debugging symbols
  .
  This package contains debugging symbols for the libraries.
 
+Package: mod-spatialite5
+Architecture: any
+Multi-Arch: same
+Section: libs
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Description: Geospatial extension for SQLite - loadable module
+ The SpatiaLite extension enables SQLite to support spatial (geometry) data
+ in a way conformant to OpenGis specifications, with both WKT and WKB formats.
+ .
+ Spatialite also includes Virtualshape and Virtualtext to enable accessing
+ shapefiles and csv/text files as virtual tables.
+ .
+ This package contains the loadable extension module for SQLite 3.
+

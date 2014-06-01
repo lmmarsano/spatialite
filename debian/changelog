@@ -6,6 +6,7 @@ spatialite (4.2.0~rc1-1) UNRELEASED; urgency=low
   * Add patch to fix check_multithread build failure by linking libpthread.
   * Drop --enable-libxml2, libxml2 support is enabled by default now.
   * Add patch to fix 'successfully' typo.
+  * Add mod-spatialite package for the loadable extension module.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 01 Jun 2014 14:15:51 +0200
 
