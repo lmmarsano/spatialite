@@ -8,6 +8,7 @@ spatialite (4.2.0~rc1-1) UNRELEASED; urgency=low
   * Add patch to fix 'successfully' typo.
   * Add mod-spatialite package for the loadable extension module.
   * Bump SOVERSION to reflect added and removed symbols.
+  * Add patch to link libm for math functions.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 01 Jun 2014 14:15:51 +0200
 
