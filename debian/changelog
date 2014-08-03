@@ -1,4 +1,4 @@
-spatialite (4.2.0-1) UNRELEASED; urgency=low
+spatialite (4.2.0-1~exp1) experimental; urgency=low
  
   * New upstream release candidate.
   * Refresh patches.
@@ -10,7 +10,7 @@ spatialite (4.2.0-1) UNRELEASED; urgency=low
   * Add patch to link libm for math functions.
   * Update symbols for 4.2.0 release.
 
- -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 03 Aug 2014 14:23:30 +0200
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 03 Aug 2014 23:37:04 +0200
 
 spatialite (4.1.1-10) unstable; urgency=medium
 
