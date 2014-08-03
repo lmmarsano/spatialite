@@ -7,7 +7,6 @@ spatialite (4.2.0-1) UNRELEASED; urgency=low
   * Drop --enable-libxml2, libxml2 support is enabled by default now.
   * Add patch to fix 'successfully' typo.
   * Add mod-spatialite package for the loadable extension module.
-  * Bump SOVERSION to reflect added and removed symbols.
   * Add patch to link libm for math functions.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 03 Aug 2014 14:23:30 +0200
