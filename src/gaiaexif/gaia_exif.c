@@ -2,7 +2,7 @@
 
  gaia_exif.c -- Gaia EXIF support
   
- version 4.1, 2013 May 8
+ version 4.2, 2014 July 25
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -61,6 +61,7 @@ the terms of any one of the MPL, the GPL or the LGPL.
 
 #include <spatialite/gaiageo.h>
 #include <spatialite/gaiaexif.h>
+#include <spatialite/geopackage.h>
 #include <spatialite.h>
 
 #ifdef _WIN32
