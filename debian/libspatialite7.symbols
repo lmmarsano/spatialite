@@ -492,6 +492,10 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaIsToxic_r@Base 4.2.0
  gaiaIsValid@Base 2.4.0
  gaiaIsValidDbfList@Base 2.4.0
+ gaiaIsValidDetail@Base 4.2.0
+ gaiaIsValidDetail_r@Base 4.2.0
+ gaiaIsValidReason@Base 4.2.0
+ gaiaIsValidReason_r@Base 4.2.0
  gaiaIsValidXmlBlob@Base 4.1.1
  gaiaIsValid_r@Base 4.2.0
  gaiaLineGetPoint@Base 2.4.0
