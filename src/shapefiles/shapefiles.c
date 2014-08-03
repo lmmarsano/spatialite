@@ -2,7 +2,7 @@
 
  shapefiles.c -- implements shapefile support [import - export]
 
- version 4.1, 2013 May 8
+ version 4.2, 2014 July 25
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -3573,7 +3573,6 @@ load_dbf_ex (sqlite3 * sqlite, char *dbf_path, char *table, char *pk_column,
 	    }
 	  if (!pk_set)
 	      sqlite3_bind_int (stmt, 1, current_row);
-	  sqlite3_bind_int (stmt, 1, current_row);
 	  cnt = 0;
 	  dbf_field = dbf->Dbf->First;
 	  while (dbf_field)

@@ -2,7 +2,7 @@
 
  gg_transform.c -- Gaia PROJ.4 wrapping
   
- version 4.1, 2013 May 8
+ version 4.2, 2014 July 25
 
  Author: Sandro Furieri a.furieri@lqt.it
 
@@ -46,6 +46,7 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #if defined(_WIN32) && !defined(__MINGW32__)
 #include "config-msvc.h"
