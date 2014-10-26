@@ -169,10 +169,14 @@ libspatialite.so.6 libspatialite6 #MINVER#
  destroy_wfs_catalog@Base 4.1.0
  destroy_wfs_schema@Base 4.1.0
  dump_dbf@Base 3.0.2~20120302
+ dump_dbf_ex@Base 4.2.1
  dump_geojson@Base 3.0.2~20120302
+ dump_geojson_ex@Base 4.2.1
  dump_kml@Base 3.0.2~20120302
+ dump_kml_ex@Base 4.2.1
  dump_shapefile@Base 3.0.2~20120302
  elementary_geometries@Base 3.0.2~20120302
+ elementary_geometries_ex@Base 4.2.1
  ewktParse@Base 3.0.0
  ewktParseAlloc@Base 3.0.0
  ewktParseFree@Base 3.0.0
@@ -588,7 +592,9 @@ libspatialite.so.6 libspatialite6 #MINVER#
  gaiaQuotedSql@Base 3.0.2~20120302
  gaiaRadsToDegs@Base 2.4.0
  gaiaReadDbfEntity@Base 2.4.0
+ gaiaReadDbfEntity_ex@Base 4.2.1
  gaiaReadShpEntity@Base 2.4.0
+ gaiaReadShpEntity_ex@Base 4.2.1
  gaiaReflectCoords@Base 2.4.0
  gaiaResetDbfEntity@Base 2.4.0
  gaiaResetGeosMsg@Base 2.4.0
@@ -726,10 +732,12 @@ libspatialite.so.6 libspatialite6 #MINVER#
  kml_yylex@Base 4.0.0
  load_XL@Base 3.0.2~20120302
  load_dbf@Base 3.0.2~20120302
+ load_dbf_ex2@Base 4.2.1
  load_dbf_ex@Base 4.0.0
  load_from_wfs@Base 4.1.0
  load_from_wfs_paged@Base 4.1.0
  load_shapefile@Base 3.0.2~20120302
+ load_shapefile_ex2@Base 4.2.1
  load_shapefile_ex@Base 4.0.0
  math_llabs@Base 2.4.0
  math_round@Base 2.4.0
