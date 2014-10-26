@@ -3,7 +3,7 @@ Author: Bas Couwenberg <sebastic@xs4all.nl>
 Last-Update: 2013-12-14
 --- a/test/Makefile.am
 +++ b/test/Makefile.am
-@@ -85,7 +85,7 @@ check_PROGRAMS += \
+@@ -87,7 +87,7 @@ check_PROGRAMS += \
  endif
  
  AM_CFLAGS = -I@srcdir@/../src/headers -I@srcdir@

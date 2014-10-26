@@ -65,7 +65,7 @@ Author: Bas Couwenberg <sebastic@xs4all.nl>
  		else if (n_discarded == 0 && n_failures > 0)
 --- a/src/spatialite/spatialite.c
 +++ b/src/spatialite/spatialite.c
-@@ -27015,7 +27015,7 @@ fnct_XB_Create (sqlite3_context * contex
+@@ -28678,7 +28678,7 @@ fnct_XB_Create (sqlite3_context * contex
  /
  / - the XMLdocument should be "well formed"
  / - if *compressed* is TRUE (default) the XmlBlob would be zipped
