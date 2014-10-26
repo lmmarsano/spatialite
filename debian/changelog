@@ -5,6 +5,7 @@ spatialite (4.2.1~rc0-1~exp1) UNRELEASED; urgency=medium
   * Remove 03-link-m.patch, applied upstream.
   * Update package names for SONAME bump.
   * Update copyright file, consolidate files paragraphs.
+  * Update 13-succesfully-typo.patch.
 
  -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 26 Oct 2014 16:30:32 +0100
 

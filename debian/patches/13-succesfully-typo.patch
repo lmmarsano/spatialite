@@ -65,6 +65,15 @@ Author: Bas Couwenberg <sebastic@xs4all.nl>
  		else if (n_discarded == 0 && n_failures > 0)
 --- a/src/spatialite/spatialite.c
 +++ b/src/spatialite/spatialite.c
+@@ -26201,7 +26201,7 @@ load_dxf (sqlite3 * db_handle, struct sp
+ 	  spatialite_e ("Unable to parse: %s\n", filename);
+ 	  goto stop_dxf;
+       }
+-    spatialite_e ("\n*** DXF file succesfully loaded\n");
++    spatialite_e ("\n*** DXF file successfully loaded\n");
+     ret = 1;
+ 
+   stop_dxf:
 @@ -28678,7 +28678,7 @@ fnct_XB_Create (sqlite3_context * contex
  /
  / - the XMLdocument should be "well formed"
