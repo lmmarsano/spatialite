@@ -1,0 +1,3 @@
+# mod_spatialite is a SQLite 3 loadable extension module, not a normal shared library
+mod-spatialite6: non-dev-pkg-with-shlib-symlink usr/lib/*/mod_spatialite.so*
+mod-spatialite6: no-symbols-control-file usr/lib/*/mod_spatialite.so.*
