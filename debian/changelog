@@ -1,4 +1,4 @@
-spatialite (4.2.1~rc0-1~exp1) UNRELEASED; urgency=medium
+spatialite (4.2.1~rc1-1~exp1) UNRELEASED; urgency=medium
 
   * New upstream release candidate.
   * Set experimental branch in Vcs-Git and gbp.conf.
@@ -9,7 +9,7 @@ spatialite (4.2.1~rc0-1~exp1) UNRELEASED; urgency=medium
   * Bump Standards-Version to 3.9.6, no changes.
   * Update symbols for 4.2.1 release.
 
- -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 26 Oct 2014 16:30:32 +0100
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Wed, 26 Nov 2014 23:52:27 +0100
 
 spatialite (4.2.0-1~exp1) experimental; urgency=low
  
