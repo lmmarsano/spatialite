@@ -2,8 +2,9 @@ spatialite (4.2.1~rc1-1~exp2) UNRELEASED; urgency=medium
 
   * Add upstream metadata.
   * Update Vcs-Browser URL to use cgit instead of gitweb.
+  * Rename mod-spatialite package to libsqlite3-mod-spatialite.
 
- -- Bas Couwenberg <sebastic@xs4all.nl>  Sat, 29 Nov 2014 00:06:02 +0100
+ -- Bas Couwenberg <sebastic@xs4all.nl>  Sun, 11 Jan 2015 21:47:58 +0100
 
 spatialite (4.2.1~rc1-1~exp1) experimental; urgency=medium
 
