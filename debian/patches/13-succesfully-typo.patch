@@ -1,5 +1,5 @@
 Description: Fix 'succesfully' typo, replace with 'successfully'.
-Author: Bas Couwenberg <sebastic@xs4all.nl>
+Author: Bas Couwenberg <sebastic@debian.org>
 Forwarded: https://groups.google.com/d/msg/spatialite-users/yvME7fp-7EI/OiRiDJioEjEJ
 Applied-Upstream: https://www.gaia-gis.it/fossil/libspatialite/vinfo/497f33bd73
 

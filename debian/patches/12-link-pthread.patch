@@ -1,5 +1,5 @@
 Description: Link libpthread to fix check_multithread build failure 
-Author: Bas Couwenberg <sebastic@xs4all.nl>
+Author: Bas Couwenberg <sebastic@debian.org>
 --- a/test/Makefile.am
 +++ b/test/Makefile.am
 @@ -87,7 +87,7 @@ check_PROGRAMS += \

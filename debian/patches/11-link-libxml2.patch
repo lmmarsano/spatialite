@@ -1,5 +1,5 @@
 Description: Link libxml2 for successfull test case build.
-Author: Bas Couwenberg <sebastic@xs4all.nl>
+Author: Bas Couwenberg <sebastic@debian.org>
 Last-Update: 2013-12-14
 --- a/test/Makefile.am
 +++ b/test/Makefile.am

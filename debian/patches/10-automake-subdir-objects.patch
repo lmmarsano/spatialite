@@ -1,5 +1,5 @@
 Description: Set automake option subdir-object to remain forward compatible.
-Author: Bas Couwenberg <sebastic@xs4all.nl>
+Author: Bas Couwenberg <sebastic@debian.org>
 Last-Update: 2013-09-30
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
