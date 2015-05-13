@@ -1,11 +1,11 @@
-spatialite (4.2.1~rc1-1~exp3) UNRELEASED; urgency=medium
+spatialite (4.2.1~rc1-1~exp3) experimental; urgency=medium
 
   * Update my email to use @debian.org address.
   * Update copyright file, changes:
     - Align copyright holders
     - Drop .0 from GPL license shortname
 
- -- Bas Couwenberg <sebastic@debian.org>  Wed, 13 May 2015 19:45:59 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Wed, 13 May 2015 22:52:20 +0200
 
 spatialite (4.2.1~rc1-1~exp2) experimental; urgency=medium
 
