@@ -45,6 +45,7 @@ Multi-Arch: same
 Section: libdevel
 Depends: libspatialite6 (= ${binary:Version}),
          libsqlite3-dev,
+         zlib1g-dev,
          ${misc:Depends}
 Recommends: pkg-config
 Description: Geospatial extension for SQLite - development files

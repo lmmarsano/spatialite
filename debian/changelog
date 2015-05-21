@@ -1,6 +1,7 @@
 spatialite (4.2.1~rc1-1~exp5) UNRELEASED; urgency=medium
 
   * Also install spatialite_private.h for pyspatialite builds.
+  * Add dependency on zlib1g-dev to libspatialite-dev for zlib.h.
 
  -- Bas Couwenberg <sebastic@debian.org>  Thu, 21 May 2015 15:26:34 +0200
 
