@@ -4,3 +4,4 @@
 11-link-libxml2.patch
 12-link-pthread.patch
 13-succesfully-typo.patch
+#14-soversion.patch
