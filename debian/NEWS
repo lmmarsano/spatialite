@@ -1,4 +1,4 @@
-spatialite (4.3.0~rc0-1) experimental; urgency=medium
+spatialite (4.3.0~rc0-1~exp1) experimental; urgency=medium
 
   SpatiaLite 4.3.x is now configured to enable liblwgeom and GCP options.
   This causes an implicit license escalation to GPLv2+ from the initial

@@ -1,4 +1,4 @@
-spatialite (4.3.0~rc0-1) UNRELEASED; urgency=medium
+spatialite (4.3.0~rc0-1~exp1) experimental; urgency=medium
 
   * Update watch file to use lowercase rc in upstream version mangle.
   * New upstream release candidate.
@@ -13,7 +13,7 @@ spatialite (4.3.0~rc0-1) UNRELEASED; urgency=medium
   * Add patch to fix SONAME, the SOVERSION was incorrectly decremented to 0.
   * Update symbols for 4.3.0 release.
 
- -- Bas Couwenberg <sebastic@debian.org>  Fri, 19 Jun 2015 03:20:11 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 19 Jun 2015 20:38:28 +0200
 
 spatialite (4.2.1~rc1-1~exp5) experimental; urgency=medium
 
