@@ -14,6 +14,10 @@ Comment: Contributor(s):
  Pepijn Van Eeckhoudt <pepijnvaneeckhoudt@luciad.com>
 License: MPL-1.1 or GPL-2+ or LGPL-2.1+
 
+Files: ltmain.sh
+Copyright: 1996-2001, 2003-2011, Free Software Foundation, Inc.
+License: GPL-2+ with Libtool exception
+
 Files: src/connection_cache/generator/code_generator.c
 Copyright: 2013, Alessandro Furieri <a.furieri@lqt.it>
 License: GPL-3+
@@ -39,6 +43,10 @@ License: public-domain
  donated to the public domain; use this code for anything you like
  as long as it is understood there are absolutely *NO* warranties of any kind,
  even implied
+
+Files: src/control_points/*
+Copyright: 2015, Sandro Furieri <a.furieri@lqt.it>
+License: GPL-2+
 
 Files: src/gaiageo/Ewkt.c
  src/gaiageo/Ewkt.h
@@ -91,15 +99,17 @@ License: public-domain
  optimizations are not included to reduce source code size and avoid
  compile-time configuration.
 
+Files: src/srsinit/epsg_update/auto_epsg.c
+ src/srsinit/epsg_update/auto_epsg_ext.c
+ src/srsinit/epsg_update/epsg_from_gdal.c
+Copyright: 2011, 2014, Alessandro Furieri
+License: GPL-3+
+
 Files: test/fnmatch_impl4win.h
 Copyright: 1989, 1993-1994, The Regents of the University of California
 Comment: This code is derived from software contributed to Berkeley by
  Guido van Rossum.
 License: BSD-4-Clause
-
-Files: ltmain.sh
-Copyright: 1996-2001, 2003-2011, Free Software Foundation, Inc.
-License: GPL-2+ with Libtool exception
 
 Files: test/asprintf4win.h
 Copyright:  2001, Federico Di Gregorio <fog@debian.org>
@@ -110,10 +120,6 @@ Files: test/fnmatch4win.h
 Copyright: 1992, Free Software Foundation, Inc
            1998, Alexandre Parenteau <aubonbeurre@hotmail.com>
 License: LGPL-2+
-
-Files: src/srsinit/epsg_update/auto_epsg.c
-Copyright: 2011, Alessandro Furieri
-License: GPL-3+
 
 Files: debian/*
 Copyright: 2009, Francesco Paolo Lovergine <frankie@debian.org>
