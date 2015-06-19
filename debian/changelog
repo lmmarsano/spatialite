@@ -2,6 +2,7 @@ spatialite (4.3.0~rc0-1) UNRELEASED; urgency=medium
 
   * Update watch file to use lowercase rc in upstream version mangle.
   * New upstream release candidate.
+  * Drop patches applied upstream, refresh remaining patches.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 19 Jun 2015 03:20:11 +0200
 

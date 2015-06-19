@@ -2,7 +2,7 @@ Description: Link libpthread to fix check_multithread build failure
 Author: Bas Couwenberg <sebastic@debian.org>
 --- a/test/Makefile.am
 +++ b/test/Makefile.am
-@@ -87,7 +87,7 @@ check_PROGRAMS += \
+@@ -89,7 +89,7 @@ check_PROGRAMS += \
  endif
  
  AM_CFLAGS = -I@srcdir@/../src/headers -I@srcdir@
@@ -13,7 +13,7 @@ Author: Bas Couwenberg <sebastic@debian.org>
  
 --- a/test/Makefile.in
 +++ b/test/Makefile.in
-@@ -972,7 +972,7 @@ top_builddir = @top_builddir@
+@@ -996,7 +996,7 @@ top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
  AM_CPPFLAGS = @CFLAGS@ @GEOS_CFLAGS@ @LIBXML2_CFLAGS@
  AM_CFLAGS = -I@srcdir@/../src/headers -I@srcdir@

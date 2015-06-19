@@ -3,7 +3,7 @@ Author: Bas Couwenberg <sebastic@debian.org>
 Last-Update: 2013-12-14
 --- a/test/Makefile.am
 +++ b/test/Makefile.am
-@@ -87,7 +87,7 @@ check_PROGRAMS += \
+@@ -89,7 +89,7 @@ check_PROGRAMS += \
  endif
  
  AM_CFLAGS = -I@srcdir@/../src/headers -I@srcdir@
