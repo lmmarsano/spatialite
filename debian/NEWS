@@ -1,3 +1,49 @@
+spatialite (4.3.0~rc0-1) experimental; urgency=medium
+
+  SpatiaLite 4.3.x is now configured to enable liblwgeom and GCP options.
+  This causes an implicit license escalation to GPLv2+ from the initial
+  tri-license (MPL/LGPL/GPL).
+
+  Enabling these features is the recommended configuration by upstream.
+  For more information refer to following posts on the spatialite-users list:
+
+   * ,/configure changes in 4.2.0:
+     https://groups.google.com/d/msg/spatialite-users/S2mY1Tj7BBc/_gWzznEKZnwJ
+
+   * 4.3.0: note for builders and packages:
+     https://groups.google.com/d/msg/spatialite-users/uawzaLjzbo4/_0JqJ8a6HmAJ
+
+  For the changes since Spatialite 4.1 please refer to the online documention.
+
+  Spatialite 4.2.0:
+
+   * 4.2.0 Documentation and Tutorials about recent changes and new features:
+     https://www.gaia-gis.it/fossil/libspatialite/wiki?name=4.2.0-doc
+
+   * new SQL functions introduced since version 4.2.0:
+     https://www.gaia-gis.it/fossil/libspatialite/wiki?name=4.2.0+functions  
+
+   * SpatiaLite 4.2.0 SQL functions reference list:
+     http://www.gaia-gis.it/gaia-sins/spatialite-sql-4.2.0.html
+
+  SpatiaLite 4.2.1:
+
+   * new SQL functions introduced since version 4.2.1-RC:
+     https://www.gaia-gis.it/fossil/libspatialite/wiki?name=4.2.1+functions
+
+   * SpatiaLite 4.2.1 SQL functions reference list:
+     http://www.gaia-gis.it/gaia-sins/spatialite-sql-4.2.1.html
+
+  SpatiaLite 4.3.0:
+
+   * new SQL functions introduced since version 4.3.0:
+     https://www.gaia-gis.it/fossil/libspatialite/wiki?name=4.3.0+functions
+
+   * SpatiaLite 4.3.0 SQL functions reference list:
+     http://www.gaia-gis.it/gaia-sins/spatialite-sql-4.3.0.html
+
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 19 Jun 2015 18:50:44 +0200
+
 spatialite (4.1.1-7) unstable; urgency=medium
 
   The upgrade from SpatiaLite 3.0 to 4.1 brings many changes, some of which

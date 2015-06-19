@@ -6,6 +6,10 @@ spatialite (4.3.0~rc0-1) UNRELEASED; urgency=medium
   * Update copyright file for new files.
   * Rename library package to libspatialite7 to match fixed SONAME,
     rename debug package to libspatialite-dbg.
+  * Add suggested configuration options by upstream:
+    --enable-lwgeom=yes --enable-gcp=yes
+    See the '4.3.0: note for builders and packages' thread on spatialite-users:
+    https://groups.google.com/d/msg/spatialite-users/uawzaLjzbo4/_0JqJ8a6HmAJ
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 19 Jun 2015 03:20:11 +0200
 
