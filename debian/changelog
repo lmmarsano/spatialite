@@ -10,6 +10,7 @@ spatialite (4.3.0~rc0-1) UNRELEASED; urgency=medium
     --enable-lwgeom=yes --enable-gcp=yes
     See the '4.3.0: note for builders and packages' thread on spatialite-users:
     https://groups.google.com/d/msg/spatialite-users/uawzaLjzbo4/_0JqJ8a6HmAJ
+  * Add patch to fix SONAME, the SOVERSION was incorrectly decremented to 0.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 19 Jun 2015 03:20:11 +0200
 
