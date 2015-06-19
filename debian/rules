@@ -59,7 +59,7 @@ override_dh_shlibdeps:
 	dh_shlibdeps -l/usr/lib:$(CURDIR)/debian/tmp/usr/lib
 
 override_dh_strip:
-	dh_strip --dbg-package=libspatialite6-dbg
+	dh_strip --dbg-package=libspatialite-dbg
 
 override_dh_install:
 	dh_install --list-missing

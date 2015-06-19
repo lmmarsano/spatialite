@@ -4,6 +4,8 @@ spatialite (4.3.0~rc0-1) UNRELEASED; urgency=medium
   * New upstream release candidate.
   * Drop patches applied upstream, refresh remaining patches.
   * Update copyright file for new files.
+  * Rename library package to libspatialite7 to match fixed SONAME,
+    rename debug package to libspatialite-dbg.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 19 Jun 2015 03:20:11 +0200
 
