@@ -1,7 +1,7 @@
 From: Francesco Paolo Lovergine <frankie@debian.org>
 Subject: add 'foreign' to AUTOMAKE_OPTIONS
 Origin: vendor
-Forwarded: no
+Forwarded: https://groups.google.com/d/msg/spatialite-users/kIZA-n4f9kk/IoaxSGjUWZEJ
 
 ---
  Makefile.am |    2 +-

@@ -1,7 +1,7 @@
 From: Francesco Paolo Lovergine <frankie@debian.org>
 Subject: avoid relinking sqlite3 and math libraries
 Origin: vendor
-Forwarded: no
+Forwarded: https://groups.google.com/d/msg/spatialite-users/kIZA-n4f9kk/IoaxSGjUWZEJ
 
 --- a/spatialite.pc.in
 +++ b/spatialite.pc.in

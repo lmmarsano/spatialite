@@ -1,6 +1,8 @@
 Description: Link libxml2 for successfull test case build.
 Author: Bas Couwenberg <sebastic@debian.org>
 Last-Update: 2013-12-14
+Forwarded: https://groups.google.com/d/msg/spatialite-users/kIZA-n4f9kk/IoaxSGjUWZEJ
+
 --- a/test/Makefile.am
 +++ b/test/Makefile.am
 @@ -89,7 +89,7 @@ check_PROGRAMS += \
