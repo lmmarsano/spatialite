@@ -64,5 +64,6 @@ override_dh_strip:
 	dh_strip --dbg-package=libspatialite-dbg
 
 override_dh_install:
+	$(RM) debian/*/usr/lib/*/*.la
 	dh_install --list-missing
 
