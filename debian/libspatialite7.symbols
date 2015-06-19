@@ -1,5 +1,4 @@
 libspatialite.so.7 libspatialite7 #MINVER#
-#MISSING: 4.1.0# EwktLval@Base 3.0.0
  Ewkt_create_buffer@Base 3.0.0
  Ewkt_delete_buffer@Base 3.0.0
  Ewkt_flush_buffer@Base 3.0.0
@@ -31,7 +30,6 @@ libspatialite.so.7 libspatialite7 #MINVER#
  Ewktset_lineno@Base 3.0.0
  Ewktset_out@Base 3.0.0
  Ewktwrap@Base 3.0.0
-#MISSING: 4.1.0# GeoJsonLval@Base 3.0.0
  GeoJson_create_buffer@Base 3.0.0
  GeoJson_delete_buffer@Base 3.0.0
  GeoJson_flush_buffer@Base 3.0.0
@@ -63,7 +61,6 @@ libspatialite.so.7 libspatialite7 #MINVER#
  GeoJsonset_lineno@Base 3.0.0
  GeoJsonset_out@Base 3.0.0
  GeoJsonwrap@Base 3.0.0
-#MISSING: 4.1.0# GmlLval@Base 3.0.0
  Gml_create_buffer@Base 3.0.0
  Gml_delete_buffer@Base 3.0.0
  Gml_flush_buffer@Base 3.0.0
@@ -95,7 +92,6 @@ libspatialite.so.7 libspatialite7 #MINVER#
  Gmlset_lineno@Base 3.0.0
  Gmlset_out@Base 3.0.0
  Gmlwrap@Base 3.0.0
-#MISSING: 4.1.0# KmlLval@Base 3.0.0
  Kml_create_buffer@Base 3.0.0
  Kml_delete_buffer@Base 3.0.0
  Kml_flush_buffer@Base 3.0.0
@@ -147,7 +143,6 @@ libspatialite.so.7 libspatialite7 #MINVER#
  VanuatuWktlex_destroy@Base 3.0.0
  VanuatuWktlex_init@Base 4.0.0
  VanuatuWktlex_init_extra@Base 4.0.0
-#MISSING: 4.1.0# VanuatuWktlval@Base 3.0.0
  VanuatuWktpop_buffer_state@Base 3.0.0
  VanuatuWktpush_buffer_state@Base 3.0.0
  VanuatuWktrealloc@Base 3.0.0
@@ -763,13 +758,10 @@ libspatialite.so.7 libspatialite7 #MINVER#
  spatialitetargetcpu@Base 4.2.0
  spatialiteversion@Base 2.4.0
  splite_connection_pool@Base 4.2.0
-#MISSING: 4.2.0# sqlite3VirtualTextInit@Base 2.4.0
-#MISSING: 4.2.0# sqlite3_extension_init@Base 2.4.0
  update_layer_statistics@Base 3.0.2~20120302
  vanuatuParse@Base 3.0.0
  vanuatuParseAlloc@Base 3.0.0
  vanuatuParseFree@Base 3.0.0
  vanuatu_point_xyzm@Base 3.0.0
  vanuatu_yylex@Base 4.0.0
-#MISSING: 4.2.0# virtualtext_extension_init@Base 2.4.0
  virtualtext_module@Base 2.4.0
