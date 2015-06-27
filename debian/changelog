@@ -1,6 +1,7 @@
 spatialite (4.3.0~rc1-1) UNRELEASED; urgency=medium
 
   * New upstream release candidate.
+  * Drop patches applied upstream.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sat, 27 Jun 2015 15:16:28 +0200
 
