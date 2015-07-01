@@ -1,9 +1,9 @@
-spatialite (4.3.0-1) UNRELEASED; urgency=medium
+spatialite (4.3.0-1~exp1) experimental; urgency=medium
 
   * New upstream release.
   * Update copyright years.
 
- -- Bas Couwenberg <sebastic@debian.org>  Wed, 01 Jul 2015 20:26:55 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Wed, 01 Jul 2015 21:21:04 +0200
 
 spatialite (4.3.0~rc1-1~exp1) experimental; urgency=medium
 
