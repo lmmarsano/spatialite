@@ -5,7 +5,7 @@ Source: https://www.gaia-gis.it/fossil/libspatialite/
 License: MPL-1.1 or GPL-2+ or LGPL-2.1+
 
 Files: *
-Copyright: 2008-2014, Alessandro Furieri <a.furieri@lqt.it>
+Copyright: 2008-2015, Alessandro Furieri <a.furieri@lqt.it>
            2011-2014, Brad Hards <bradh@frogmouth.net>
 Comment: Contributor(s):
  Ahmadou Dicko <dicko.ahmadou@gmail.com>
