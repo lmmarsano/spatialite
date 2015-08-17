@@ -1,6 +1,8 @@
 spatialite (4.3.0a-5) UNRELEASED; urgency=medium
 
   * Update Vcs-Git URL to use HTTPS.
+  * Drop build dependency on liblwgeom-dev to untangle
+    spatialite->postgis->gdal->spatialite circular dependency.
 
  -- Bas Couwenberg <sebastic@debian.org>  Fri, 05 Feb 2016 15:50:00 +0100
 
