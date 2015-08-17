@@ -13,7 +13,7 @@ spatialite (4.3.0~rc0-1~exp1) experimental; urgency=medium
    * 4.3.0: note for builders and packages:
      https://groups.google.com/d/msg/spatialite-users/uawzaLjzbo4/_0JqJ8a6HmAJ
 
-  For the changes since Spatialite 4.1 please refer to the online documention.
+  For the changes since Spatialite 4.1 please refer to the online documentation.
 
   Spatialite 4.2.0:
 
