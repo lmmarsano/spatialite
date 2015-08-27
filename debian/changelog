@@ -1,3 +1,9 @@
+spatialite (4.3.0-3) UNRELEASED; urgency=medium
+
+  * Reinstate liblwgeom-dev (build) dependency.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Thu, 27 Aug 2015 18:15:40 +0200
+
 spatialite (4.3.0-2) unstable; urgency=medium
 
   * Drop build dependency on liblwgeom-dev to untangle
