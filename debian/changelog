@@ -1,9 +1,9 @@
-spatialite (4.3.0-3) UNRELEASED; urgency=medium
+spatialite (4.3.0-3) unstable; urgency=medium
 
   * Reinstate liblwgeom-dev (build) dependency.
   * Update Vcs-Browser URL to use HTTPS.
 
- -- Bas Couwenberg <sebastic@debian.org>  Thu, 27 Aug 2015 18:15:40 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 28 Aug 2015 09:38:42 +0200
 
 spatialite (4.3.0-2) unstable; urgency=medium
 
