@@ -1,8 +1,8 @@
-spatialite (4.3.0a-1) UNRELEASED; urgency=medium
+spatialite (4.3.0a-1) unstable; urgency=medium
 
   * New upstream release.
 
- -- Bas Couwenberg <sebastic@debian.org>  Wed, 09 Sep 2015 08:15:26 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Wed, 09 Sep 2015 08:20:15 +0200
 
 spatialite (4.3.0-3) unstable; urgency=medium
 
