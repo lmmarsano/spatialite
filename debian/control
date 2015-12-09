@@ -14,7 +14,7 @@ Build-Depends: debhelper (>= 9),
                libreadline-dev,
                libexpat1-dev,
                libfreexl-dev,
-               liblwgeom-dev,
+               liblwgeom-dev (>= 2.2.0),
                libxml2-dev,
                pkg-config,
                zlib1g-dev
