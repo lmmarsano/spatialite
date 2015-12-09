@@ -1,6 +1,7 @@
 spatialite (4.3.0a-2) UNRELEASED; urgency=medium
 
   * Require at least liblwgeom-dev 2.2.0 for postgis mini-transition.
+  * Drop unused BASE_URL variable from rules file.
 
  -- Bas Couwenberg <sebastic@debian.org>  Wed, 09 Dec 2015 23:19:36 +0100
 
