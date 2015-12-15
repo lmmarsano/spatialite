@@ -1,4 +1,4 @@
-spatialite (4.4.0~rc0-1) UNRELEASED; urgency=medium
+spatialite (4.4.0~rc0-1~exp1) experimental; urgency=medium
 
   * New upstream release candidate.
   * Drop patches, applied upstream.
@@ -6,7 +6,7 @@ spatialite (4.4.0~rc0-1) UNRELEASED; urgency=medium
   * Enable parallel builds, disable parallel test execution.
   * Update symbols for 4.4.0~rc0.
 
- -- Bas Couwenberg <sebastic@debian.org>  Tue, 15 Dec 2015 20:43:30 +0100
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 15 Dec 2015 22:03:12 +0100
 
 spatialite (4.3.0a-3) unstable; urgency=medium
 
