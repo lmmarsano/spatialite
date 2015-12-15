@@ -154,6 +154,43 @@ libspatialite.so.7 libspatialite7 #MINVER#
  VanuatuWktset_lineno@Base 3.0.0
  VanuatuWktset_out@Base 3.0.0
  VanuatuWktwrap@Base 3.0.0
+ callback_checkTopoGeomRemEdge@Base 4.4.0~rc0
+ callback_checkTopoGeomRemNode@Base 4.4.0~rc0
+ callback_deleteEdges@Base 4.4.0~rc0
+ callback_deleteFacesById@Base 4.4.0~rc0
+ callback_deleteNodesById@Base 4.4.0~rc0
+ callback_freeTopology@Base 4.4.0~rc0
+ callback_getEdgeByFace@Base 4.4.0~rc0
+ callback_getEdgeById@Base 4.4.0~rc0
+ callback_getEdgeByNode@Base 4.4.0~rc0
+ callback_getEdgeWithinBox2D@Base 4.4.0~rc0
+ callback_getEdgeWithinDistance2D@Base 4.4.0~rc0
+ callback_getFaceById@Base 4.4.0~rc0
+ callback_getFaceContainingPoint@Base 4.4.0~rc0
+ callback_getFaceWithinBox2D@Base 4.4.0~rc0
+ callback_getNextEdgeId@Base 4.4.0~rc0
+ callback_getNodeByFace@Base 4.4.0~rc0
+ callback_getNodeById@Base 4.4.0~rc0
+ callback_getNodeWithinBox2D@Base 4.4.0~rc0
+ callback_getNodeWithinDistance2D@Base 4.4.0~rc0
+ callback_getRingEdges@Base 4.4.0~rc0
+ callback_insertEdges@Base 4.4.0~rc0
+ callback_insertFaces@Base 4.4.0~rc0
+ callback_insertNodes@Base 4.4.0~rc0
+ callback_lastErrorMessage@Base 4.4.0~rc0
+ callback_loadTopologyByName@Base 4.4.0~rc0
+ callback_topoGetPrecision@Base 4.4.0~rc0
+ callback_topoGetSRID@Base 4.4.0~rc0
+ callback_topoHasZ@Base 4.4.0~rc0
+ callback_updateEdges@Base 4.4.0~rc0
+ callback_updateEdgesById@Base 4.4.0~rc0
+ callback_updateFacesById@Base 4.4.0~rc0
+ callback_updateNodes@Base 4.4.0~rc0
+ callback_updateNodesById@Base 4.4.0~rc0
+ callback_updateTopoGeomEdgeHeal@Base 4.4.0~rc0
+ callback_updateTopoGeomEdgeSplit@Base 4.4.0~rc0
+ callback_updateTopoGeomFaceHeal@Base 4.4.0~rc0
+ callback_updateTopoGeomFaceSplit@Base 4.4.0~rc0
  check_all_geometry_columns@Base 4.1.0
  check_all_geometry_columns_r@Base 4.2.0
  check_duplicated_rows@Base 3.0.2~20120302
@@ -180,11 +217,18 @@ libspatialite.so.7 libspatialite7 #MINVER#
  ewky_yylex@Base 4.0.0
  gaia3DDistance@Base 4.3.0~rc0
  gaia3DMaxDistance@Base 4.3.0~rc0
+ gaia3dLength@Base 4.4.0~rc0
  gaiaAddControlPoint2D@Base 4.3.0~rc0
  gaiaAddControlPoint3D@Base 4.3.0~rc0
  gaiaAddDbfField@Base 2.4.0
+ gaiaAddEdgeModFace@Base 4.4.0~rc0
+ gaiaAddEdgeNewFaces@Base 4.4.0~rc0
  gaiaAddInteriorRing@Base 2.4.0
+ gaiaAddIsoEdge@Base 4.4.0~rc0
+ gaiaAddIsoNetNode@Base 4.4.0~rc0
+ gaiaAddIsoNode@Base 4.4.0~rc0
  gaiaAddLinestringToGeomColl@Base 2.4.0
+ gaiaAddLink@Base 4.4.0~rc0
  gaiaAddPointToGeomColl@Base 2.4.0
  gaiaAddPointToGeomCollXYM@Base 2.4.0
  gaiaAddPointToGeomCollXYZ@Base 2.4.0
@@ -232,6 +276,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaCastGeomCollToXYM@Base 2.4.0
  gaiaCastGeomCollToXYZ@Base 2.4.0
  gaiaCastGeomCollToXYZM@Base 2.4.0
+ gaiaChangeEdgeGeom@Base 4.4.0~rc0
+ gaiaChangeLinkGeom@Base 4.4.0~rc0
  gaiaCleanSqlString@Base 2.4.0
  gaiaClockwise@Base 2.4.0
  gaiaCloneDbfEntity@Base 2.4.0
@@ -271,6 +317,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaCreateUTF8Converter@Base 2.4.0
  gaiaCriticalPointFromGEOSmsg@Base 4.2.0
  gaiaCriticalPointFromGEOSmsg_r@Base 4.2.0
+ gaiaCutter@Base 4.4.0~rc0
  gaiaDecodeURL@Base 4.3.0~rc0
  gaiaDegsToRads@Base 2.4.0
  gaiaDelaunayTriangulation@Base 4.2.0
@@ -443,6 +490,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaGeometryType@Base 2.4.0
  gaiaGeometryUnion@Base 2.4.0
  gaiaGeometryUnion_r@Base 4.2.0
+ gaiaGetEdgeByPoint@Base 4.4.0~rc0
+ gaiaGetEdgeSeed@Base 4.4.0~rc0
  gaiaGetEnvelopeFromGPB@Base 4.3.0~rc0
  gaiaGetExifGpsTagById@Base 2.4.0
  gaiaGetExifTagById@Base 2.4.0
@@ -450,6 +499,10 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaGetExifTagByPos@Base 2.4.0
  gaiaGetExifTags@Base 2.4.0
  gaiaGetExifTagsCount@Base 2.4.0
+ gaiaGetFaceByPoint@Base 4.4.0~rc0
+ gaiaGetFaceEdges@Base 4.4.0~rc0
+ gaiaGetFaceGeometry@Base 4.4.0~rc0
+ gaiaGetFaceSeed@Base 4.4.0~rc0
  gaiaGetGeometryTypeFromGPB@Base 4.3.0~rc0
  gaiaGetGeosAuxErrorMsg@Base 4.1.0
  gaiaGetGeosAuxErrorMsg_r@Base 4.2.0
@@ -460,6 +513,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaGetGpsCoords@Base 2.4.0
  gaiaGetGpsLatLong@Base 2.4.0
  gaiaGetLayerExtent@Base 4.1.0
+ gaiaGetLinkByPoint@Base 4.4.0~rc0
+ gaiaGetLinkSeed@Base 4.4.0~rc0
  gaiaGetLocaleCharset@Base 2.4.0
  gaiaGetLwGeomErrorMsg@Base 4.3.0~rc0
  gaiaGetLwGeomWarningMsg@Base 4.3.0~rc0
@@ -467,9 +522,13 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaGetMbrMaxY@Base 2.4.0
  gaiaGetMbrMinX@Base 2.4.0
  gaiaGetMbrMinY@Base 2.4.0
+ gaiaGetNetNodeByPoint@Base 4.4.0~rc0
+ gaiaGetNetwork@Base 4.4.0~rc0
+ gaiaGetNodeByPoint@Base 4.4.0~rc0
  gaiaGetPointOnSurface@Base 2.4.0
  gaiaGetPointOnSurface_r@Base 4.2.0
  gaiaGetSridFromGPB@Base 4.3.0~rc0
+ gaiaGetTopology@Base 4.4.0~rc0
  gaiaGetVectorLayersList@Base 4.0.0
  gaiaGreatCircleDistance@Base 2.4.0
  gaiaGreatCircleTotalLength@Base 2.4.0
@@ -497,6 +556,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaIsEmpty@Base 2.4.0
  gaiaIsEmptyGPB@Base 4.3.0~rc0
  gaiaIsExifGpsTag@Base 2.4.0
+ gaiaIsGpxXmlBlob@Base 4.4.0~rc0
  gaiaIsIsoMetadataXmlBlob@Base 4.1.1
  gaiaIsNotClosedGeomColl@Base 4.0.0
  gaiaIsNotClosedGeomColl_r@Base 4.2.0
@@ -576,6 +636,23 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaMergeGeometries@Base 3.0.0
  gaiaMergeGeometries_r@Base 4.2.0
  gaiaMinDistance@Base 2.4.0
+ gaiaModEdgeHeal@Base 4.4.0~rc0
+ gaiaModEdgeSplit@Base 4.4.0~rc0
+ gaiaModGeoLinkSplit@Base 4.4.0~rc0
+ gaiaModLinkHeal@Base 4.4.0~rc0
+ gaiaModLogLinkSplit@Base 4.4.0~rc0
+ gaiaMoveIsoNetNode@Base 4.4.0~rc0
+ gaiaMoveIsoNode@Base 4.4.0~rc0
+ gaiaNetworkCreate@Base 4.4.0~rc0
+ gaiaNetworkDestroy@Base 4.4.0~rc0
+ gaiaNetworkDrop@Base 4.4.0~rc0
+ gaiaNetworkFromCache@Base 4.4.0~rc0
+ gaiaNetworkFromDBMS@Base 4.4.0~rc0
+ gaiaNewEdgeHeal@Base 4.4.0~rc0
+ gaiaNewEdgesSplit@Base 4.4.0~rc0
+ gaiaNewGeoLinkSplit@Base 4.4.0~rc0
+ gaiaNewLinkHeal@Base 4.4.0~rc0
+ gaiaNewLogLinkSplit@Base 4.4.0~rc0
  gaiaNodeLines@Base 4.3.0~rc0
  gaiaNormalizeLonLat@Base 4.0.0
  gaiaOffsetCurve@Base 3.0.2~20120302
@@ -630,9 +707,17 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaRadsToDegs@Base 2.4.0
  gaiaReadDbfEntity@Base 2.4.0
  gaiaReadDbfEntity_ex@Base 4.2.1~
+ gaiaReadNetworkFromDBMS@Base 4.4.0~rc0
  gaiaReadShpEntity@Base 2.4.0
  gaiaReadShpEntity_ex@Base 4.2.1~
+ gaiaReadTopologyFromDBMS@Base 4.4.0~rc0
  gaiaReflectCoords@Base 2.4.0
+ gaiaRemEdgeModFace@Base 4.4.0~rc0
+ gaiaRemEdgeNewFace@Base 4.4.0~rc0
+ gaiaRemIsoEdge@Base 4.4.0~rc0
+ gaiaRemIsoNetNode@Base 4.4.0~rc0
+ gaiaRemIsoNode@Base 4.4.0~rc0
+ gaiaRemoveLink@Base 4.4.0~rc0
  gaiaResetDbfEntity@Base 2.4.0
  gaiaResetGeosMsg@Base 2.4.0
  gaiaResetGeosMsg_r@Base 4.2.0
@@ -697,6 +782,28 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaToSpatiaLiteBlobWkb@Base 2.4.0
  gaiaToSpatiaLiteBlobWkbEx@Base 4.3.0~rc0
  gaiaToWkb@Base 2.4.0
+ gaiaTopoGeoUpdateSeeds@Base 4.4.0~rc0
+ gaiaTopoGeo_AddLineString@Base 4.4.0~rc0
+ gaiaTopoGeo_AddPoint@Base 4.4.0~rc0
+ gaiaTopoGeo_AddPolygon@Base 4.4.0~rc0
+ gaiaTopoGeo_CreateTopoLayer@Base 4.4.0~rc0
+ gaiaTopoGeo_ExportTopoLayer@Base 4.4.0~rc0
+ gaiaTopoGeo_FromGeoTable@Base 4.4.0~rc0
+ gaiaTopoGeo_InitTopoLayer@Base 4.4.0~rc0
+ gaiaTopoGeo_InsertFeatureFromTopoLayer@Base 4.4.0~rc0
+ gaiaTopoGeo_RemoveTopoLayer@Base 4.4.0~rc0
+ gaiaTopoGeo_SubdivideLines@Base 4.4.0~rc0
+ gaiaTopoGeo_ToGeoTable@Base 4.4.0~rc0
+ gaiaTopoGeo_ToGeoTableGeneralize@Base 4.4.0~rc0
+ gaiaTopoNetUpdateSeeds@Base 4.4.0~rc0
+ gaiaTopoNet_FromGeoTable@Base 4.4.0~rc0
+ gaiaTopoNet_ToGeoTable@Base 4.4.0~rc0
+ gaiaTopoNet_ToGeoTableGeneralize@Base 4.4.0~rc0
+ gaiaTopologyCreate@Base 4.4.0~rc0
+ gaiaTopologyDestroy@Base 4.4.0~rc0
+ gaiaTopologyDrop@Base 4.4.0~rc0
+ gaiaTopologyFromCache@Base 4.4.0~rc0
+ gaiaTopologyFromDBMS@Base 4.4.0~rc0
  gaiaTransform@Base 2.4.0
  gaiaTransform_r@Base 4.2.0
  gaiaTriangularGrid@Base 4.0.0
@@ -709,6 +816,9 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaUpdateMetaCatalogStatistics@Base 4.2.0
  gaiaUpdateMetaCatalogStatisticsFromMaster@Base 4.2.0
  gaiaUpdateSqlLog@Base 4.0.0
+ gaiaValidLogicalNet@Base 4.4.0~rc0
+ gaiaValidSpatialNet@Base 4.4.0~rc0
+ gaiaValidateTopoGeo@Base 4.4.0~rc0
  gaiaVoronojDiagram@Base 4.2.0
  gaiaVoronojDiagram_r@Base 4.2.0
  gaiaWriteDbfEntity@Base 3.0.0
@@ -728,6 +838,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaXmlBlobGetParentId@Base 4.1.1
  gaiaXmlBlobGetSchemaURI@Base 4.1.1
  gaiaXmlBlobGetTitle@Base 4.1.1
+ gaiaXmlBlobMLineFromGPX@Base 4.4.0~rc0
  gaiaXmlBlobSetFileId@Base 4.1.1
  gaiaXmlBlobSetParentId@Base 4.1.1
  gaiaXmlFromBlob@Base 4.1.1
@@ -798,8 +909,58 @@ libspatialite.so.7 libspatialite7 #MINVER#
  load_shapefile@Base 3.0.2~20120302
  load_shapefile_ex2@Base 4.2.1~
  load_shapefile_ex@Base 4.0.0
+ lwn_AddIsoNetNode@Base 4.4.0~rc0
+ lwn_AddLink@Base 4.4.0~rc0
+ lwn_BackendIfaceRegisterCallbacks@Base 4.4.0~rc0
+ lwn_ChangeLinkGeom@Base 4.4.0~rc0
+ lwn_CreateBackendIface@Base 4.4.0~rc0
+ lwn_FreeBackendIface@Base 4.4.0~rc0
+ lwn_FreeNetwork@Base 4.4.0~rc0
+ lwn_GetErrorMsg@Base 4.4.0~rc0
+ lwn_GetLinkByPoint@Base 4.4.0~rc0
+ lwn_GetNetNodeByPoint@Base 4.4.0~rc0
+ lwn_LoadNetwork@Base 4.4.0~rc0
+ lwn_ModGeoLinkSplit@Base 4.4.0~rc0
+ lwn_ModLinkHeal@Base 4.4.0~rc0
+ lwn_ModLogLinkSplit@Base 4.4.0~rc0
+ lwn_MoveIsoNetNode@Base 4.4.0~rc0
+ lwn_NewGeoLinkSplit@Base 4.4.0~rc0
+ lwn_NewLinkHeal@Base 4.4.0~rc0
+ lwn_NewLogLinkSplit@Base 4.4.0~rc0
+ lwn_RemIsoNetNode@Base 4.4.0~rc0
+ lwn_RemoveLink@Base 4.4.0~rc0
+ lwn_ResetErrorMsg@Base 4.4.0~rc0
+ lwn_SetErrorMsg@Base 4.4.0~rc0
+ lwn_alloc_line@Base 4.4.0~rc0
+ lwn_be_existsCoincidentNode@Base 4.4.0~rc0
+ lwn_be_existsLinkIntersectingPoint@Base 4.4.0~rc0
+ lwn_create_point2d@Base 4.4.0~rc0
+ lwn_create_point3d@Base 4.4.0~rc0
+ lwn_free_line@Base 4.4.0~rc0
+ lwn_free_point@Base 4.4.0~rc0
  math_llabs@Base 2.4.0
  math_round@Base 2.4.0
+ netcallback_deleteLinksById@Base 4.4.0~rc0
+ netcallback_deleteNetNodesById@Base 4.4.0~rc0
+ netcallback_freeNetwork@Base 4.4.0~rc0
+ netcallback_getLinkById@Base 4.4.0~rc0
+ netcallback_getLinkByNetNode@Base 4.4.0~rc0
+ netcallback_getLinkWithinDistance2D@Base 4.4.0~rc0
+ netcallback_getNetNodeById@Base 4.4.0~rc0
+ netcallback_getNetNodeWithinBox2D@Base 4.4.0~rc0
+ netcallback_getNetNodeWithinDistance2D@Base 4.4.0~rc0
+ netcallback_getNextLinkId@Base 4.4.0~rc0
+ netcallback_insertLinks@Base 4.4.0~rc0
+ netcallback_insertNetNodes@Base 4.4.0~rc0
+ netcallback_lastErrorMessage@Base 4.4.0~rc0
+ netcallback_loadNetworkByName@Base 4.4.0~rc0
+ netcallback_netAllowCoincident@Base 4.4.0~rc0
+ netcallback_netGetGEOS@Base 4.4.0~rc0
+ netcallback_netGetSRID@Base 4.4.0~rc0
+ netcallback_netHasZ@Base 4.4.0~rc0
+ netcallback_netIsSpatial@Base 4.4.0~rc0
+ netcallback_updateLinksById@Base 4.4.0~rc0
+ netcallback_updateNetNodesById@Base 4.4.0~rc0
  remove_duplicated_rows@Base 3.0.2~20120302
  remove_duplicated_rows_ex2@Base 4.3.0~rc0
  remove_duplicated_rows_ex@Base 4.2.0
@@ -813,6 +974,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  spatialite_alloc_connection@Base 4.1.0
  spatialite_cleanup@Base 3.0.2~20120302
  spatialite_cleanup_ex@Base 4.1.0
+ spatialite_finalize_topologies@Base 4.4.0~rc0
  spatialite_init@Base 2.4.0
  spatialite_init_ex@Base 4.1.0
  spatialite_init_geos@Base 4.0.0
@@ -822,7 +984,6 @@ libspatialite.so.7 libspatialite7 #MINVER#
  spatialite_version@Base 2.4.0
  spatialitetargetcpu@Base 4.2.0
  spatialiteversion@Base 2.4.0
- splite_connection_pool@Base 4.2.0
  splitelwgeomversion@Base 4.3.0~rc0
  srid_get_axis@Base 4.3.0~rc0
  srid_get_datum@Base 4.3.0~rc0
