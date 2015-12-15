@@ -25,7 +25,7 @@ endif
 export VERBOSE=1
 
 %:
-	dh $@ --with autoreconf
+	dh $@ --with autoreconf --parallel
 
 versions:
 	@echo "Spatialite full version: $(FULL_VERSION)"
@@ -46,7 +46,7 @@ override_dh_auto_test:
 	cp test/*.sqlite debian/backup/
 	cp test/sql_stmt_tests/*.sqlite debian/backup/stmt/
 
-	dh_auto_test || echo "Ignoring test failures"
+	dh_auto_test --max-parallel=1 || echo "Ignoring test failures"
 
 	cp debian/backup/stmt/*.sqlite test/sql_stmt_tests/
 	cp debian/backup/*.sqlite test/
