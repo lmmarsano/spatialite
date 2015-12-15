@@ -1,3 +1,9 @@
+spatialite (4.4.0~rc0-1) UNRELEASED; urgency=medium
+
+  * New upstream release candidate.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 15 Dec 2015 20:43:30 +0100
+
 spatialite (4.3.0a-3) unstable; urgency=medium
 
   * Add patch to switch from lw_vasprintf() to sqlite3_vmprintf().
