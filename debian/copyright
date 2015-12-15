@@ -111,11 +111,6 @@ Comment: This code is derived from software contributed to Berkeley by
  Guido van Rossum.
 License: BSD-4-Clause
 
-Files: test/asprintf4win.h
-Copyright:  2001, Federico Di Gregorio <fog@debian.org>
- 1991, 1994-2001, Free Software Foundation, Inc
-License: GPL-2+
-
 Files: test/fnmatch4win.h
 Copyright: 1992, Free Software Foundation, Inc
            1998, Alexandre Parenteau <aubonbeurre@hotmail.com>

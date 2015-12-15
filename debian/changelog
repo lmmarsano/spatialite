@@ -2,6 +2,7 @@ spatialite (4.4.0~rc0-1) UNRELEASED; urgency=medium
 
   * New upstream release candidate.
   * Drop patches, applied upstream.
+  * Update copyright file, drop files section for asprintf4win.h.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 15 Dec 2015 20:43:30 +0100
 
