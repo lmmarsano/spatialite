@@ -8,6 +8,12 @@ spatialite (4.4.0~rc0-1~exp1) experimental; urgency=medium
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 15 Dec 2015 22:03:12 +0100
 
+spatialite (4.3.0a-4) unstable; urgency=medium
+
+  * Require at least liblwgeom-dev 2.2.1 for postgis mini-transition.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 12 Jan 2016 21:25:08 +0100
+
 spatialite (4.3.0a-3) unstable; urgency=medium
 
   * Add patch to switch from lw_vasprintf() to sqlite3_vmprintf().
