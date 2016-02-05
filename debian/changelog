@@ -1,3 +1,12 @@
+spatialite (4.4.0~rc0-1~exp3) UNRELEASED; urgency=medium
+
+  * Merge changes from spatialite (4.3.0a-5).
+    - Update Vcs-Git URL to use HTTPS.
+    - Drop build dependency on liblwgeom-dev to untangle
+      spatialite->postgis->gdal->spatialite circular dependency.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 05 Feb 2016 17:23:07 +0100
+
 spatialite (4.4.0~rc0-1~exp2) experimental; urgency=medium
 
   * Merge changes from spatialite (4.3.0a-4).
