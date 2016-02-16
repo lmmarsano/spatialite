@@ -1,3 +1,9 @@
+spatialite (4.4.0~rc0-1~exp4) UNRELEASED; urgency=medium
+
+  * Bump Standards-Version to 3.9.7, no changes.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 16 Feb 2016 23:41:36 +0100
+
 spatialite (4.4.0~rc0-1~exp3) experimental; urgency=medium
 
   * Merge changes from spatialite (4.3.0a-5).
