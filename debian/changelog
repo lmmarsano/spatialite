@@ -1,9 +1,9 @@
-spatialite (4.4.0~rc0-1~exp4) UNRELEASED; urgency=medium
+spatialite (4.4.0~rc0-1~exp4) experimental; urgency=medium
 
   * Bump Standards-Version to 3.9.7, no changes.
   * Require at least libgeos-dev 3.5.0 for geosreentrant support.
 
- -- Bas Couwenberg <sebastic@debian.org>  Tue, 16 Feb 2016 23:41:36 +0100
+ -- Bas Couwenberg <sebastic@debian.org>  Fri, 19 Feb 2016 16:19:35 +0100
 
 spatialite (4.4.0~rc0-1~exp3) experimental; urgency=medium
 
