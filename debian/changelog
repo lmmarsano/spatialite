@@ -1,9 +1,10 @@
-spatialite (4.4.0~rc0-1~exp5) UNRELEASED; urgency=medium
+spatialite (4.4.0~rc0+20160424-f73a4c7295-1) UNRELEASED; urgency=medium
 
+  * New upstream fossil snapshot.
   * Bump Standards-Version to 3.9.8, no changes.
   * Enable bindnow hardening buildflags.
 
- -- Bas Couwenberg <sebastic@debian.org>  Thu, 05 May 2016 18:55:37 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Thu, 05 May 2016 19:37:06 +0200
 
 spatialite (4.4.0~rc0-1~exp4) experimental; urgency=medium
 
