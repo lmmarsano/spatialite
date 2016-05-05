@@ -2,4 +2,5 @@
 libsqlite3-mod-spatialite: non-dev-pkg-with-shlib-symlink usr/lib/*/mod_spatialite.so*
 libsqlite3-mod-spatialite: no-symbols-control-file usr/lib/*/mod_spatialite.so.*
 libsqlite3-mod-spatialite: package-name-doesnt-match-sonames mod-spatialite*
+libsqlite3-mod-spatialite: package-has-long-file-name *
 
