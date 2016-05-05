@@ -215,6 +215,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  ewktParseFree@Base 3.0.0
  ewkt_point_xyzm@Base 3.0.0
  ewky_yylex@Base 4.0.0
+ gaia3DDistance@Base 4.4.0~rc0
+ gaia3DMaxDistance@Base 4.4.0~rc0
  gaia3dLength@Base 4.4.0~rc0
  gaiaAddControlPoint2D@Base 4.3.0~rc0
  gaiaAddControlPoint3D@Base 4.3.0~rc0
@@ -263,6 +265,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaAppendPointZMToDynamicLine@Base 3.0.0
  gaiaAppendPointZToDynamicLine@Base 3.0.0
  gaiaAppendToOutBuffer@Base 3.0.0
+ gaiaAsX3D@Base 4.4.0~rc0
+ gaiaAzimuth@Base 4.4.0~rc0
  gaiaBoundary@Base 2.4.0
  gaiaBoundary_r@Base 4.2.0
  gaiaBuildCircleMbr@Base 2.4.0
@@ -327,6 +331,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaDoubleQuotedSql@Base 3.0.2~20120302
  gaiaDropTable@Base 4.0.0
  gaiaDropTableEx2@Base 4.3.0~rc0
+ gaiaDropTableEx3@Base 4.4.0~rc0
  gaiaDropTableEx@Base 4.2.0
  gaiaDxfWriteEndSection@Base 4.1.0
  gaiaDxfWriteEntities@Base 4.1.0
@@ -350,6 +355,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaDynamicLineSplitAfter@Base 2.4.0
  gaiaDynamicLineSplitBefore@Base 2.4.0
  gaiaEllipseParams@Base 2.4.0
+ gaiaEllipsoidAzimuth@Base 4.4.0~rc0
  gaiaEncodeURL@Base 4.3.0~rc0
  gaiaEndianArch@Base 2.4.0
  gaiaEwkbGetLinestring@Base 4.0.0
@@ -424,6 +430,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaFromWkb@Base 2.4.0
  gaiaFullFileNameFromPath@Base 4.3.0~rc0
  gaiaGPKG2Spatialite@Base 4.2.0
+ gaiaGeoHash@Base 4.4.0~rc0
+ gaiaGeodesicArea@Base 4.4.0~rc0
  gaiaGeodesicDistance@Base 2.4.0
  gaiaGeodesicTotalLength@Base 2.4.0
  gaiaGeomCollArea@Base 2.4.0
@@ -518,6 +526,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaGetNodeByPoint@Base 4.4.0~rc0
  gaiaGetPointOnSurface@Base 2.4.0
  gaiaGetPointOnSurface_r@Base 4.2.0
+ gaiaGetRtTopoErrorMsg@Base 4.4.0~rc0
+ gaiaGetRtTopoWarningMsg@Base 4.4.0~rc0
  gaiaGetSridFromGPB@Base 4.3.0~rc0
  gaiaGetTopology@Base 4.4.0~rc0
  gaiaGetVectorLayersList@Base 4.0.0
@@ -571,6 +581,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaIsValid@Base 2.4.0
  gaiaIsValidDbfList@Base 2.4.0
  gaiaIsValidDetail@Base 4.2.0
+ gaiaIsValidDetailEx@Base 4.4.0~rc0
+ gaiaIsValidDetailEx_r@Base 4.4.0~rc0
  gaiaIsValidDetail_r@Base 4.2.0
  gaiaIsValidGPB@Base 4.3.0~rc0
  gaiaIsValidReason@Base 4.2.0
@@ -608,6 +620,9 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaMakePointZ@Base 3.0.2~20120302
  gaiaMakePointZM@Base 3.0.2~20120302
  gaiaMakePolygon@Base 4.2.0
+ gaiaMakeValid@Base 4.4.0~rc0
+ gaiaMakeValidDiscarded@Base 4.4.0~rc0
+ gaiaMaxDistance@Base 4.4.0~rc0
  gaiaMbrGeometry@Base 2.4.0
  gaiaMbrLinestring@Base 2.4.0
  gaiaMbrPolygon@Base 2.4.0
@@ -641,6 +656,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaNewGeoLinkSplit@Base 4.4.0~rc0
  gaiaNewLinkHeal@Base 4.4.0~rc0
  gaiaNewLogLinkSplit@Base 4.4.0~rc0
+ gaiaNodeLines@Base 4.4.0~rc0
  gaiaNormalizeLonLat@Base 4.0.0
  gaiaOffsetCurve@Base 3.0.2~20120302
  gaiaOffsetCurve_r@Base 4.2.0
@@ -689,6 +705,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaPrependPointToDynamicLine@Base 2.4.0
  gaiaPrependPointZMToDynamicLine@Base 3.0.0
  gaiaPrependPointZToDynamicLine@Base 3.0.0
+ gaiaProjectedPoint@Base 4.4.0~rc0
  gaiaQuotedSql@Base 3.0.2~20120302
  gaiaRadsToDegs@Base 2.4.0
  gaiaReadDbfEntity@Base 2.4.0
@@ -707,6 +724,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaResetDbfEntity@Base 2.4.0
  gaiaResetGeosMsg@Base 2.4.0
  gaiaResetGeosMsg_r@Base 4.2.0
+ gaiaResetRtTopoMsg@Base 4.4.0~rc0
  gaiaReverseDynamicLine@Base 2.4.0
  gaiaRingCentroid@Base 2.4.0
  gaiaRingGetPoint@Base 2.4.0
@@ -714,6 +732,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaRotateCoords@Base 2.4.0
  gaiaSanitize@Base 2.4.0
  gaiaScaleCoords@Base 2.4.0
+ gaiaSegmentize@Base 4.4.0~rc0
  gaiaSetDoubleValue@Base 2.4.0
  gaiaSetGeosAuxErrorMsg@Base 4.1.0
  gaiaSetGeosAuxErrorMsg_r@Base 4.2.0
@@ -723,6 +742,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaSetGeosWarningMsg_r@Base 4.2.0
  gaiaSetIntValue@Base 2.4.0
  gaiaSetNullValue@Base 2.4.0
+ gaiaSetRtTopoErrorMsg@Base 4.4.0~rc0
+ gaiaSetRtTopoWarningMsg@Base 4.4.0~rc0
  gaiaSetStrValue@Base 2.4.0
  gaiaSharedPaths@Base 3.0.2~20120302
  gaiaSharedPaths_r@Base 4.2.0
@@ -739,6 +760,9 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaSnapToGrid@Base 4.0.0
  gaiaSnap_r@Base 4.2.0
  gaiaSpatialite2GPKG@Base 4.2.0
+ gaiaSplit@Base 4.4.0~rc0
+ gaiaSplitLeft@Base 4.4.0~rc0
+ gaiaSplitRight@Base 4.4.0~rc0
  gaiaSquareGrid@Base 4.0.0
  gaiaSquareGrid_r@Base 4.2.0
  gaiaStatisticsInvalidate@Base 4.2.0
@@ -761,6 +785,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaToSpatiaLiteBlobWkb@Base 2.4.0
  gaiaToSpatiaLiteBlobWkbEx@Base 4.3.0~rc0
  gaiaToWkb@Base 2.4.0
+ gaiaTopoGeoSnapLinestringToSeed@Base 4.4.0~rc0
+ gaiaTopoGeoSnapPointToSeed@Base 4.4.0~rc0
  gaiaTopoGeoUpdateSeeds@Base 4.4.0~rc0
  gaiaTopoGeo_AddLineString@Base 4.4.0~rc0
  gaiaTopoGeo_AddPoint@Base 4.4.0~rc0
@@ -768,8 +794,12 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaTopoGeo_CreateTopoLayer@Base 4.4.0~rc0
  gaiaTopoGeo_ExportTopoLayer@Base 4.4.0~rc0
  gaiaTopoGeo_FromGeoTable@Base 4.4.0~rc0
+ gaiaTopoGeo_FromGeoTableExtended@Base 4.4.0~rc0
  gaiaTopoGeo_InitTopoLayer@Base 4.4.0~rc0
  gaiaTopoGeo_InsertFeatureFromTopoLayer@Base 4.4.0~rc0
+ gaiaTopoGeo_RemoveDanglingEdges@Base 4.4.0~rc0
+ gaiaTopoGeo_RemoveDanglingNodes@Base 4.4.0~rc0
+ gaiaTopoGeo_RemoveSmallFaces@Base 4.4.0~rc0
  gaiaTopoGeo_RemoveTopoLayer@Base 4.4.0~rc0
  gaiaTopoGeo_SubdivideLines@Base 4.4.0~rc0
  gaiaTopoGeo_ToGeoTable@Base 4.4.0~rc0

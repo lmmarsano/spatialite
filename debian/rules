@@ -41,8 +41,8 @@ override_dh_auto_configure:
 		--disable-examples \
 		--enable-gcp=yes \
 		--enable-geos \
-		--enable-lwgeom=no \
-		--enable-proj
+		--enable-proj \
+		--enable-rttopo=yes
 
 override_dh_auto_test:
 	mkdir -p debian/backup/stmt

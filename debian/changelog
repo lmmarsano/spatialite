@@ -5,6 +5,7 @@ spatialite (4.4.0~rc0+20160424-f73a4c7295-1) UNRELEASED; urgency=medium
   * Enable bindnow hardening buildflags.
   * Update copyright file, changes:
     - Update copyright years for Alessandro Furieri
+  * Enable rttopo support.
 
  -- Bas Couwenberg <sebastic@debian.org>  Thu, 05 May 2016 19:37:06 +0200
 
