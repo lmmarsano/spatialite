@@ -1,6 +1,7 @@
 spatialite (4.4.0~rc1-1) UNRELEASED; urgency=medium
 
   * New upstream release candidate.
+  * Update symbols for 4.4.0~rc1.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sat, 07 May 2016 14:30:38 +0200
 

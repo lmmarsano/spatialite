@@ -986,6 +986,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  spatialite_init_ex@Base 4.1.0
  spatialite_init_geos@Base 4.0.0
  spatialite_initialize@Base 4.2.0
+ spatialite_set_silent_mode@Base 4.4.0~rc1
+ spatialite_set_verbose_mode@Base 4.4.0~rc1
  spatialite_shutdown@Base 4.2.0
  spatialite_target_cpu@Base 4.2.0
  spatialite_version@Base 2.4.0
