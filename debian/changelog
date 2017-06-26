@@ -1,4 +1,4 @@
-spatialite (4.4.0~rc1-1~exp2) UNRELEASED; urgency=medium
+spatialite (4.4.0~rc1-1~exp2) experimental; urgency=medium
 
   * Bump Standards-Version to 4.0.0, no changes.
   * Add autopkgtest to test installability.
@@ -7,7 +7,7 @@ spatialite (4.4.0~rc1-1~exp2) UNRELEASED; urgency=medium
   * Add patch to fix spelling errors.
   * Drop unused override for package-has-long-file-name.
 
- -- Bas Couwenberg <sebastic@debian.org>  Mon, 26 Jun 2017 15:31:19 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Mon, 26 Jun 2017 15:35:51 +0200
 
 spatialite (4.4.0~rc1-1~exp1) experimental; urgency=medium
 
