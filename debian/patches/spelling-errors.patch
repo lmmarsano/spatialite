@@ -1,0 +1,15 @@
+Description: Fix spelling errors.
+ * updgrade -> upgrade
+Author: Bas Couwenberg <sebastic@debian.org>
+
+--- a/src/spatialite/table_cloner.c
++++ b/src/spatialite/table_cloner.c
+@@ -2305,7 +2305,7 @@ gaiaAuxClonerExecute (const void *handle
+ 	  if (!upgrade_output_table (cloner))
+ 	    {
+ 		spatialite_e
+-		    ("CloneTable: unable to updgrade the output table \"%s\"\n",
++		    ("CloneTable: unable to upgrade the output table \"%s\"\n",
+ 		     cloner->out_table);
+ 		return 0;
+ 	    }

@@ -4,6 +4,7 @@ spatialite (4.4.0~rc1-1~exp2) UNRELEASED; urgency=medium
   * Add autopkgtest to test installability.
   * Enable PIE hardening buildflags.
   * Use pkg-info.mk variables instead of dpkg-parsechangelog output.
+  * Add patch to fix spelling errors.
 
  -- Bas Couwenberg <sebastic@debian.org>  Mon, 26 Jun 2017 15:31:19 +0200
 
