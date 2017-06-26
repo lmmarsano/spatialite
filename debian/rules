@@ -10,10 +10,9 @@ export DH_OPTIONS
 # Enable hardening build flags
 export DEB_BUILD_MAINT_OPTIONS=hardening=+all
 
-FULL_VERSION := $(shell dpkg-parsechangelog | grep ^Version | cut -d' ' -f2 | cut -d- -f1)
-VERSION := $(shell echo $(FULL_VERSION) | sed -e "s/~beta[[:digit:]]\+/-BETA/")
-LC_VERSION := $(shell echo $(VERSION) | tr A-Z a-z)
-SPATIALITE_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p' | sed -e 's/\+.*//; s/^[0-9]://')
+include /usr/share/dpkg/pkg-info.mk
+
+UPSTREAM_VERSION = $(shell echo $(DEB_VERSION_UPSTREAM) | sed -e 's/\+.*//')
 
 DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 
@@ -29,11 +28,6 @@ export VERBOSE=1
 
 %:
 	dh $@ --with autoreconf --parallel
-
-versions:
-	@echo "Spatialite full version: $(FULL_VERSION)"
-	@echo "Spatialite version: $(LC_VERSION)"
-	@echo "Spatialite symbols: $(SPATIALITE_VERSION)"
 
 override_dh_auto_configure:
 	dh_auto_configure -- \
@@ -56,7 +50,7 @@ override_dh_auto_test:
 	rm -rf debian/backup
 
 override_dh_makeshlibs:
-	dh_makeshlibs -- -v$(SPATIALITE_VERSION)
+	dh_makeshlibs -- -v$(UPSTREAM_VERSION)
 
 override_dh_shlibdeps:
 	dh_shlibdeps -l/usr/lib:$(CURDIR)/debian/tmp/usr/lib
