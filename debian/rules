@@ -8,7 +8,7 @@
 export DH_OPTIONS
 
 # Enable hardening build flags
-export DEB_BUILD_MAINT_OPTIONS=hardening=+all,-pie
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
 
 FULL_VERSION := $(shell dpkg-parsechangelog | grep ^Version | cut -d' ' -f2 | cut -d- -f1)
 VERSION := $(shell echo $(FULL_VERSION) | sed -e "s/~beta[[:digit:]]\+/-BETA/")
