@@ -1,6 +1,7 @@
 spatialite (4.4.0~rc1-1~exp3) UNRELEASED; urgency=medium
 
   * Change priority from extra to optional.
+  * Bump Standards-Version to 4.1.0, changes: priority.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sun, 24 Sep 2017 13:24:04 +0200
 
