@@ -2,6 +2,7 @@ spatialite (4.4.0~rc1-1~exp3) UNRELEASED; urgency=medium
 
   * Change priority from extra to optional.
   * Bump Standards-Version to 4.1.0, changes: priority.
+  * Strip trailing whitespace from changelog.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sun, 24 Sep 2017 13:24:04 +0200
 
@@ -197,7 +198,7 @@ spatialite (4.2.1~rc1-1~exp1) experimental; urgency=medium
  -- Bas Couwenberg <sebastic@xs4all.nl>  Fri, 28 Nov 2014 18:57:53 +0100
 
 spatialite (4.2.0-1~exp1) experimental; urgency=low
- 
+
   * New upstream release candidate.
   * Refresh patches.
   * Update copyright file.
@@ -330,7 +331,7 @@ spatialite (3.1.0~rc2-1) unstable; urgency=low
 spatialite (3.0.2~20120302-1) unstable; urgency=low
 
   * New upstream pre-release.
-  * Added 07-fix_spatialite_pc.patch: now avoid re-linking also in spatialite.pc 
+  * Added 07-fix_spatialite_pc.patch: now avoid re-linking also in spatialite.pc
     file.
   * Patchset refreshed.
   * New SONAME set to be compatible with that issued until now.
@@ -342,7 +343,7 @@ spatialite (3.0.1-1) unstable; urgency=low
 
   * New upstream release.
     (closes: #661018)
-  * Patchset refreshed. Finally, Sandro is now following a sane policy with 
+  * Patchset refreshed. Finally, Sandro is now following a sane policy with
     SONAME versioning. Better than never.
   * This version is compatible with Freexl >= 1.0.0 only.
   * Now spatialite source includes the library only, spatialite-tools moved
@@ -390,7 +391,7 @@ spatialite (3.0.0~beta20110817-1) unstable; urgency=low
   * Fixed get-orig-tarball to use full version for pre-release tarballs.
   * Policy bumped to 3.9.2, without changes.
   * The mega-patch systemlibs.diff has been updated.
-  * Removed .pc file manipulation. 
+  * Removed .pc file manipulation.
 
   [ David Paleino ]
   * New upstream pre-release
@@ -464,8 +465,8 @@ spatialite (2.4.0~rc2-1) unstable; urgency=low
 spatialite (2.3.0-1) unstable; urgency=low
 
   * New upstream release with partial repackaing to cope with upstream changes.
-  * New upstream packaging: now this package includes all spatialite-related 
-    tarballs to provide the whole set of binary packages, based on the 
+  * New upstream packaging: now this package includes all spatialite-related
+    tarballs to provide the whole set of binary packages, based on the
     amalgameted sources.
   * Added quilt support. Now the upstream tarball is included as a
     compressed archive to facilitate interactive cleanaups and patching.
