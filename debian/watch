@@ -2,5 +2,5 @@ version=3
 opts=\
 dversionmangle=s/\+(debian|dfsg|ds|deb)\d*$//,\
 uversionmangle=s/(\d)[_\.\-\+]?((RC|rc|pre|dev|beta|alpha)\d*[a-z]*)$/$1~$2/;s/RC/rc/ \
-http://www.gaia-gis.it/gaia-sins/libspatialite-sources/ \
+https://www.gaia-gis.it/gaia-sins/libspatialite-sources/ \
 (?:|.*/)libspatialite(?:[_\-]v?|)(\d\S*)\.(?:tar\.xz|txz|tar\.bz2|tbz2|tar\.gz|tgz)
