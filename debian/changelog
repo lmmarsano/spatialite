@@ -6,6 +6,7 @@ spatialite (4.4.0~rc1-1~exp3) UNRELEASED; urgency=medium
   * Update copyright-format URL to use HTTPS.
   * Update watch file to use HTTPS.
   * Add lintian override for spelling-error-in-binary false positive.
+  * Update spelling-errors.patch to fix additional typos.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sun, 24 Sep 2017 13:24:04 +0200
 
