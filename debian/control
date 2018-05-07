@@ -91,4 +91,3 @@ Description: Geospatial extension for SQLite - loadable module
  shapefiles and csv/text files as virtual tables.
  .
  This package contains the loadable extension module for SQLite 3.
-

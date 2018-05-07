@@ -61,4 +61,3 @@ override_dh_strip:
 override_dh_install:
 	$(RM) debian/*/usr/lib/*/*.la
 	dh_install --list-missing
-
