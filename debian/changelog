@@ -1,7 +1,7 @@
 spatialite (4.4.0~rc1-1~exp3) UNRELEASED; urgency=medium
 
   * Change priority from extra to optional.
-  * Bump Standards-Version to 4.1.4, changes: priority.
+  * Bump Standards-Version to 4.1.5, changes: priority.
   * Strip trailing whitespace from changelog, control & rules files.
   * Update copyright-format URL to use HTTPS.
   * Update watch file to use HTTPS.
