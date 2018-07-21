@@ -9,6 +9,7 @@ spatialite (4.4.0~rc1-1~exp3) UNRELEASED; urgency=medium
   * Update spelling-errors.patch to fix additional typos.
   * Update Vcs-* URLs for Salsa.
   * Drop obsolete dbg package.
+  * Drop unused override for spelling-error-in-binary.
 
  -- Bas Couwenberg <sebastic@debian.org>  Sun, 24 Sep 2017 13:24:04 +0200
 

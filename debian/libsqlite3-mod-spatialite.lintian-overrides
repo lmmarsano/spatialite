@@ -3,6 +3,3 @@ libsqlite3-mod-spatialite: non-dev-pkg-with-shlib-symlink usr/lib/*/mod_spatiali
 libsqlite3-mod-spatialite: no-symbols-control-file usr/lib/*/mod_spatialite.so.*
 libsqlite3-mod-spatialite: package-name-doesnt-match-sonames mod-spatialite*
 
-# False positive, string no included in source
-libsqlite3-mod-spatialite: spelling-error-in-binary * ment meant
-
