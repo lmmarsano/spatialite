@@ -1,4 +1,4 @@
-spatialite (4.4.0~rc1-1~exp3) UNRELEASED; urgency=medium
+spatialite (4.4.0~rc1-1~exp3) experimental; urgency=medium
 
   * Change priority from extra to optional.
   * Bump Standards-Version to 4.1.5, changes: priority.
@@ -11,7 +11,7 @@ spatialite (4.4.0~rc1-1~exp3) UNRELEASED; urgency=medium
   * Drop obsolete dbg package.
   * Drop unused override for spelling-error-in-binary.
 
- -- Bas Couwenberg <sebastic@debian.org>  Sun, 24 Sep 2017 13:24:04 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Sat, 21 Jul 2018 19:08:10 +0200
 
 spatialite (4.4.0~rc1-1~exp2) experimental; urgency=medium
 
