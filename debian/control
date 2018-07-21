@@ -5,7 +5,7 @@ Uploaders: Francesco Paolo Lovergine <frankie@debian.org>,
            Bas Couwenberg <sebastic@debian.org>
 Section: science
 Priority: optional
-Build-Depends: debhelper (>= 9),
+Build-Depends: debhelper (>= 9.20160114),
                dh-autoreconf,
                autotools-dev,
                libexpat1-dev,
@@ -58,23 +58,6 @@ Description: Geospatial extension for SQLite - development files
  shapefiles and csv/text files as virtual tables.
  .
  This package contains development files (static libraries and header files).
-
-Package: libspatialite-dbg
-Architecture: any
-Multi-Arch: same
-Section: debug
-Depends: libspatialite7 (= ${binary:Version}),
-         ${misc:Depends}
-Breaks: libspatialite6-dbg (<< 4.3.0~rc0-1~)
-Replaces: libspatialite6-dbg (<< 4.3.0~rc0-1~)
-Description: Geospatial extension for SQLite - debugging symbols
- The SpatiaLite extension enables SQLite to support spatial (geometry) data
- in a way conformant to OpenGis specifications, with both WKT and WKB formats.
- .
- Spatialite also includes Virtualshape and Virtualtext to enable accessing
- shapefiles and csv/text files as virtual tables.
- .
- This package contains debugging symbols for the libraries.
 
 Package: libsqlite3-mod-spatialite
 Architecture: any
