@@ -1,3 +1,9 @@
+spatialite (5.0.0~beta0-1) UNRELEASED; urgency=medium
+
+  * New upstream beta release.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Tue, 31 Jul 2018 07:26:45 +0200
+
 spatialite (4.4.0~rc1-1~exp3) experimental; urgency=medium
 
   * Change priority from extra to optional.
