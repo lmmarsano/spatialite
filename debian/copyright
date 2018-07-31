@@ -5,7 +5,7 @@ Source: https://www.gaia-gis.it/fossil/libspatialite/
 License: MPL-1.1 or GPL-2+ or LGPL-2.1+
 
 Files: *
-Copyright: 2008-2016, Alessandro Furieri <a.furieri@lqt.it>
+Copyright: 2008-2017, Alessandro Furieri <a.furieri@lqt.it>
            2011-2014, Brad Hards <bradh@frogmouth.net>
 Comment: Contributor(s):
  Ahmadou Dicko <dicko.ahmadou@gmail.com>
@@ -67,7 +67,12 @@ Files: src/gaiageo/Ewkt.c
  src/gaiageo/vanuatuWkt.h
 Copyright: Unknown
 License: public-domain
- The author disclaims copyright to this source code.
+ The author disclaims copyright to this source code.  In place of
+ a legal notice, here is a blessing:
+ .
+    May you do good and not evil.
+    May you find forgiveness for yourself and forgive others.
+    May you share freely, never taking more than you give.
 
 Files: src/md5/md5.c
  src/md5/md5.h
