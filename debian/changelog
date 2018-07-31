@@ -5,6 +5,7 @@ spatialite (5.0.0~beta0-1) UNRELEASED; urgency=medium
     - Update copyright years for Alessandro Furieri
     - Update license text for public-domain lex generated files
   * Update URL to SQLite Loadable Extensions documentation.
+  * Require at least librttopo-dev 1.1.0~.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 31 Jul 2018 07:26:45 +0200
 
