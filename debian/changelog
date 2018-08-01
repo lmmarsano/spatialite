@@ -9,6 +9,7 @@ spatialite (5.0.0~beta0-1) UNRELEASED; urgency=medium
   * Update spelling-errors.patch to fix 'retrieve' typo.
   * Update symbols for 5.0.0~beta0.
   * Drop autopkgtest to test installability.
+  * Add lintian override for testsuite-autopkgtest-missing.
 
  -- Bas Couwenberg <sebastic@debian.org>  Tue, 31 Jul 2018 07:26:45 +0200
 
