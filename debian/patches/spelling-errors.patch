@@ -1,10 +1,11 @@
 Description: Fix spelling errors.
  * updgrade -> upgrade
+ * retrive  -> retrieve
 Author: Bas Couwenberg <sebastic@debian.org>
 
 --- a/src/spatialite/table_cloner.c
 +++ b/src/spatialite/table_cloner.c
-@@ -2305,7 +2305,7 @@ gaiaAuxClonerExecute (const void *handle
+@@ -2315,7 +2315,7 @@ gaiaAuxClonerExecute (const void *handle
  	  if (!upgrade_output_table (cloner))
  	    {
  		spatialite_e
@@ -24,3 +25,64 @@ Author: Bas Couwenberg <sebastic@debian.org>
  	  fprintf (out,
  		   "please manually check the <b>%s</b> table.</td></tr>\n",
  		   tmp_table);
+--- a/src/gaiageo/gg_xml.c
++++ b/src/gaiageo/gg_xml.c
+@@ -336,7 +336,7 @@ splite_xmlSchemaCacheFind (struct splite
+ 			   xmlSchemaParserCtxtPtr * parser_ctxt,
+ 			   xmlSchemaPtr * schema)
+ {
+-/* attempting to retrive some XmlSchema from within the Cache */
++/* attempting to retrieve some XmlSchema from within the Cache */
+     int i;
+     time_t now;
+     struct splite_xmlSchema_cache_item *p;
+--- a/src/spatialite/spatialite.c
++++ b/src/spatialite/spatialite.c
+@@ -34541,7 +34541,7 @@ fnct_sp_stored_execute (sqlite3_context
+   invalid_stored_procedure:
+     message =
+ 	sqlite3_mprintf
+-	("StoredProc exception - unable to retrive a Stored Procedure named \"%s\".",
++	("StoredProc exception - unable to retrieve a Stored Procedure named \"%s\".",
+ 	 name);
+     sqlite3_result_error (context, message, -1);
+     sqlite3_free (message);
+--- a/src/spatialite/srid_aux.c
++++ b/src/spatialite/srid_aux.c
+@@ -1739,7 +1739,7 @@ static void
+ getProjParamsFromSpatialReferenceSystemTable (sqlite3 * sqlite, int srid,
+ 					      char **proj_params)
+ {
+-/* retrives the PROJ params from SPATIAL_SYS_REF table, if possible */
++/* retrieves the PROJ params from SPATIAL_SYS_REF table, if possible */
+     char *sql;
+     char **results;
+     int rows;
+@@ -1890,7 +1890,7 @@ getProjParamsFromGeopackageTable (sqlite
+ SPATIALITE_PRIVATE void
+ getProjParams (void *p_sqlite, int srid, char **proj_params)
+ {
+-/* retrives the PROJ params from SPATIAL_SYS_REF table */
++/* retrieves the PROJ params from SPATIAL_SYS_REF table */
+     sqlite3 *sqlite = (sqlite3 *) p_sqlite;
+     *proj_params = NULL;
+ 
+--- a/src/topology/gaia_auxtopo_table.c
++++ b/src/topology/gaia_auxtopo_table.c
+@@ -4721,7 +4721,7 @@ auxtopo_retrieve_geometry_type (sqlite3
+ 				const char *table, const char *column,
+ 				int *ref_type)
+ {
+-/* attempting to retrive the reference Geometry Type */
++/* attempting to retrieve the reference Geometry Type */
+     int ret;
+     int i;
+     char **results;
+--- a/test/sql_stmt_iconv_tests/sp_executestored5.testcase
++++ b/test/sql_stmt_iconv_tests/sp_executestored5.testcase
+@@ -4,4 +4,4 @@ SELECT StoredProc_Execute('not existing'
+ 1 # rows (not including the header row)
+ 1 # columns
+ StoredProc_Execute('not existing')
+-StoredProc exception - unable to retrive a Stored Procedure named "not existing".
++StoredProc exception - unable to retrieve a Stored Procedure named "not existing".
