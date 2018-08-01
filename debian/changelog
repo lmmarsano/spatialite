@@ -1,4 +1,4 @@
-spatialite (5.0.0~beta0-1) UNRELEASED; urgency=medium
+spatialite (5.0.0~beta0-1~exp1) experimental; urgency=medium
 
   * New upstream beta release.
   * Update copyright file, changes:
@@ -11,7 +11,7 @@ spatialite (5.0.0~beta0-1) UNRELEASED; urgency=medium
   * Drop autopkgtest to test installability.
   * Add lintian override for testsuite-autopkgtest-missing.
 
- -- Bas Couwenberg <sebastic@debian.org>  Tue, 31 Jul 2018 07:26:45 +0200
+ -- Bas Couwenberg <sebastic@debian.org>  Wed, 01 Aug 2018 10:21:51 +0200
 
 spatialite (4.4.0~rc1-1~exp3) experimental; urgency=medium
 
