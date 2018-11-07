@@ -1,3 +1,14 @@
+spatialite (4.3.0a-5ubuntu1~1.gbpa8a0ab) UNRELEASED; urgency=medium
+
+  ** SNAPSHOT build @a8a0abadd7d5f056a31dbbc6235481cabe944692 **
+
+  [ Luis Marsano ]
+  * Revert "Drop build dependency on liblwgeom-dev to untangle spatialite->postgis->gdal->spatialite circular dependency."
+  * enable geocallbacks
+  * patch: update epsg data from libgdal 2.3.2
+
+ -- lmm-notebook <luism@lmm-notebook.localdomain>  Wed, 07 Nov 2018 04:11:30 -0500
+
 spatialite (4.3.0a-5) unstable; urgency=medium
 
   * Update Vcs-Git URL to use HTTPS.
