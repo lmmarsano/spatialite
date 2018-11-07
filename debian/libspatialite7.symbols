@@ -178,6 +178,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  ewktParseFree@Base 3.0.0
  ewkt_point_xyzm@Base 3.0.0
  ewky_yylex@Base 4.0.0
+ gaia3DDistance@Base 4.3.0~rc0
+ gaia3DMaxDistance@Base 4.3.0~rc0
  gaiaAddControlPoint2D@Base 4.3.0~rc0
  gaiaAddControlPoint3D@Base 4.3.0~rc0
  gaiaAddDbfField@Base 2.4.0
@@ -219,6 +221,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaAppendPointZMToDynamicLine@Base 3.0.0
  gaiaAppendPointZToDynamicLine@Base 3.0.0
  gaiaAppendToOutBuffer@Base 3.0.0
+ gaiaAsX3D@Base 4.3.0~rc0
+ gaiaAzimuth@Base 4.3.0~rc0
  gaiaBoundary@Base 2.4.0
  gaiaBoundary_r@Base 4.2.0
  gaiaBuildCircleMbr@Base 2.4.0
@@ -303,6 +307,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaDynamicLineSplitAfter@Base 2.4.0
  gaiaDynamicLineSplitBefore@Base 2.4.0
  gaiaEllipseParams@Base 2.4.0
+ gaiaEllipsoidAzimuth@Base 4.3.0~rc0
  gaiaEncodeURL@Base 4.3.0~rc0
  gaiaEndianArch@Base 2.4.0
  gaiaEwkbGetLinestring@Base 4.0.0
@@ -377,6 +382,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaFromWkb@Base 2.4.0
  gaiaFullFileNameFromPath@Base 4.3.0~rc0
  gaiaGPKG2Spatialite@Base 4.2.0
+ gaiaGeoHash@Base 4.3.0~rc0
+ gaiaGeodesicArea@Base 4.3.0~rc0
  gaiaGeodesicDistance@Base 2.4.0
  gaiaGeodesicTotalLength@Base 2.4.0
  gaiaGeomCollArea@Base 2.4.0
@@ -454,6 +461,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaGetGpsLatLong@Base 2.4.0
  gaiaGetLayerExtent@Base 4.1.0
  gaiaGetLocaleCharset@Base 2.4.0
+ gaiaGetLwGeomErrorMsg@Base 4.3.0~rc0
+ gaiaGetLwGeomWarningMsg@Base 4.3.0~rc0
  gaiaGetMbrMaxX@Base 2.4.0
  gaiaGetMbrMaxY@Base 2.4.0
  gaiaGetMbrMinX@Base 2.4.0
@@ -548,6 +557,9 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaMakePointZ@Base 3.0.2~20120302
  gaiaMakePointZM@Base 3.0.2~20120302
  gaiaMakePolygon@Base 4.2.0
+ gaiaMakeValid@Base 4.3.0~rc0
+ gaiaMakeValidDiscarded@Base 4.3.0~rc0
+ gaiaMaxDistance@Base 4.3.0~rc0
  gaiaMbrGeometry@Base 2.4.0
  gaiaMbrLinestring@Base 2.4.0
  gaiaMbrPolygon@Base 2.4.0
@@ -564,6 +576,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaMergeGeometries@Base 3.0.0
  gaiaMergeGeometries_r@Base 4.2.0
  gaiaMinDistance@Base 2.4.0
+ gaiaNodeLines@Base 4.3.0~rc0
  gaiaNormalizeLonLat@Base 4.0.0
  gaiaOffsetCurve@Base 3.0.2~20120302
  gaiaOffsetCurve_r@Base 4.2.0
@@ -612,6 +625,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaPrependPointToDynamicLine@Base 2.4.0
  gaiaPrependPointZMToDynamicLine@Base 3.0.0
  gaiaPrependPointZToDynamicLine@Base 3.0.0
+ gaiaProjectedPoint@Base 4.3.0~rc0
  gaiaQuotedSql@Base 3.0.2~20120302
  gaiaRadsToDegs@Base 2.4.0
  gaiaReadDbfEntity@Base 2.4.0
@@ -622,6 +636,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaResetDbfEntity@Base 2.4.0
  gaiaResetGeosMsg@Base 2.4.0
  gaiaResetGeosMsg_r@Base 4.2.0
+ gaiaResetLwGeomMsg@Base 4.3.0~rc0
  gaiaReverseDynamicLine@Base 2.4.0
  gaiaRingCentroid@Base 2.4.0
  gaiaRingGetPoint@Base 2.4.0
@@ -629,6 +644,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaRotateCoords@Base 2.4.0
  gaiaSanitize@Base 2.4.0
  gaiaScaleCoords@Base 2.4.0
+ gaiaSegmentize@Base 4.3.0~rc0
  gaiaSetDoubleValue@Base 2.4.0
  gaiaSetGeosAuxErrorMsg@Base 4.1.0
  gaiaSetGeosAuxErrorMsg_r@Base 4.2.0
@@ -637,6 +653,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaSetGeosWarningMsg@Base 2.4.0
  gaiaSetGeosWarningMsg_r@Base 4.2.0
  gaiaSetIntValue@Base 2.4.0
+ gaiaSetLwGeomErrorMsg@Base 4.3.0~rc0
+ gaiaSetLwGeomWarningMsg@Base 4.3.0~rc0
  gaiaSetNullValue@Base 2.4.0
  gaiaSetStrValue@Base 2.4.0
  gaiaSharedPaths@Base 3.0.2~20120302
@@ -654,6 +672,9 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaiaSnapToGrid@Base 4.0.0
  gaiaSnap_r@Base 4.2.0
  gaiaSpatialite2GPKG@Base 4.2.0
+ gaiaSplit@Base 4.3.0~rc0
+ gaiaSplitLeft@Base 4.3.0~rc0
+ gaiaSplitRight@Base 4.3.0~rc0
  gaiaSquareGrid@Base 4.0.0
  gaiaSquareGrid_r@Base 4.2.0
  gaiaStatisticsInvalidate@Base 4.2.0
@@ -724,6 +745,8 @@ libspatialite.so.7 libspatialite7 #MINVER#
  gaia_geos_warning_msg@Base 2.4.0
  gaia_geosaux_error_msg@Base 4.1.0
  gaia_libxml2_version@Base 4.1.1
+ gaia_lwgeom_error_msg@Base 4.3.0~rc0
+ gaia_lwgeom_warning_msg@Base 4.3.0~rc0
  gaia_matrix_as_text@Base 4.3.0~rc0
  gaia_matrix_create@Base 4.3.0~rc0
  gaia_matrix_create_multiply@Base 4.3.0~rc0
@@ -800,6 +823,7 @@ libspatialite.so.7 libspatialite7 #MINVER#
  spatialitetargetcpu@Base 4.2.0
  spatialiteversion@Base 2.4.0
  splite_connection_pool@Base 4.2.0
+ splitelwgeomversion@Base 4.3.0~rc0
  srid_get_axis@Base 4.3.0~rc0
  srid_get_datum@Base 4.3.0~rc0
  srid_get_prime_meridian@Base 4.3.0~rc0
