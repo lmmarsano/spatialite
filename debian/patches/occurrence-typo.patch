@@ -1,7 +1,15 @@
-Description: Fix 'occurence' typo, replace with 'occurrence'.
-Author: Bas Couwenberg <sebastic@debian.org>
-Forwarded: https://groups.google.com/d/msg/spatialite-users/L5StBh5nou0/rrc154fgDQAJ
+From: Bas Couwenberg <sebastic@debian.org>
+Date: Wed, 7 Nov 2018 02:52:56 -0500
+Subject: Fix 'occurence' typo, replace with 'occurrence'.
 
+Forwarded: https://groups.google.com/d/msg/spatialite-users/L5StBh5nou0/rrc154fgDQAJ
+---
+ src/headers/spatialite.h    | 6 +++---
+ src/shapefiles/shapefiles.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/headers/spatialite.h b/src/headers/spatialite.h
+index 13ac90a..97a04d0 100644
 --- a/src/headers/spatialite.h
 +++ b/src/headers/spatialite.h
 @@ -711,7 +711,7 @@ extern "C"
@@ -31,9 +39,11 @@ Forwarded: https://groups.google.com/d/msg/spatialite-users/L5StBh5nou0/rrc154fg
   will be preserved, then deleting any further occurrence.
   */
      SPATIALITE_DECLARE void remove_duplicated_rows_ex2 (sqlite3 * sqlite,
+diff --git a/src/shapefiles/shapefiles.c b/src/shapefiles/shapefiles.c
+index 4fe3420..f2f71dd 100644
 --- a/src/shapefiles/shapefiles.c
 +++ b/src/shapefiles/shapefiles.c
-@@ -684,7 +684,7 @@ load_shapefile_ex2 (sqlite3 * sqlite, ch
+@@ -684,7 +684,7 @@ load_shapefile_ex2 (sqlite3 * sqlite, char *shp_path, char *table,
  		xdummy = sqlite3_mprintf ("COL_%d", seed++);
  		spatialite_e
  		    ("Warning: duplicated fieldName \"%s\" in shapefile \"%s\": "

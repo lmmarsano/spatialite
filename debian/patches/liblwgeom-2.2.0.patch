@@ -1,10 +1,17 @@
-Description: Switch from lw_vasprintf() to sqlite3_vmprintf().
- lw_vasprintf() was removed in liblwgeom 2.2.0.
-Author: Alessandro Furieri <a.furieri@lqt.it>
+From: Alessandro Furieri <a.furieri@lqt.it>
+Date: Wed, 7 Nov 2018 02:52:56 -0500
+Subject: Switch from lw_vasprintf() to sqlite3_vmprintf().
+
+lw_vasprintf() was removed in liblwgeom 2.2.0.
 Origin: https://www.gaia-gis.it/fossil/libspatialite/fdiff?v1=48918773ced633bc&v2=342a605d691bddc6&sbs=1
         https://www.gaia-gis.it/fossil/libspatialite/fdiff?v1=bae06cd7cce4c2c9&v2=6000f2931ddaf06d&sbs=1
 Bug-Debian: https://bugs.debian.org/807556
+---
+ src/gaiageo/gg_lwgeom.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
+diff --git a/src/gaiageo/gg_lwgeom.c b/src/gaiageo/gg_lwgeom.c
+index 0ae8e71..5ff7be9 100644
 --- a/src/gaiageo/gg_lwgeom.c
 +++ b/src/gaiageo/gg_lwgeom.c
 @@ -90,29 +90,31 @@ splite_lwgeom_version (void)
